@@ -1,7 +1,7 @@
 const express = require('express'); 
 const router = express.Router(); 
-// const {TEST_TWILIO_ACCOUNT_SID,  TEST_TWILIO_AUTH_TOKEN} = require('../config'); 
-// const client = require('twilio')(TEST_TWILIO_ACCOUNT_SID, TEST_TWILIO_AUTH_TOKEN);
+const {TWILIO_ACCOUNT_SID,  TWILIO_AUTH_TOKEN} = require('../config'); 
+const client = require('twilio')(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 const VoiceResponse = require('twilio').twiml.VoiceResponse; 
 
 router.get('/', (req, res) => { 
@@ -19,7 +19,7 @@ router.post('/inbound', (req, res) => {
   let allowedCallers = []; 
 
   let twiMl = new VoiceResponse(); 
-  
+
   //conditions to see if the incoming caller is allowed
   twiMl.dial(callerId, phoneNumber); 
 
@@ -31,7 +31,17 @@ router.post('/inbound', (req, res) => {
 }); 
 
 router.post('/outbound', (req, res) => { 
-
+  client.calls.create({ 
+    url: 'http://demo.twilio.com/docs/voice.xml', 
+    to: '+13019803889', 
+    from: '+18026488173' 
+  })
+    .then((call) => { 
+      console.log('call', call.sid); 
+    })
+    .done(() => { 
+      res.end(); 
+    }); 
 }); 
 
 module.exports = router; 

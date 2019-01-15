@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router(); 
 const {TWILIO_ACCOUNT_SID,  TWILIO_AUTH_TOKEN} = require('../config'); 
 const client = require('twilio')(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
-// console.log('client', client);  
+// console.log('register calls', client.calls);  
 let number; 
 
 router.post('/users', (req, res) => { 
