@@ -3,10 +3,12 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const passport = require('passport');
+const localStrategy = require('./passport/local');
+const jwtStrategy = require('./passport/jwt'); 
 
 const { PORT, CLIENT_ORIGIN } = require('./config');
 const { dbConnect } = require('./db-mongoose');
-// const {dbConnect} = require('./db-knex');
 
 const userRouter = require('./routes/register'); 
 const callRouter = require('./routes/call'); 
@@ -27,6 +29,11 @@ app.use(
     origin: CLIENT_ORIGIN
   })
 );
+
+
+passport.use(localStrategy);
+passport.use(jwtStrategy); 
+
 
 function runServer(port = PORT) {
   const server = app
