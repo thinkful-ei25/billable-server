@@ -1,16 +1,13 @@
 const express = require('express'); 
 const router = express.Router(); 
-const {TEST_TWILIO_ACCOUNT_SID,  TEST_TWILIO_AUTH_TOKEN} = require('../config'); 
-// const {TWILIO_ACCOUNT_SID,  TWILIO_AUTH_TOKEN} = require('../config'); 
-console.log('sid', TEST_TWILIO_ACCOUNT_SID, 'auth', TEST_TWILIO_AUTH_TOKEN); 
-const client = require('twilio')(TEST_TWILIO_ACCOUNT_SID, TEST_TWILIO_AUTH_TOKEN);
-// const client = require('twilio')(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
+const {TWILIO_ACCOUNT_SID,  TWILIO_AUTH_TOKEN} = require('../config'); 
+const client = require('twilio')(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 // console.log('client', client);  
 let number; 
 
 router.post('/users', (req, res) => { 
   console.log('CREATE A NEW USER'); 
-  client.api.accounts.create({friendlyName: 'Submarin'})
+  client.api.accounts.create({friendlyName: 'Brady Fox'})
     .then(account => { 
       console.log(account); 
       res.end(); 
