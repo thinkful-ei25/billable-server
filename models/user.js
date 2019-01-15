@@ -30,6 +30,13 @@ const UserSchema = mongoose.Schema({
   }
 });
 
+UserSchema.set('toJSON', {
+  virtuals: true, 
+  transform: (doc, result) => {
+    delete result._id; 
+    delete result.__v; 
+  }
+}); 
 
 UserSchema.methods.validatePassword = function(password) {
   return bcrypt.compare(password, this.password);

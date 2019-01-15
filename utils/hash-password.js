@@ -1,7 +1,7 @@
 'use strict';
 
 const bcrypt = require('bcryptjs');
-const password = 'tootwilio';
+const password = 'twillBill';
 
 /* Hash a password with cost-factor 10, then run compare to verify */
 bcrypt.hash(password, 10)
