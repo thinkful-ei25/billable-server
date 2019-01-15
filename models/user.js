@@ -30,13 +30,6 @@ const UserSchema = mongoose.Schema({
   }
 });
 
-UserSchema.methods.serialize = function(){
-  return {
-    email:this.email || '',
-    organizationName: this.organizationName || '', 
-    organizationPhoneNumber: this.organizationPhoneNumber || ''
-  };
-};
 
 UserSchema.methods.validatePassword = function(password) {
   return bcrypt.compare(password, this.password);

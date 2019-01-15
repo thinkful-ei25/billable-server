@@ -24,6 +24,11 @@ app.use(
   })
 );
 
+
+passport.use(localStrategy);
+passport.use(jwtStrategy); 
+
+
 function runServer(port = PORT) {
   const server = app
     .listen(port, () => {
