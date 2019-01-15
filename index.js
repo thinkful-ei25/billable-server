@@ -11,10 +11,12 @@ const { PORT, CLIENT_ORIGIN } = require('./config');
 const { dbConnect } = require('./db-mongoose');
 
 const userRouter = require('./routes/register'); 
+const callRouter = require('./routes/call'); 
 
 const app = express();
 
 app.use('/api', userRouter);
+app.use('/api/call', callRouter); 
 
 app.use(
   morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev', {
