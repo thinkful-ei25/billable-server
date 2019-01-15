@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise; 
 
 const UserSchema = mongoose.Schema({
-  _id:{type:mongoose.Schema.Types.ObjectId},
+  id:{type:mongoose.Schema.Types.ObjectId},
   email:{
     type:String,
     required:true,
@@ -20,12 +20,13 @@ const UserSchema = mongoose.Schema({
     authToken:{type:String, required:true}, 
     dateCreated:{type:Date},
     dateUpdated:{type:Date}, 
-    friendlyName:{type:String, required:true},
+    accountFriendlyName:{type:String, required:true}, //email 
     sid:{type:String},
     status:{type:String},
     phones:[{
       sid:{
-        friendlyName:{type:String}, number:Number }
+        phoneFriendlyName:{type:String}, number:Number
+      } //
     }]
   }
 });

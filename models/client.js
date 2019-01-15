@@ -3,10 +3,11 @@
 const mongoose = require('mongoose'); 
 
 const ClientSchema = mongoose.Schema({
-  _id: {
+  userId: {
     type:mongoose.Schema.Types.ObjectId,
     ref:'User'
   },
+  clientId:mongoose.Schema.Types.ObjectId,
   company: {
     type:String, 
     required:true

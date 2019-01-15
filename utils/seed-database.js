@@ -15,15 +15,17 @@ mongoose.connect(DATABASE_URL, { useNewUrlParser: true, useCreateIndex : true })
   .then(() => {
     console.info('Deleting Data...');
     return Promise.all([
-      //collection.deleteMany(docs)
-    
+      User.deleteMany(), 
+      Client.deleteMany(), 
+      Call.deleteMany()  
     ]);
   })
   .then(() => {
     console.info('Seeding Database...');
     return Promise.all([
-      //collection.insertMany(docs)
-   
+      User.insertMany(users),
+      Client.insertMany(clients),
+      Call.insertMany(calls)
     ]);
   })
   .then(results => {
