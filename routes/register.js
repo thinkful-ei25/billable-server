@@ -42,7 +42,7 @@ router.get('/phone/search', (req, res) => {
   client
   .availablePhoneNumbers('US')
   .local.list({
-    areaCode
+    areaCode 
   })
   .then(availableNumbers => {
     console.log('availableNumbers', availableNumbers, 'length', availableNumbers.length)

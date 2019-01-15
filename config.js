@@ -9,7 +9,7 @@ module.exports = {
         process.env.TEST_DATABASE_URL ||
         'mongodb://localhost/thinkful-backend-test', 
   TEST_TWILIO_ACCOUNT_SID: 'AC96d4f4dbad42367168ac2012b1430a0d', 
-  TEST_TWILIO_AUTH_TOKEN: 'bcb71fb96c505025c24ba785f26692fd', 
+  TEST_TWILIO_AUTH_TOKEN: 'bcb71fb96c505025c24ba785f26692fd',
   TWILIO_ACCOUNT_SID: 'AC5ad320be60c4f745deea8e44f06b8906', 
   TWILIO_AUTH_TOKEN: '0c9ac2effe05bf249813fbf5c037b6ff'
   // DATABASE_URL:
