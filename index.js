@@ -3,24 +3,28 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const bodyParser = require('body-parser');
 const passport = require('passport');
 const localStrategy = require('./passport/local');
-const jwtStrategy = require('./passport/jwt'); 
+const jwtStrategy = require('./passport/jwt');
 
 const { PORT, CLIENT_ORIGIN } = require('./config');
 const { dbConnect } = require('./db-mongoose');
 
-const userRouter = require('./routes/register'); 
-const callRouter = require('./routes/call'); 
+const userRouter = require('./routes/register');
+const callRouter = require('./routes/call');
 
 const app = express();
-
-app.use('/api', userRouter);
-app.use('/api/call', callRouter); 
 
 app.use(
   morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev', {
     skip: (req, res) => process.env.NODE_ENV === 'test'
+  })
+);
+
+app.use(
+  bodyParser.urlencoded({
+    extended: true
   })
 );
 
@@ -30,9 +34,11 @@ app.use(
   })
 );
 
-
 passport.use(localStrategy);
-passport.use(jwtStrategy); 
+passport.use(jwtStrategy);
+
+app.use('/api', userRouter);
+app.use('/api/call', callRouter);
 
 
 function runServer(port = PORT) {

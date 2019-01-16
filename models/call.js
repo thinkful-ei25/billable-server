@@ -24,4 +24,4 @@ CallSchema.set('toJSON', {
 
 const Call = mongoose.model('Call', CallSchema);
 
-module.exports = {Call}; 
+module.exports = Call; 
