@@ -19,9 +19,8 @@ router.post('/', (req, res) => {
     .catch(err => { 
       console.log('POST /api/phone', error); 
     }); 
-  //put phone number in to mongo and name of it
-  //auth 
-  //
+    //put phone number in to mongo and name of it
+    //auth 
 }); 
 
 router.put('/phone', (req, res) => { 

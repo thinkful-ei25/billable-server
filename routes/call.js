@@ -63,9 +63,9 @@ router.post('/inbound', (req, res, next) => {
 });
 
 router.post('/outbound', (req, res) => {
-  console.log('Request Body', req.body);
-  console.log('Request Params', req.params);
-  console.log('Request Query', req.query);
+  // console.log('Request Body', req.body);
+  // console.log('Request Params', req.params);
+  // console.log('Request Query', req.query);
   CLIENT.calls
     .create({
       url: 'http://demo.twilio.com/docs/voice.xml',
