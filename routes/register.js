@@ -4,7 +4,6 @@ const express = require('express');
 const router = express.Router(); 
 const { CLIENT } = require('../config'); 
 const User = require('../models/user'); 
-// let number; 
 
 router.post('/users', (req, res, next) => { 
   console.log('CREATE A NEW USER'); 
