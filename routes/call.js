@@ -1,3 +1,4 @@
+'use strict';
 const express = require('express');
 const router = express.Router();
 const { CLIENT } = require('../config');
@@ -44,7 +45,7 @@ router.post('/inbound', (req, res, next) => {
       }
       else {
         if(reject) {
-        twiMl.reject(); 
+          twiMl.reject(); 
         } else {
           twiMl.say('Sorry you are calling a restricted number');
         }

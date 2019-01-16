@@ -4,15 +4,9 @@ const mongoose = require('mongoose');
 
 const { DATABASE_URL } = require('../config');
 
-<<<<<<< HEAD
-const User=require('../models/user');
-const Client=require('../models/client');
-const Call=require('../models/call');
-=======
 const User =require('../models/user');
 const Client =require('../models/client');
 const Call =require('../models/call');
->>>>>>> bf/callRoute
 const {calls, users, clients} = require('../db/data');
 
 console.log(`Connecting to mongodb at ${DATABASE_URL}`);
