@@ -50,7 +50,7 @@ router.post('/user', (req, res, next) => {
     }); 
 }); 
 
-router.get('/phone/search', (req, res) => { 
+router.get('/phones', (req, res) => { 
   console.log('FIND AVAILABLE LOCAL PHONE NUMBERS'); 
 
   const { areaCode } = req.body; 
@@ -69,53 +69,6 @@ router.get('/phone/search', (req, res) => {
         .json(phoneNumbers)
         .done(); 
     }); 
-}); 
-
-//See Twilio status
-router.get('/user', (req, res) => { 
-  console.log('GET A PRE-EXISTING USER'); 
-  const accountSid = 'AC5ad320be60c4f745deea8e44f06b8906'; 
-  // return User.find({})
-  CLIENT.api.accounts(accountSid)
-    .fetch()
-    .then(account => { 
-      console.log(account); 
-      res.json(account); 
-    })
-    .done();
-}); 
-
-router.delete('/user', (req, res) => { 
-  //TODO
-}); 
-
-router.put('/user', (req, res) => { 
-  //TODO
-}); 
-
-
-
-router.post('/phone', (req, res) => { 
-  console.log('CREATE A NEW PHONE NUMBER'); 
-  console.log('number', number); 
-  CLIENT.incomingPhoneNumbers.create({
-    phoneNumber: number,
-  })
-    .then(createdPhoneNumber => { 
-      console.log('phone', createdPhoneNumber); 
-      res.end(); 
-    })
-    .catch(err => { 
-      console.log('POST /api/phone', error); 
-    }); 
-  //put phone number in to mongo and name of it
-  //auth 
-  //
-}); 
-
-router.put('/phone', (req, res) => { 
-  console.log('UPDATE A PREXISTING PHONE NUMBER'); 
-
 }); 
 
 module.exports = router; 
