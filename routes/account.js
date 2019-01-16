@@ -7,16 +7,25 @@ const validateUser = require('../utils/validateUser');
 
 //See Twilio status
 router.get('/user', (req, res) => { 
-  console.log('GET A PRE-EXISTING USER'); 
-  const accountSid = 'AC5ad320be60c4f745deea8e44f06b8906'; 
-  // return User.find({})
-  CLIENT.api.accounts(accountSid)
-    .fetch()
-    .then(account => { 
-      console.log(account); 
-      res.json(account); 
-    })
-    .done();
+  console.log('GET A PRE-EXISTING SUBACCOUNT / USER'); 
+
+  // const { id } = req.body.id; 
+  let tempId = '5c3fae2b152d093f16f1e236'; 
+  return User.findById( tempId )
+    .then(account => {
+      let sid = account.twilio.sid; 
+      console.log('sid', sid); 
+      CLIENT.api.accounts(sid)
+      .fetch()
+      .then(account => { 
+        console.log(account); 
+        res.json(account); 
+      })
+      .catch(err => { 
+        console.log('err', err); 
+      })
+      .done();
+    }); 
 }); 
 
 router.delete('/user', (req, res) => { 
