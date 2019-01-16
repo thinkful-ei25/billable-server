@@ -55,7 +55,7 @@ function validateUser(req, res, next){
       const max = sizedFields[tooLargeField].max;
       const err = new Error(`Field: '${tooLargeField}' must be at most ${max} characters long`);
       err.status = 422;
-      rejext(err);
+      reject(err);
 
     }
     let { password, organizationName, email, hourlyRate } = req.body; 
