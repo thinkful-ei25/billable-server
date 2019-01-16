@@ -10,36 +10,14 @@ router.get('/', (req, res) => {
   res.json('test worked');
 });
 
-let reqBody = {
-  twilio: {
-    authToken: 'bcb71fb96c505025c24ba785f26692fd',
-    accountFriendlyName: 'jsantiag@wellesley.edu',
-    sid: 'AC96d4f4dbad42367168ac2012b1430a0d',
-    status: 'active',
-    phones: [
-      {
-        _id: '5c3f71c14435264a2cafaff8',
-        phoneFriendlyName: 'jangles@gmail.com',
-        number: '+18026488173'
-      }
-    ]
-  },
-  _id: '5c3f71c14435264a2cafaff7',
-  id: '000000000000000000000000',
-  email: 'jsantiag@wellesley.edu',
-  organizationName: 'jsantiag Inc',
-  organizationPhoneNumber: '+18025055503',
-  globalHourlyRate: 20,
-  password: '$2a$10$swigcZnoxlNuqXIzKP/k1eUqKjjL02Y5FM7IUau9K75H0yXp1xp1i',
-  __v: 0
-};
-
-router.post('/inbound', (req, res) => {
+router.post('/inbound', (req, res, next) => {
   let callInfo;
   let twiMl = new VoiceResponse();
   const dial = twiMl.dial({});
+  let allowedThrough = true;
+  let allowedCallers = [];
+  let reject = true;
 
-  dial.number('+15558675310');
   User.find({ 'twilio.phones.number': req.body.Called })
     .then(([user]) => {
       callInfo = {};
@@ -49,14 +27,31 @@ router.post('/inbound', (req, res) => {
       return callInfo;
     })
     .then(callInfo => {
-      return Client.find({ userId: callInfo.userId });
+      return Client.find(
+        { userId: callInfo.userId },
+        { _id: 0, phoneNumber: 1 }
+      );
     })
     .then(clients => {
-      const dial = twiMl.dial({ callerId: callInfo.callerId });
-      dial.number(callInfo.phoneNumber);
+      clients.map(phoneNumber => {
+        allowedCallers.push(phoneNumber.phoneNumber);
+      });
+      allowedThrough = allowedCallers.includes(callInfo.callerId);
+
+      if (allowedThrough) {
+        const dial = twiMl.dial({ callerId: callInfo.callerId });
+        dial.number(callInfo.phoneNumber);
+      }
+      else {
+        if(reject) {
+        twiMl.reject(); 
+        } else {
+          twiMl.say('Sorry you are calling a restricted number');
+        }
+      }
       return;
     })
-    .then(results => {
+    .then(() => {
       res
         .type('text/xml')
         .send(twiMl.toString())
