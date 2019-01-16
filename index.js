@@ -3,9 +3,10 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const bodyParser = require('body-parser');
 const passport = require('passport');
 const localStrategy = require('./passport/local');
-const jwtStrategy = require('./passport/jwt'); 
+const jwtStrategy = require('./passport/jwt');
 
 const { PORT, CLIENT_ORIGIN } = require('./config');
 const { dbConnect } = require('./db-mongoose');
@@ -23,6 +24,12 @@ app.use(
 );
 
 app.use(
+  bodyParser.urlencoded({
+    extended: true
+  })
+);
+
+app.use(
   cors({
     origin: CLIENT_ORIGIN
   })
@@ -35,7 +42,8 @@ app.use('/api/call', callRouter);
 app.use('/api', authRouter); 
 
 passport.use(localStrategy);
-passport.use(jwtStrategy); 
+passport.use(jwtStrategy);
+
 
 function runServer(port = PORT) {
   const server = app
