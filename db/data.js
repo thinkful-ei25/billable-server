@@ -1,44 +1,45 @@
-'use strict'; 
+'use strict';
 
-const users=[
+const users = [
   {
-    'id':'000000000000000000000000',
-    'email':'jsantiag@wellesley.edu',
-    'organizationName':'jsantiag Inc',
-    'organizationPhoneNumber':'+18025055503',
-    'globalHourlyRate':'20',
-    'password':'$2a$10$swigcZnoxlNuqXIzKP/k1eUqKjjL02Y5FM7IUau9K75H0yXp1xp1i',
-    'twilio': {
-      'authToken':'bcb71fb96c505025c24ba785f26692fd', 
-      'dateCreated':'2016-05-18T16:00:00Z',
-      'dateUpdated':'2017-05-18T16:00:00Z',
-      'accountFriendlyName':'jsantiag@wellesley.edu', 
-      'sid':'AC96d4f4dbad42367168ac2012b1430a0d',
-      'status':'active', 
-      'phones': [ { 
-        'phoneFriendlyName': 'jangles@gmail.com',
-        'number': '+18026488173' 
-      }]
+    id: '000000000000000000000000',
+    email: 'jsantiag@wellesley.edu',
+    organizationName: 'jsantiag Inc',
+    organizationPhoneNumer: '+18025055503',
+    globalHourlyRate: '20',
+    password: '$2a$10$swigcZnoxlNuqXIzKP/k1eUqKjjL02Y5FM7IUau9K75H0yXp1xp1i',
+    twilio: {
+      authToken: 'bcb71fb96c505025c24ba785f26692fd',
+      dateCreated: '2016-05-18T16:00:00Z',
+      dateUpdated: '2017-05-18T16:00:00Z',
+      accountFriendlyName: 'jsantiag@wellesley.edu',
+      sid: 'AC96d4f4dbad42367168ac2012b1430a0d',
+      status: 'active',
+      phones: [
+        {
+          phoneFriendlyName: 'jangles@gmail.com',
+          number: '+18026488173'
+        }
+      ]
     }
   }
-
 ];
 
-const clients=[
+const clients = [
   {
-    'userId':'000000000000000000000000',
-    'clientId':'200000000000000000000000',
-    'company':'nodeitall R us',
-    'hourlyRate':'22',
-    'phoneNumber':'+141586753099',
-    'invoice':[
+    userId: '000000000000000000000000',
+    clientId: '200000000000000000000000',
+    company: 'nodeitall R us',
+    hourlyRate: '22',
+    phoneNumber: '+141586753099',
+    invoice: [
       {
-        'month':2,
-        'year':2017,
-        'paid': false
+        month: 2,
+        year: 2017,
+        paid: false
       }
     ]
-  }, 
+  },
   {
     'userId':'000000000000000000000000',
     'clientId':'200000000000000000000001',
@@ -47,16 +48,15 @@ const clients=[
     'phoneNumber':'+13019803889',
     'invoice':[
       {
-        'month':3,
-        'year':2018,
-        'paid': true
+        month: 3,
+        year: 2018,
+        paid: true
       }
     ]
   }
-
 ];
 
-const calls=[
+const calls = [
   {
     'id':'200000000000000000000001',
     'start':'Tue, 31 Aug 2018 20:36:29 +0000',
@@ -73,9 +73,6 @@ const calls=[
     'rating': 3,
     'billable': 3
   }
+];
 
-]; 
-
-
-module.exports = {calls, users, clients }; 
-
+module.exports = { calls, users, clients };

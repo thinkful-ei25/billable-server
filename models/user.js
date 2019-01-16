@@ -20,7 +20,7 @@ const UserSchema = mongoose.Schema({
     authToken:{type:String, required:true}, 
     dateCreated:{type:Date},
     dateUpdated:{type:Date}, 
-    accountFriendlyName:{type:String, required:true}, //email 
+    accountFriendlyName:{type:String, required:true}, 
     sid:{type:String},
     status:{type:String},
     phones:[{
