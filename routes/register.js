@@ -5,7 +5,6 @@ const router = express.Router();
 const { CLIENT } = require('../config'); 
 const User = require('../models/user'); 
 const validateUser = require('../utils/validateUser'); 
-// const hashPassword = require('../utils/hash-password'); 
 
 router.post('/users', (req, res, next) => { 
   console.log('CREATE A NEW USER'); 
@@ -74,17 +73,22 @@ router.put('/users', (req, res) => {
 
 router.get('/phone/search', (req, res) => { 
   console.log('FIND AVAILABLE LOCAL PHONE NUMBERS'); 
-  const areaCode = '802'; 
+
+  const { areaCode } = req.body; 
   CLIENT
     .availablePhoneNumbers('US')
     .local.list({
       areaCode 
     })
     .then(availableNumbers => {
-      console.log('availableNumbers', availableNumbers, 'length', availableNumbers.length);
-      number = availableNumbers[0].phoneNumber;
-      console.log('number', number); 
-      res.json(number); 
+      const subsetAvailableNumbers = availableNumbers.slice(0, 5); 
+      let phoneNumbers = []; 
+      subsetAvailableNumbers.forEach((number) => { 
+        phoneNumbers.push(number.phoneNumber); 
+      }); 
+      res
+        .json(phoneNumbers)
+        .done(); 
     }); 
 }); 
 
