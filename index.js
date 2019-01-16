@@ -14,6 +14,7 @@ const userRouter = require('./routes/register');
 const callRouter = require('./routes/call'); 
 
 const app = express();
+app.use(express.json());
 
 app.use('/api', userRouter);
 app.use('/api/call', callRouter); 
@@ -30,10 +31,11 @@ app.use(
   })
 );
 
-
 passport.use(localStrategy);
 passport.use(jwtStrategy); 
 
+app.use('/api', userRouter);
+app.use('/api/call', callRouter); 
 
 function runServer(port = PORT) {
   const server = app

@@ -64,7 +64,7 @@ router.post('/users', (req, res, next) => {
     return next(err);
   }
 
-  let { organizationName, password, hourlyRate, email } = req.body; 
+  let { organizationName, password, globalHourlyRate, email } = req.body; 
   let sid; 
 
   return CLIENT.api.accounts
@@ -78,7 +78,7 @@ router.post('/users', (req, res, next) => {
         organizationName, 
         password: digest, 
         sid, 
-        hourlyRate, 
+        globalHourlyRate, 
         email
       }; 
       return User.create(newUser); 
