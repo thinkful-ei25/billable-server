@@ -1,6 +1,6 @@
 const express = require('express'); 
 const router = express.Router(); 
-const { client } = require('../config'); 
+const { CLIENT } = require('../config'); 
 const VoiceResponse = require('twilio').twiml.VoiceResponse; 
 
 router.get('/', (req, res) => { 
@@ -30,7 +30,7 @@ router.post('/inbound', (req, res) => {
 }); 
 
 router.post('/outbound', (req, res) => { 
-  client.calls.create({ 
+  CLIENT.calls.create({ 
     url: 'http://demo.twilio.com/docs/voice.xml', 
     to: '+13019803889', 
     from: '+18026488173' 

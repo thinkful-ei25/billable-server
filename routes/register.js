@@ -1,8 +1,8 @@
 const express = require('express'); 
 const router = express.Router(); 
-const { client } = require('../config'); 
+const { CLIENT } = require('../config'); 
 const User = require('../models/user'); 
-console.log('client', client); 
+console.log('CLIENT', CLIENT); 
 // let number; 
 
 router.post('/users', (req, res, next) => { 
@@ -68,7 +68,7 @@ router.post('/users', (req, res, next) => {
   // let { organizationName, password, hourlyRate, email } = req.body; 
   // let sid; 
 
-  // return client.api.accounts
+  // return CLIENT.api.accounts
   //   .create({friendlyName: 'Brady Fox'})
   //   .then(account => { 
   //     sid = account.sid;  
@@ -98,7 +98,7 @@ router.post('/users', (req, res, next) => {
   //     next(err); 
   //   }); 
   console.log('CREATE A NEW USER'); 
-  client.api.accounts.create({friendlyName: 'Brady Fox'})
+  CLIENT.api.accounts.create({friendlyName: 'Brady Fox'})
     .then(account => { 
       console.log(account); 
       res.end(); 
@@ -110,7 +110,7 @@ router.get('/users', (req, res) => {
   console.log('GET A PRE-EXISTING USER'); 
   const accountSid = 'AC5ad320be60c4f745deea8e44f06b8906'; 
 
-  client.api.accounts(accountSid)
+  CLIENT.api.accounts(accountSid)
     .fetch()
     .then(account => { 
       console.log(account); 
@@ -130,7 +130,7 @@ router.put('/users', (req, res) => {
 router.get('/phone/search', (req, res) => { 
   console.log('FIND AVAILABLE LOCAL PHONE NUMBERS'); 
   const areaCode = '802'; 
-  client
+  CLIENT
     .availablePhoneNumbers('US')
     .local.list({
       areaCode 
@@ -146,7 +146,7 @@ router.get('/phone/search', (req, res) => {
 router.post('/phone', (req, res) => { 
   console.log('CREATE A NEW PHONE NUMBER'); 
   console.log('number', number); 
-  client.incomingPhoneNumbers.create({
+  CLIENT.incomingPhoneNumbers.create({
       phoneNumber: number,
   })
   .then(createdPhoneNumber => { 
