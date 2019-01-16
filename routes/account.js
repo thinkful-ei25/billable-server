@@ -25,8 +25,44 @@ router.delete('/user', (req, res) => {
   //TODO
 }); 
 
-router.put('/user', (req, res) => { 
+
+ 
+const updateTwilioAccountPromise = (sid, status) =>  { 
+  return CLIENT.api.accounts(sid).update({status})
+    .then(account => { 
+      console.log('friendly name', account.friendlyName); 
+    })
+    .catch(err => { 
+      console.log('err', err)
+    })
+    .done(); 
+}; 
+
+const updateDbAccountPromise = (sid, status) => {  
+  return User.findOneAndUpdate({sid}, {status})
+    .then((account) => { 
+      console.log(account); 
+    })
+    .catch(err => { 
+      console.log('err', err); 
+    }); 
+}; 
+
+router.put('/user/suspend', (req, res) => { 
   //TODO
+  const {sid} = req.user.twilio; 
+  
+  Promise.all([updateTwilioAccountPromise(sid, 'active'), updateDbAccountPromise(sid, 'suspended')])
+    .then((result) => { 
+      console.log('hi'); 
+      res
+        .status(201)
+        .json(result[1]); 
+      
+    })
+    .catch(err => { 
+      console.log('err', err); 
+    }); 
 }); 
 
 module.exports = router; 
