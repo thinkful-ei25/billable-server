@@ -13,21 +13,15 @@ router.post('/users', (req, res, next) => {
 
   validateUser(req, res)
     .then((validatedUser) => {
-      console.log('user has been validated', validatedUser.organizationName); 
       user = validatedUser; 
       password = user.password; 
       return CLIENT.api.accounts.create({friendlyName: user.organizationName}); 
     })
     .then(createdAccount => { 
-      console.log('account name', createdAccount.friendlyName);
-      console.log('account sid', createdAccount.sid);
-      console.log(createdAccount); 
       account = createdAccount;   
-      
       return User.hashPassword(password);  
     })
     .then(digest => { 
-      console.log('digest', digest); 
       const newUser = { 
         organizationName : user.organizationName, 
         password: digest, 
@@ -42,7 +36,6 @@ router.post('/users', (req, res, next) => {
       return User.create(newUser); 
     })
     .then(newUser => { 
-      console.log('newUser', newUser); 
       res
         .status(201)
         .location(`/api/users/${newUser.id}`).json(newUser) 
@@ -53,6 +46,7 @@ router.post('/users', (req, res, next) => {
         err = new Error('The username already exists'); 
         err.status = 400; 
       }
+      err.status = 404; 
       next(err); 
     }); 
 }); 
