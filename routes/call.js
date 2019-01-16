@@ -1,7 +1,6 @@
 const express = require('express'); 
 const router = express.Router(); 
-const {TWILIO_ACCOUNT_SID,  TWILIO_AUTH_TOKEN} = require('../config'); 
-const client = require('twilio')(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
+const { client } = require('../config'); 
 const VoiceResponse = require('twilio').twiml.VoiceResponse; 
 
 router.get('/', (req, res) => { 
