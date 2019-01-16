@@ -42,7 +42,7 @@ router.post('/users', (req, res, next) => {
     })
     .catch((err) => { 
       if (err.code === 11000) { 
-        err = new Error('The username already exists'); 
+        err = new Error('The organization name already exists'); 
         err.status = 400; 
       }
       err.status = 404; 

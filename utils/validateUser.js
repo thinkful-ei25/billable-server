@@ -1,20 +1,23 @@
 'use strict'; 
 
-function validateUser(req, res){ 
+function validateUser(req, res, next){ 
   return new Promise(function(resolve, reject) { 
     const requiredFields = ['organizationName', 'email', 'hourlyRate', 'password']; 
     const missingField = requiredFields.find(field => !(field in req.body)); 
   
     if (missingField ) { 
-      reject(new Error(`Missing '${missingField} in request body`)); 
-
+      const err = new Error(`Missing '${missingField}' in request body`);
+      err.status = 422;
+      reject(err);
     }
   
     const stringFields = ['organizationName', 'password', 'email']; 
     const nonStringField = stringFields.find(field => !(field in req.body)); 
   
     if (nonStringField) { 
-      reject(new Error(`Field: '${nonStringField}' must be type String`)); 
+      const err = new Error(`Field: '${nonStringField}' must be type String`);
+      err.status = 422;
+      reject(err);
     }
   
     const explicityTrimmedFields = ['organizationName', 'password', 'email'];
@@ -23,7 +26,8 @@ function validateUser(req, res){
     );
   
     if (nonTrimmedField) {
-      reject(new Error(`Field: '${nonTrimmedField}' cannot start or end with whitespace`));
+      err.status = 422;
+      reject(err);
     }
   
     const sizedFields = {
@@ -37,7 +41,9 @@ function validateUser(req, res){
     );
     if (tooSmallField) {
       const min = sizedFields[tooSmallField].min;
-      reject(new Error(`Field: '${tooSmallField}' must be at least ${min} characters long`));
+      const err = new Error(`Field: '${tooSmallField}' must be at least ${min} characters long`);
+      err.status = 422;
+      reject(err);
     }
   
     const tooLargeField = Object.keys(sizedFields).find(
@@ -47,7 +53,10 @@ function validateUser(req, res){
   
     if (tooLargeField) {
       const max = sizedFields[tooLargeField].max;
-      reject(new Error(`Field: '${tooLargeField}' must be at most ${max} characters long`));
+      const err = new Error(`Field: '${tooLargeField}' must be at most ${max} characters long`);
+      err.status = 422;
+      rejext(err);
+
     }
     let { password, organizationName, email, hourlyRate } = req.body; 
     let user = {password, organizationName, email, hourlyRate }; 
