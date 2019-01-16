@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router(); 
 const { client } = require('../config'); 
 const User = require('../models/user'); 
-console.log('client', Client); 
+console.log('client', client); 
 // let number; 
 
 router.post('/users', (req, res, next) => { 
