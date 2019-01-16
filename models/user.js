@@ -26,7 +26,7 @@ const UserSchema = mongoose.Schema({
     phones:[{
       sid:{
         phoneFriendlyName:{type:String}, number:Number
-      } //
+      } 
     }]
   }
 });
@@ -49,5 +49,5 @@ UserSchema.statics.hashPassword = function(password) {
 
 const User = mongoose.model('User', UserSchema);
 
-module.exports = {User}; 
+module.exports = User; 
 

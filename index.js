@@ -15,9 +15,6 @@ const callRouter = require('./routes/call');
 
 const app = express();
 
-app.use('/api', userRouter);
-app.use('/api/call', callRouter); 
-
 app.use(
   morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev', {
     skip: (req, res) => process.env.NODE_ENV === 'test'
@@ -30,10 +27,13 @@ app.use(
   })
 );
 
+app.use(express.json());
+
+app.use('/api', userRouter);
+app.use('/api/call', callRouter); 
 
 passport.use(localStrategy);
 passport.use(jwtStrategy); 
-
 
 function runServer(port = PORT) {
   const server = app

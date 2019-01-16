@@ -4,90 +4,48 @@ const express = require('express');
 const router = express.Router(); 
 const { CLIENT } = require('../config'); 
 const User = require('../models/user'); 
-// let number; 
+const validateUser = require('../utils/validateUser'); 
+// const hashPassword = require('../utils/hash-password'); 
 
 router.post('/users', (req, res, next) => { 
   console.log('CREATE A NEW USER'); 
-  const requiredFields = ['organizationName', 'email', 'hourlyRate', 'password']; 
-  const missingField = requiredFields.find(field => !(field in req.body)); 
+  let account, password, user; 
 
-  if (missingField ) { 
-    const err = new Error(`Missing '${missingField} in request body`); 
-    err.status = 422; 
-    return next(err); 
-  }
-
-  const stringFields = ['organizationName', 'password', 'email']; 
-  const nonStringField = stringFields.find(field => !(field in req.body)); 
-
-  if (nonStringField) { 
-    const err = new Error(`Field: '${nonStringField}' must be type String`); 
-    err.status = 422; 
-    return next(err); 
-  }
-
-  const explicityTrimmedFields = ['organizationName', 'password', 'email'];
-  const nonTrimmedField = explicityTrimmedFields.find(
-    field => req.body[field].trim() !== req.body[field]
-  );
-
-  if (nonTrimmedField) {
-    const err = new Error(`Field: '${nonTrimmedField}' cannot start or end with whitespace`);
-    err.status = 422;
-    return next(err);
-  }
-
-  const sizedFields = {
-    organizationName: { min: 1 },
-    password: { min: 8, max: 72 }
-  };
-
-  const tooSmallField = Object.keys(sizedFields).find(
-    field => 'min' in sizedFields[field] &&
-      req.body[field].trim().length < sizedFields[field].min
-  );
-  if (tooSmallField) {
-    const min = sizedFields[tooSmallField].min;
-    const err = new Error(`Field: '${tooSmallField}' must be at least ${min} characters long`);
-    err.status = 422;
-    return next(err);
-  }
-
-  const tooLargeField = Object.keys(sizedFields).find(
-    field => 'max' in sizedFields[field] &&
-      req.body[field].trim().length > sizedFields[field].max
-  );
-
-  if (tooLargeField) {
-    const max = sizedFields[tooLargeField].max;
-    const err = new Error(`Field: '${tooLargeField}' must be at most ${max} characters long`);
-    err.status = 422;
-    return next(err);
-  }
-
-  let { organizationName, password, hourlyRate, email } = req.body; 
-  let sid; 
-
-  return CLIENT.api.accounts
-    .create({friendlyName: 'Brady Fox'})
-    .then(account => { 
-      sid = account.sid;  
+  validateUser(req, res)
+    .then((validatedUser) => {
+      console.log('user has been validated', validatedUser.organizationName); 
+      user = validatedUser; 
+      password = user.password; 
+      return CLIENT.api.accounts.create({friendlyName: user.organizationName}); 
+    })
+    .then(createdAccount => { 
+      console.log('account name', createdAccount.friendlyName);
+      console.log('account sid', createdAccount.sid);
+      console.log(createdAccount); 
+      account = createdAccount;   
+      
       return User.hashPassword(password);  
     })
     .then(digest => { 
+      console.log('digest', digest); 
       const newUser = { 
-        organizationName, 
+        organizationName : user.organizationName, 
         password: digest, 
-        sid, 
-        hourlyRate, 
-        email
+        globalHourlyRate: user.hourlyRate, 
+        email : user.email, 
+        twilio: { 
+          sid: account.sid, 
+          authToken : account.authToken, 
+          accountFriendlyName : account.friendlyName
+        }
       }; 
       return User.create(newUser); 
     })
     .then(newUser => { 
+      console.log('newUser', newUser); 
       res
         .status(201)
-        .location(`/api/users/${result.id}`).json(result) 
+        .location(`/api/users/${newUser.id}`).json(newUser) 
         .end(); 
     })
     .catch((err) => { 
