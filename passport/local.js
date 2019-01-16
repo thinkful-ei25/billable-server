@@ -6,6 +6,7 @@ const User = require('../models/user');
 const localStrategy = new LocalStrategy(
   { usernameField: 'organizationName', passwordField: 'password'}, (organizationName, password, done)=> {
   let user; 
+  console.log('breaking code is fun'); 
   User.findOne({ organizationName })
     .then(results => {
       console.log('result', results.organizationName, results.email, results.password); 
