@@ -12,6 +12,7 @@ const { dbConnect } = require('./db-mongoose');
 
 const userRouter = require('./routes/register'); 
 const callRouter = require('./routes/call'); 
+const authRouter = require('./routes/auth');
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use(express.json());
 
 app.use('/api', userRouter);
 app.use('/api/call', callRouter); 
+app.use('/api', authRouter); 
 
 passport.use(localStrategy);
 passport.use(jwtStrategy); 
