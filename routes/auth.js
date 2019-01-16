@@ -12,7 +12,9 @@ const router = express.Router();
 const localAuth = passport.authenticate('local', { session: false, failWithError: true });
 
 router.post('/login', localAuth, (req, res) => {
+  console.log('user', req.user); 
   const authToken = createAuthToken(req.user);
+
   res.json({ authToken });
 });
 
@@ -25,7 +27,7 @@ router.post('/refresh', jwtAuth, (req, res) => {
 
 function createAuthToken(user) {
   return jwt.sign({ user }, JWT_SECRET, {
-    subject: user.username,
+    subject: user.organizationName,
     expiresIn: JWT_EXPIRY
   });
 }

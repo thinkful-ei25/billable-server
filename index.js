@@ -11,7 +11,7 @@ const jwtStrategy = require('./passport/jwt');
 const { PORT, CLIENT_ORIGIN } = require('./config');
 const { dbConnect } = require('./db-mongoose');
 
-const userRouter = require('./routes/register'); 
+const userRouter = require('./routes/user'); 
 const callRouter = require('./routes/call'); 
 const authRouter = require('./routes/auth');
 
@@ -37,12 +37,15 @@ app.use(
 
 app.use(express.json());
 
+passport.use(localStrategy);
+passport.use(jwtStrategy);
+
+// const jwtAuth = passport.authenticate('jwt', { session: false });
+
 app.use('/api', userRouter);
 app.use('/api/call', callRouter); 
 app.use('/api', authRouter); 
 
-passport.use(localStrategy);
-passport.use(jwtStrategy);
 
 
 function runServer(port = PORT) {

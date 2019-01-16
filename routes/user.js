@@ -6,7 +6,7 @@ const { CLIENT } = require('../config');
 const User = require('../models/user'); 
 const validateUser = require('../utils/validateUser'); 
 
-router.post('/users', (req, res, next) => { 
+router.post('/user', (req, res, next) => { 
   console.log('CREATE A NEW USER'); 
   let account, password, user; 
 
@@ -50,7 +50,7 @@ router.post('/users', (req, res, next) => {
     }); 
 }); 
 
-router.get('/users', (req, res) => { 
+router.get('/user', (req, res) => { 
   console.log('GET A PRE-EXISTING USER'); 
   const accountSid = 'AC5ad320be60c4f745deea8e44f06b8906'; 
 
@@ -63,11 +63,11 @@ router.get('/users', (req, res) => {
     .done();
 }); 
 
-router.delete('/users', (req, res) => { 
+router.delete('/user', (req, res) => { 
   //TODO
 }); 
 
-router.put('/users', (req, res) => { 
+router.put('/user', (req, res) => { 
   //TODO
 }); 
 
