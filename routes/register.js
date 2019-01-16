@@ -1,13 +1,13 @@
+'use strict'; 
+
 const express = require('express'); 
 const router = express.Router(); 
 const { CLIENT } = require('../config'); 
 const User = require('../models/user'); 
-console.log('CLIENT', CLIENT); 
 // let number; 
 
 router.post('/users', (req, res, next) => { 
   console.log('CREATE A NEW USER'); 
-  
   const requiredFields = ['organizationName', 'email', 'hourlyRate', 'password']; 
   const missingField = requiredFields.find(field => !(field in req.body)); 
 
@@ -91,10 +91,10 @@ router.post('/users', (req, res, next) => {
         .end(); 
     })
     .catch((err) => { 
-        if (err.code === 11000) { 
-          err = new Error('The username already exists'); 
-          err.status = 400; 
-        }
+      if (err.code === 11000) { 
+        err = new Error('The username already exists'); 
+        err.status = 400; 
+      }
       next(err); 
     }); 
 }); 
@@ -129,7 +129,7 @@ router.get('/phone/search', (req, res) => {
       areaCode 
     })
     .then(availableNumbers => {
-      console.log('availableNumbers', availableNumbers, 'length', availableNumbers.length)
+      console.log('availableNumbers', availableNumbers, 'length', availableNumbers.length);
       number = availableNumbers[0].phoneNumber;
       console.log('number', number); 
       res.json(number); 
@@ -140,15 +140,15 @@ router.post('/phone', (req, res) => {
   console.log('CREATE A NEW PHONE NUMBER'); 
   console.log('number', number); 
   CLIENT.incomingPhoneNumbers.create({
-      phoneNumber: number,
+    phoneNumber: number,
   })
-  .then(createdPhoneNumber => { 
-    console.log('phone', createdPhoneNumber); 
-    res.end(); 
-  })
-  .catch(err => { 
-    console.log('POST /api/phone', error); 
-  }); 
+    .then(createdPhoneNumber => { 
+      console.log('phone', createdPhoneNumber); 
+      res.end(); 
+    })
+    .catch(err => { 
+      console.log('POST /api/phone', error); 
+    }); 
   //put phone number in to mongo and name of it
   //auth 
   //
