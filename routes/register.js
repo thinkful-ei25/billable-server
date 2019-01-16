@@ -50,27 +50,6 @@ router.post('/user', (req, res, next) => {
     }); 
 }); 
 
-router.get('/user', (req, res) => { 
-  console.log('GET A PRE-EXISTING USER'); 
-  const accountSid = 'AC5ad320be60c4f745deea8e44f06b8906'; 
-
-  CLIENT.api.accounts(accountSid)
-    .fetch()
-    .then(account => { 
-      console.log(account); 
-      res.json(account); 
-    })
-    .done();
-}); 
-
-router.delete('/user', (req, res) => { 
-  //TODO
-}); 
-
-router.put('/user', (req, res) => { 
-  //TODO
-}); 
-
 router.get('/phone/search', (req, res) => { 
   console.log('FIND AVAILABLE LOCAL PHONE NUMBERS'); 
 
@@ -91,6 +70,30 @@ router.get('/phone/search', (req, res) => {
         .done(); 
     }); 
 }); 
+
+//See Twilio status
+router.get('/user', (req, res) => { 
+  console.log('GET A PRE-EXISTING USER'); 
+  const accountSid = 'AC5ad320be60c4f745deea8e44f06b8906'; 
+  // return User.find({})
+  CLIENT.api.accounts(accountSid)
+    .fetch()
+    .then(account => { 
+      console.log(account); 
+      res.json(account); 
+    })
+    .done();
+}); 
+
+router.delete('/user', (req, res) => { 
+  //TODO
+}); 
+
+router.put('/user', (req, res) => { 
+  //TODO
+}); 
+
+
 
 router.post('/phone', (req, res) => { 
   console.log('CREATE A NEW PHONE NUMBER'); 
