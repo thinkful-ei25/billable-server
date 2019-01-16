@@ -4,96 +4,48 @@ const express = require('express');
 const router = express.Router(); 
 const { CLIENT } = require('../config'); 
 const User = require('../models/user'); 
+const validateUser = require('../utils/validateUser'); 
 
 router.post('/users', (req, res, next) => { 
   console.log('CREATE A NEW USER'); 
-  const requiredFields = ['organizationName', 'email', 'hourlyRate', 'password']; 
-  const missingField = requiredFields.find(field => !(field in req.body)); 
+  let account, password, user; 
 
-  if (missingField ) { 
-    const err = new Error(`Missing '${missingField} in request body`); 
-    err.status = 422; 
-    return next(err); 
-  }
-
-  const stringFields = ['organizationName', 'password', 'email']; 
-  const nonStringField = stringFields.find(field => !(field in req.body)); 
-
-  if (nonStringField) { 
-    const err = new Error(`Field: '${nonStringField}' must be type String`); 
-    err.status = 422; 
-    return next(err); 
-  }
-
-  const explicityTrimmedFields = ['organizationName', 'password', 'email'];
-  const nonTrimmedField = explicityTrimmedFields.find(
-    field => req.body[field].trim() !== req.body[field]
-  );
-
-  if (nonTrimmedField) {
-    const err = new Error(`Field: '${nonTrimmedField}' cannot start or end with whitespace`);
-    err.status = 422;
-    return next(err);
-  }
-
-  const sizedFields = {
-    organizationName: { min: 1 },
-    password: { min: 8, max: 72 }
-  };
-
-  const tooSmallField = Object.keys(sizedFields).find(
-    field => 'min' in sizedFields[field] &&
-      req.body[field].trim().length < sizedFields[field].min
-  );
-  if (tooSmallField) {
-    const min = sizedFields[tooSmallField].min;
-    const err = new Error(`Field: '${tooSmallField}' must be at least ${min} characters long`);
-    err.status = 422;
-    return next(err);
-  }
-
-  const tooLargeField = Object.keys(sizedFields).find(
-    field => 'max' in sizedFields[field] &&
-      req.body[field].trim().length > sizedFields[field].max
-  );
-
-  if (tooLargeField) {
-    const max = sizedFields[tooLargeField].max;
-    const err = new Error(`Field: '${tooLargeField}' must be at most ${max} characters long`);
-    err.status = 422;
-    return next(err);
-  }
-
-  let { organizationName, password, globalHourlyRate, email } = req.body; 
-  let sid; 
-
-  return CLIENT.api.accounts
-    .create({friendlyName: 'Brady Fox'})
-    .then(account => { 
-      sid = account.sid;  
+  validateUser(req, res)
+    .then((validatedUser) => {
+      user = validatedUser; 
+      password = user.password; 
+      return CLIENT.api.accounts.create({friendlyName: user.organizationName}); 
+    })
+    .then(createdAccount => { 
+      account = createdAccount;   
       return User.hashPassword(password);  
     })
     .then(digest => { 
       const newUser = { 
-        organizationName, 
+        organizationName : user.organizationName, 
         password: digest, 
-        sid, 
-        globalHourlyRate, 
-        email
+        globalHourlyRate: user.hourlyRate, 
+        email : user.email, 
+        twilio: { 
+          sid: account.sid, 
+          authToken : account.authToken, 
+          accountFriendlyName : account.friendlyName
+        }
       }; 
       return User.create(newUser); 
     })
     .then(newUser => { 
       res
         .status(201)
-        .location(`/api/users/${result.id}`).json(result) 
+        .location(`/api/users/${newUser.id}`).json(newUser) 
         .end(); 
     })
     .catch((err) => { 
       if (err.code === 11000) { 
-        err = new Error('The username already exists'); 
+        err = new Error('The organization name already exists'); 
         err.status = 400; 
       }
+      err.status = 404; 
       next(err); 
     }); 
 }); 
@@ -121,17 +73,22 @@ router.put('/users', (req, res) => {
 
 router.get('/phone/search', (req, res) => { 
   console.log('FIND AVAILABLE LOCAL PHONE NUMBERS'); 
-  const areaCode = '802'; 
+
+  const { areaCode } = req.body; 
   CLIENT
     .availablePhoneNumbers('US')
     .local.list({
       areaCode 
     })
     .then(availableNumbers => {
-      console.log('availableNumbers', availableNumbers, 'length', availableNumbers.length);
-      number = availableNumbers[0].phoneNumber;
-      console.log('number', number); 
-      res.json(number); 
+      const subsetAvailableNumbers = availableNumbers.slice(0, 5); 
+      let phoneNumbers = []; 
+      subsetAvailableNumbers.forEach((number) => { 
+        phoneNumbers.push(number.phoneNumber); 
+      }); 
+      res
+        .json(phoneNumbers)
+        .done(); 
     }); 
 }); 
 
@@ -157,8 +114,5 @@ router.put('/phone', (req, res) => {
   console.log('UPDATE A PREXISTING PHONE NUMBER'); 
 
 }); 
-
-
-
 
 module.exports = router; 
