@@ -13,7 +13,11 @@ const UserSchema = mongoose.Schema({
     required:true,
     unique:true
   },
-  organizationName:{type:String, required:true},
+  organizationName:{
+    type:String, 
+    required:true, 
+    unique:true
+  },
   organizationPhoneNumber:String,
   globalHourlyRate:Number,
   password:{type:String, required: true}, 

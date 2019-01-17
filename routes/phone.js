@@ -2,32 +2,46 @@
 
 const express = require('express'); 
 const router = express.Router(); 
+const User = require('../models/user'); 
 
-const createClient = require('../utils/createClient'); 
+const createSubAccountClient = require('../utils/createSubAccountClient'); 
 
 router.post('/', (req, res) => { 
-  const subAccount = createClient(req.user.email); 
   console.log('CREATE A NEW PHONE NUMBER'); 
-  console.log('number', number); 
 
-  ///////////START HERE
-  createClient(req.user.email)
+  const { twilioPhoneNumber, organizationPhoneNumber, twilioPhoneNumberName } = req.body;  
+  const {organizationName} = req.user; 
+  //TODO: ERROR CHECK INCOMING DATA
+
+  let twilioPhone; 
+
+  createSubAccountClient(organizationName)
     .then(client => { 
+      //Configured for phone calls (redirect to use inbound call route)
       return client.incomingPhoneNumbers.create({ 
-        phoneNumber: req.user.twilio.phones.number
+        phoneNumber: twilioPhoneNumber, 
+        friendlyName: twilioPhoneNumberName, 
+        voiceMethod: 'POST', 
+        voiceUrl: 'https://d28bf872.ngrok.io/api/call/inbound' 
       }); 
     })
-    .then(createdPhoneNumber => { 
-      console.log('phone', createdPhoneNumber); 
-      res.end(); 
+    .then(createdPhone => { 
+      console.log('phone', createdPhone); 
+      twilioPhone = createdPhone; 
+      return User.findOne({ organizationName });
+    })
+    .then(user => { 
+      user.organizationPhoneNumber = organizationPhoneNumber; 
+      user.twilio.phones.push(twilioPhone); 
+      user.save(); 
     })
     .catch(err => { 
       console.log('POST /api/phone', error); 
     }); 
 }); 
 
-router.put('/phone', (req, res) => { 
-  console.log('UPDATE A PREXISTING PHONE NUMBER'); 
+router.put('/', (req, res) => { 
+  console.log('UPDATE A PREXISTING PHONE'); 
 
 }); 
 

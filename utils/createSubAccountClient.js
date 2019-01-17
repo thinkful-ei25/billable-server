@@ -1,10 +1,9 @@
 'use strict'; 
 const User = require('../models/user'); 
 
-function createClient(userIdentifier){ 
-  //NOTE CHANGE THIS
+function createSubAccountClient(organizationName){ 
   return new Promise((res, rej) => { 
-    User.findOne({email: userIdentifier})
+    User.findOne({organizationName})
       .then((user) => { 
         res(user.createClient()); 
       })
@@ -14,4 +13,4 @@ function createClient(userIdentifier){
     }); 
 }
 
-module.exports = createClient; 
+module.exports = createSubAccountClient; 
