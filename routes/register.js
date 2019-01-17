@@ -5,12 +5,18 @@ const router = express.Router();
 const { MASTER_CLIENT } = require('../config'); 
 const User = require('../models/user'); 
 const validateUser = require('../utils/validators/user.validate'); 
+const isExistingUser = require('../utils/validators/existingUser.validate'); 
+const { PHONE_NUMBER_LIMIT } = require('../utils/constants'); 
 
 router.post('/user', (req, res, next) => { 
   console.log('CREATE A NEW USER'); 
+  const { organizationName } = req.body; 
   let account, password, user; 
 
-  validateUser(req, res)
+  isExistingUser(organizationName)
+    .then(() => { 
+      return  validateUser(req, res); 
+    })
     .then((validatedUser) => {
       user = validatedUser; 
       password = user.password; 
@@ -65,10 +71,10 @@ router.get('/phones', (req, res) => {
       voiceEnabled: 'true'
     })
     .then(availableNumbers => {
-      let limit = 5; 
+
       let phoneNumbers = []; 
-      for (let i = 0; i < limit; i++) { 
-        phoneNumbers.push(availableNumbers[i]); 
+      for (let i = 0; i < PHONE_NUMBER_LIMIT; i++) { 
+        phoneNumbers.push(availableNumbers[i].phoneNumber); 
       }
   
       res
