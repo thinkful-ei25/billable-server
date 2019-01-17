@@ -5,8 +5,11 @@ const { CLIENT } = require('../config');
 const User = require('../models/user'); 
 const Client = require('../models/client'); 
 
+
 router.post('/client', (req, res) => {
 
 
   
-})
+}); 
+
+module.exports = router; 
