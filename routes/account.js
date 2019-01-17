@@ -10,15 +10,15 @@ router.get('/user', (req, res) => {
 
   //TODO: ERROR CHECK
   CLIENT.api.accounts(sid)
-  .fetch()
-  .then(account => { 
-    console.log(account); 
-    res.json(account); 
-  })
-  .catch(err => { 
-    console.log('err', err); 
-  })
-  .done();
+    .fetch()
+    .then(account => { 
+      console.log(account); 
+      res.json(account); 
+    })
+    .catch(err => { 
+      console.log('err', err); 
+    })
+    .done();
 }); 
 
 //NOT MVP
@@ -49,7 +49,7 @@ const updateTwilioAccountPromise = (sid, status) =>  {
       // console.log('friendly name', account.friendlyName); 
     })
     .catch(err => { 
-      console.log('err', err)
+      console.log('err', err);
     })
     .done(); 
 }; 
