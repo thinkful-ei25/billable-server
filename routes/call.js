@@ -1,14 +1,14 @@
+'use strict';
 const express = require('express');
 const router = express.Router();
-const { CLIENT } = require('../config');
 const User = require('../models/user');
 const Client = require('../models/client');
 const VoiceResponse = require('twilio').twiml.VoiceResponse;
-const createClient = require('../utils/createClient'); 
+const createSubAccountClient = require('../utils/createSubAccountClient'); 
 
 router.get('/', (req, res) => {
   console.log('test');
- createClient(req.user.email)
+ createSubAccountClient(req.user.email)
   .then(client => { 
     console.log('client', client); 
     res.json(client); 
@@ -43,13 +43,13 @@ router.post('/inbound', (req, res, next) => {
       });
       allowedThrough = allowedCallers.includes(callInfo.callerId);
 
-      if (allowedThrough) {
+      if (!allowedThrough) {
         const dial = twiMl.dial({ callerId: callInfo.callerId });
         dial.number(callInfo.phoneNumber);
       }
       else {
         if(reject) {
-        twiMl.reject(); 
+          twiMl.reject(); 
         } else {
           twiMl.say('Sorry you are calling a restricted number. haha you sucker');
         }
@@ -69,7 +69,7 @@ router.post('/inbound', (req, res, next) => {
 
 router.post('/outbound', (req, res) => {
 
-  createClient(req.user.email)
+  createSubAccountClient(req.user.email)
     .then(client => { 
       return client.calls.create({
         url: 'http://demo.twilio.com/docs/voice.xml',

@@ -32,7 +32,6 @@ router.put('/user/:status', (req, res, next) => {
   const {twilio , email} = req.user; 
 
   //TODO ERROR CHECK
-
   Promise.all([updateTwilioAccountPromise(twilio.sid, status), updateDbAccountPromise(email, status)])
     .then((result) => { 
       res

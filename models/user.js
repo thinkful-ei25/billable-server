@@ -17,18 +17,18 @@ const UserSchema = mongoose.Schema({
   organizationPhoneNumber:String,
   globalHourlyRate:Number,
   password:{type:String, required: true}, 
-  // twilio: {
-  //   authToken:{type:String, required:true}, 
-  //   dateCreated:{type:Date},
-  //   dateUpdated:{type:Date}, 
-  //   accountFriendlyName:{type:String, required:true}, 
-  //   sid:{type:String},
-  //   status:{type:String, default: 'active'},
-  //   phones:[{
-  //     phoneFriendlyName:String,
-  //     number:String
-  //   }]
-  // }
+  twilio: {
+    authToken:{type:String, required:true}, 
+    dateCreated:{type:Date},
+    dateUpdated:{type:Date}, 
+    accountFriendlyName:{type:String, required:true}, 
+    sid:{type:String},
+    status:{type:String, default: 'active'},
+    phones:[{
+      phoneFriendlyName:String,
+      number:String
+    }]
+  }
 });
 
 UserSchema.set('toJSON', {
