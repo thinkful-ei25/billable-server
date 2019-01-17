@@ -12,6 +12,8 @@ const ClientSchema = mongoose.Schema({
     type:String, 
     required:true
   },
+  firstName:String,
+  lastName:String,
   hourlyRate:Number,
   phoneNumber:String,
   invoice:[
