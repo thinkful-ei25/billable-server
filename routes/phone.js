@@ -27,7 +27,7 @@ router.post('/', (req, res) => {
         phoneNumber: twilioPhoneNumber, 
         friendlyName: twilioPhoneNumberName, 
         voiceMethod: 'POST', 
-        voiceUrl: 'https://d28bf872.ngrok.io/api/call/inbound' 
+        voiceUrl: 'http://4fceaa26.ngrok.io/api/call/inbound' 
       }); 
     })
     .then(createdPhone => { 

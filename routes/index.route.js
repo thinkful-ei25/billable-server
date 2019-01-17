@@ -16,13 +16,11 @@ const jwtAuth = passport.authenticate('jwt', { session: false });
 
 router.use('/register', register); 
 router.use('/', auth); 
+router.use('/call', call); 
 router.use('/phone', jwtAuth, phone); 
-router.use('/call', jwtAuth, call); 
 router.use('/account', jwtAuth, account); 
 router.use('/client', jwtAuth, client); 
 
-
-  
 // Custom Error Handler
 router.use((err, req, res, next) => {
   if (err.status) {

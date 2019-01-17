@@ -1,7 +1,7 @@
 'use strict'; 
 const express = require('express'); 
 const router = express.Router(); 
-const { CLIENT } = require('../config'); 
+const { MASTER_CLIENT } = require('../config'); 
 const User = require('../models/user'); 
 
 router.get('/user', (req, res) => { 
@@ -9,7 +9,7 @@ router.get('/user', (req, res) => {
   const { sid } = req.user.twilio;
 
   //TODO: ERROR CHECK
-  CLIENT.api.accounts(sid)
+  MASTER_CLIENT.api.accounts(sid)
     .fetch()
     .then(account => { 
       console.log(account); 
@@ -23,7 +23,15 @@ router.get('/user', (req, res) => {
 
 //NOT MVP
 router.delete('/user', (req, res) => { 
-  //TODO
+  const { sid} = req.body; 
+
+  MASTER_CLIENT.api.accounts(sid).update({status: 'closed'})
+    .then(account => { 
+      console.log(account.friendlyName);
+      res
+        .end(); 
+    })
+    .done();
 }); 
 
 //NOTED: can update user status (active, suspended)
@@ -42,6 +50,7 @@ router.put('/user/:status', (req, res, next) => {
       console.log('err', err); 
     }); 
 }); 
+
 
 const updateTwilioAccountPromise = (sid, status) =>  { 
   return CLIENT.api.accounts(sid).update({status})
