@@ -38,10 +38,14 @@ const updateTwilioAccountPromise = (sid, status) =>  {
     .done(); 
 }; 
 
-const updateDbAccountPromise = (sid, status) => {  
-  return User.findOneAndUpdate({sid}, {status})
+const updateDbAccountPromise = (email, status) => {  
+
+  return User.findOne({email})
     .then((account) => { 
-      console.log(account); 
+      console.log(account.twilio.status, 'account'); 
+      account.twilio.status = status; 
+      account.save(); 
+      return account; 
     })
     .catch(err => { 
       console.log('err', err); 
@@ -50,11 +54,11 @@ const updateDbAccountPromise = (sid, status) => {
 
 router.put('/user/suspend', (req, res) => { 
   //TODO
-  const {sid} = req.user.twilio; 
+  const {twilio} = req.user; 
+  const { email } =  req.user; 
   
-  Promise.all([updateTwilioAccountPromise(sid, 'active'), updateDbAccountPromise(sid, 'suspended')])
+  Promise.all([updateTwilioAccountPromise(twilio.sid, 'suspended'), updateDbAccountPromise(email, 'suspended')])
     .then((result) => { 
-      console.log('hi'); 
       res
         .status(201)
         .json(result[1]); 
