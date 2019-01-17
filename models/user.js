@@ -2,6 +2,7 @@
 
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose'); 
+const twilio = require('twilio'); 
 
 mongoose.Promise = global.Promise; 
 
@@ -22,7 +23,7 @@ const UserSchema = mongoose.Schema({
     dateUpdated:{type:Date}, 
     accountFriendlyName:{type:String, required:true}, 
     sid:{type:String},
-    status:{type:String},
+    status:{type:String, default: 'active'},
     phones:[{
       phoneFriendlyName:String,
       number:String
@@ -40,6 +41,11 @@ UserSchema.set('toJSON', {
 
 UserSchema.methods.validatePassword = function(password) {
   return bcrypt.compare(password, this.password);
+};
+
+UserSchema.methods.createClient = function() { 
+  console.log('hi brady'); 
+  return twilio(this.twilio.sid, this.twilio.authToken); 
 }; 
 
 UserSchema.statics.hashPassword = function(password) {

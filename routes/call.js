@@ -5,10 +5,15 @@ const { CLIENT } = require('../config');
 const User = require('../models/user');
 const Client = require('../models/client');
 const VoiceResponse = require('twilio').twiml.VoiceResponse;
+const createClient = require('../utils/createClient'); 
 
 router.get('/', (req, res) => {
   console.log('test');
-  res.json('test worked');
+ createClient(req.user.email)
+  .then(client => { 
+    console.log('client', client); 
+    res.json(client); 
+  }); 
 });
 
 router.post('/inbound', (req, res, next) => {
@@ -47,7 +52,7 @@ router.post('/inbound', (req, res, next) => {
         if(reject) {
           twiMl.reject(); 
         } else {
-          twiMl.say('Sorry you are calling a restricted number');
+          twiMl.say('Sorry you are calling a restricted number. haha you sucker');
         }
       }
       return;
@@ -64,21 +69,25 @@ router.post('/inbound', (req, res, next) => {
 });
 
 router.post('/outbound', (req, res) => {
-  // console.log('Request Body', req.body);
-  // console.log('Request Params', req.params);
-  // console.log('Request Query', req.query);
-  CLIENT.calls
-    .create({
-      url: 'http://demo.twilio.com/docs/voice.xml',
-      to: '+13019803889',
-      from: '+18026488173'
+
+  createClient(req.user.email)
+    .then(client => { 
+      return client.calls.create({
+        url: 'http://demo.twilio.com/docs/voice.xml',
+        to: '+13019803889',
+        from: '+18026488173'
+      }); 
     })
     .then(call => {
       console.log('call', call.sid);
+      res
+        .json(call); 
     })
-    .done(() => {
-      res.end();
-    });
+    .catch(err => { 
+      console.log('err', err); 
+    })
+    .done(); 
+    
 });
 
 module.exports = router;
