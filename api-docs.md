@@ -3,7 +3,7 @@
 ### POST /api/register/users
 Purpose: Create a new user (register) 
 
-Example: POST https://example.com/api/user
+Example: POST https://example.com/api/register/user
 
 Place: Registration page
 
@@ -12,26 +12,28 @@ Request body:
 {
   "organizationName": "google", 
   "email": "joe@brosef.com",
-  "password": "correct-horse-battery-staple", 
-  "hourlyRate": "23"
+  "password": "correct-horse-battery-staple"
 }
 ```
 
 Response body: 
 ```
-{
-  "code": "201",
-  "message": "Registration Success",
-  "bearer-token": "afahsjdl239rufadsfjlq3r09uadiosf3817098"
-  "twilio": { 
-      "auth_token": "auth_token",
-      "date_created": "Thu, 30 Jul 2015 20:00:00 +0000",
-      "date_updated": "Thu, 30 Jul 2015 20:00:00 +0000",
-      "friendly_name": "Submarine+Billable",
-      "sid": "ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-      "status": "active"
-  }
+
+  {
+    "organizationName": "Elon Musk's Mighty Devils",
+    "password": "$2a$10$uN2lH0tpxKbsVVejH2Ft/enGw87FOjUc6bDzThQ56PV2Ln1TtjO1W",
+    "email": "muskyhusk@tesla.com",
+    "twilio": {
+        "sid": "AC301ed9287eaf02c492252079afb2e4dc",
+        "authToken": "936452ece6fca5bfeb20f24ce74a61f1",
+        "accountFriendlyName": "Elon Musk's Mighty Devils",
+        "dateCreated": "2019-01-17T17:04:15.000Z",
+        "dateUpdated": "2019-01-17T17:04:15.000Z",
+        "status": "active",
+        "phones": []
+    }
 }
+
 ```
 
 [Twilio Return User]:https://www.twilio.com/docs/iam/api/subaccounts?code-sample=code-return-a-subaccount-resource-by-its-account-sid&code-language=Node.js&code-sdk-version=3.x#authentication
@@ -96,7 +98,7 @@ Response body:
 
 ### DELETE /api/user
 
-### POST /api/auth/login 
+### POST /api/login 
 
 Request body: 
 ```
@@ -108,10 +110,9 @@ Request body:
 Response body:
 ```
 {
-  authToken:"supersecrettoken"
+  "authToken":"supersecrettoken"
 }
 ```
-
 
 ### GET /api/register/phones
 Purpose: Search for the available Twilio phone numbers
@@ -126,107 +127,32 @@ Request body:
 Response body: 
 ```
 {
-  "message": "Search for available Twilio phone numbers was successful",
-  "twilio": { 
-    "uri": "\/2010-04-01\/Accounts\/AC5ad320be60c4f745deea8e44f06b8906\/AvailablePhoneNumbers\/US\/Local.json?AreaCode=510",
-    "available_phone_numbers": [
-      {
-        "friendly_name": "(510) 564-7903",
-        "phone_number": "+15105647903",
-        "lata": "722",
-        "rate_center": "OKLD TRNID",
-        "latitude": "37.780000",
-        "longitude": "-122.380000",
-        "region": "CA",
-        "postal_code": "94703",
-        "iso_country": "US",
-        "capabilities":{
-          "voice": true,
-          "SMS": true,
-          "MMS": false
-        },
-        "beta": false
-      },
-      {
-        "friendly_name": "(510) 488-4379",
-        "phone_number": "+15104884379",
-        "lata": "722",
-        "rate_center": "OKLD FRTVL",
-        "latitude": "37.780000",
-        "longitude": "-122.380000",
-        "region": "CA",
-        "postal_code": "94602",
-        "iso_country": "US",
-        "capabilities":{
-          "voice": true,
-          "SMS": true,
-          "MMS": false
-        },
-        "beta": false
-      },
-      ...
-    ]
-  }
+  "+18024788199",
+  "+18024788194",
+  "+18024788195",
+  "+18024788196",
+  "+18024788197"
 }
 ```
 [Twilio Search For Phone Numbers]:https://www.twilio.com/docs/phone-numbers/api/available-phone-numbers
+
 ### POST /api/phone
 
-Purpose: Create a new Twilio phone number from the selected number and store their organization phone number
+Purpose: Purchase a Twilio phone number from the selected number and store their organization phone number
 
 Request body: 
 ```
 { 
-  "friendlyName": "Billable Line",
-  "organizationPhoneNumber": "(666)420-6969",
-  "phoneNumber": "+15105647903",
-  "voiceMethod": "GET",
-  "voiceUrl": "http://demo.twilio.com/docs/voice.xml"
+  "twilioPhoneNumber":"+1802397178",
+  "twilioPhoneNumberName":"Jim's phone", 
+  "organizationPhoneNumber":"+1802505533"
 }
 ```
 
 Response body: 
 ```
 {
-  "code": "201", 
-  "message": "Creating the Twilio phone number was successfull", 
-  "twilio": { 
-    "account_sid": "AC5ad320be60c4f745deea8e44f06b8906",
-    "address_requirements": "none",
-    "address_sid": "ADXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-    "api_version": "2010-04-01",
-    "beta": false,
-    "capabilities": {
-      "mms": true,
-      "sms": false,
-      "voice": true
-    },
-    "date_created": "Thu, 30 Jul 2015 23:19:04 +0000",
-    "date_updated": "Thu, 30 Jul 2015 23:19:04 +0000",
-    "emergency_status": "Active",
-    "emergency_address_sid": "ADXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-    "friendly_name": "My Company Line",
-    "identity_sid": "RIXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-    "origin": "origin",
-    "phone_number": "+15105647903",
-    "sid": "PNXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-    "sms_application_sid": null,
-    "sms_fallback_method": "POST",
-    "sms_fallback_url": "",
-    "sms_method": "POST",
-    "sms_url": "",
-    "status_callback": "",
-    "status_callback_method": "POST",
-    "trunk_sid": null,
-    "uri": "/2010-04-       01/Accounts/AC5ad320be60c4f745deea8e44f06b8906/IncomingPhoneNumbers/PNXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.json",
-    "voice_application_sid": null,
-    "voice_caller_id_lookup": false,
-    "voice_fallback_method": "POST",
-    "voice_fallback_url": null,
-    "voice_method": "GET",
-    "voice_url": "http://demo.twilio.com/docs/voice.xml"
-    }
-  }
+  "message": "A phone was created" 
 }
 ```
 NOTE: Then we will do a promise to set the orginationPhoneNumber and the twilio number to the db
