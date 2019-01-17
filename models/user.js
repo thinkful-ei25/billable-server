@@ -27,7 +27,7 @@ const UserSchema = mongoose.Schema({
     dateUpdated:{type:Date}, 
     accountFriendlyName:{type:String, required:true}, 
     sid:{type:String},
-    status:{type:String, default: 'active'},
+    status:{type:String},
     phones:[{
       phoneFriendlyName:String,
       number:String

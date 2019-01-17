@@ -23,7 +23,7 @@ router.post('/', (req, res) => {
       //FOR DEV
       // return client.incomingPhoneNumbers.create({ 
       //FOR TESTING (make sure client config is set to testing)
-      return MASTER_CLIENT.incomingPhoneNumbers.create({ 
+      return client.incomingPhoneNumbers.create({ 
         phoneNumber: twilioPhoneNumber, 
         friendlyName: twilioPhoneNumberName, 
         voiceMethod: 'POST', 
@@ -36,10 +36,8 @@ router.post('/', (req, res) => {
     })
     .then(user => { 
       user.organizationPhoneNumber = organizationPhoneNumber; 
-      // console.log('name', organizationName, 'phone', twilioPhone); 
-      console.log('twilioPhone', twilioPhone.phoneNumber, 'twilioFriendlyName', twilioPhone.friendlyName); 
       const phone = {phoneFriendlyName: twilioPhone.friendlyName, number: twilioPhone.phoneNumber }; 
-      console.log('phone', phone); 
+
       user.twilio.phones.push(phone); 
       user.save(); 
       
