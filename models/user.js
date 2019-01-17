@@ -48,7 +48,6 @@ UserSchema.methods.validatePassword = function(password) {
 };
 
 UserSchema.methods.createClient = function() { 
-  console.log('hi brady'); 
   return twilio(this.twilio.sid, this.twilio.authToken); 
 }; 
 
