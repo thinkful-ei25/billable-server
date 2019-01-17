@@ -1,8 +1,8 @@
 'use strict'; 
 
-function validateUser(req, res, next){ 
+function validateUser(req){ 
   return new Promise(function(resolve, reject) { 
-    const requiredFields = ['organizationName', 'email', 'hourlyRate', 'password']; 
+    const requiredFields = ['organizationName', 'email', 'password']; 
     const missingField = requiredFields.find(field => !(field in req.body)); 
   
     if (missingField ) { 

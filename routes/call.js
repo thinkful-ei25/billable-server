@@ -43,7 +43,7 @@ router.post('/inbound', (req, res, next) => {
       });
       allowedThrough = allowedCallers.includes(callInfo.callerId);
 
-      if (allowedThrough) {
+      if (!allowedThrough) {
         const dial = twiMl.dial({ callerId: callInfo.callerId });
         dial.number(callInfo.phoneNumber);
       }

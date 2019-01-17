@@ -5,12 +5,18 @@ const router = express.Router();
 const { MASTER_CLIENT } = require('../config'); 
 const User = require('../models/user'); 
 const validateUser = require('../utils/validators/user.validate'); 
+const isExistingUser = require('../utils/validators/existingUser.validate'); 
+const { PHONE_NUMBER_LIMIT } = require('../utils/constants'); 
 
 router.post('/user', (req, res, next) => { 
   console.log('CREATE A NEW USER'); 
+  const { organizationName } = req.body; 
   let account, password, user; 
 
-  validateUser(req, res)
+  isExistingUser(organizationName)
+    .then(() => { 
+      return  validateUser(req, res); 
+    })
     .then((validatedUser) => {
       user = validatedUser; 
       password = user.password; 
@@ -25,12 +31,14 @@ router.post('/user', (req, res, next) => {
       const newUser = { 
         organizationName : user.organizationName, 
         password: digest, 
-        globalHourlyRate: user.hourlyRate, 
         email : user.email, 
         twilio: { 
           sid: account.sid, 
           authToken : account.authToken, 
-          accountFriendlyName : account.friendlyName
+          accountFriendlyName : account.friendlyName, 
+          dateCreated: account.dateCreated, 
+          dateUpdated: account.dateUpdated, 
+          status: account.status
         }
       }; 
       return User.create(newUser); 
@@ -52,21 +60,23 @@ router.post('/user', (req, res, next) => {
 }); 
 
 router.get('/phones', (req, res) => { 
-  console.log('FIND AVAILABLE LOCAL PHONE NUMBERS'); 
+  console.log('FIND AVAILABLE PHONE NUMBERS'); 
   const { areaCode } = req.body; 
 
   MASTER_CLIENT
     .availablePhoneNumbers('US')
     .local.list({
-      areaCode 
+      areaCode, 
+      excludeAllAddressRequired: 'true',
+      voiceEnabled: 'true'
     })
     .then(availableNumbers => {
-      const subsetAvailableNumbers = availableNumbers.slice(0, 5); 
-      let phoneNumbers = []; 
-      subsetAvailableNumbers.forEach((number) => { 
-        phoneNumbers.push(number.phoneNumber); 
-      });
 
+      let phoneNumbers = []; 
+      for (let i = 0; i < PHONE_NUMBER_LIMIT; i++) { 
+        phoneNumbers.push(availableNumbers[i].phoneNumber); 
+      }
+  
       res
         .json(phoneNumbers)
         .done(); 
