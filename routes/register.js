@@ -51,8 +51,8 @@ router.post('/user', (req, res, next) => {
 }); 
 
 router.get('/phones', (req, res) => { 
-  console.log('FIND AVAILABLE LOCAL PHONE NUMBERS'); 
 
+  console.log('FIND AVAILABLE LOCAL PHONE NUMBERS'); 
   const { areaCode } = req.body; 
   CLIENT
     .availablePhoneNumbers('US')

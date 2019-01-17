@@ -4,10 +4,15 @@ const { CLIENT } = require('../config');
 const User = require('../models/user');
 const Client = require('../models/client');
 const VoiceResponse = require('twilio').twiml.VoiceResponse;
+const createClient = require('../utils/createClient'); 
 
 router.get('/', (req, res) => {
   console.log('test');
-  res.json('test worked');
+ createClient(req.user.email)
+  .then(client => { 
+    console.log('client', client); 
+    res.json(client); 
+  }); 
 });
 
 router.post('/inbound', (req, res, next) => {
@@ -46,7 +51,7 @@ router.post('/inbound', (req, res, next) => {
         if(reject) {
         twiMl.reject(); 
         } else {
-          twiMl.say('Sorry you are calling a restricted number');
+          twiMl.say('Sorry you are calling a restricted number. haha you sucker');
         }
       }
       return;

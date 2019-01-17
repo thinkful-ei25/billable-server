@@ -4,9 +4,11 @@ const express = require('express');
 const router = express.Router(); 
 const { CLIENT } = require('../config'); 
 const User = require('../models/user'); 
-const validateUser = require('../utils/validateUser'); 
+// const validateUser = require('../utils/validateUser'); 
+const createClient = require('../utils/createClient'); 
 
 router.post('/', (req, res) => { 
+  const subAccount = createClient(req.user.email); 
   console.log('CREATE A NEW PHONE NUMBER'); 
   console.log('number', number); 
   CLIENT.incomingPhoneNumbers.create({
