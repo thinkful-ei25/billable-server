@@ -5,17 +5,26 @@ const mongoose = require('mongoose');
 const ClientSchema = mongoose.Schema({
   userId: {
     type:mongoose.Schema.Types.ObjectId,
-    ref:'User'
+    ref:'User',
+    required:true
   },
-  clientId:mongoose.Schema.Types.ObjectId,
   company: {
     type:String, 
     required:true
   },
-  firstName:String,
-  lastName:String,
+  firstName:{
+    type:String,
+    required:true
+  },
+  lastName:{
+    type:String,
+    required:true
+  },
   hourlyRate:Number,
-  phoneNumber:String,
+  phoneNumber:{
+    type:String,
+    required:true
+  },
   invoice:[
     {
       month:Number, 
