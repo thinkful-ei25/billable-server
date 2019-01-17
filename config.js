@@ -15,8 +15,8 @@ module.exports = {
   TEST_TWILIO_AUTH_TOKEN: process.env.TEST_TWILIO_AUTH_TOKEN, 
   TWILIO_ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID, 
   TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN,
-  CLIENT: twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN), 
-      TEST_CLIENT: twilio(process.env.TEST_TWILIO_ACCOUNT_SID, process.env.TEST_TWILIO_AUTH_TOKEN), 
-  JWT_SECRET: process.env.JWT_SECRET,
+//   CLIENT: twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN), 
+//       TEST_CLIENT: twilio(process.env.TEST_TWILIO_ACCOUNT_SID, process.env.TEST_TWILIO_AUTH_TOKEN), 
+  JWT_SECRET: process.env.JWT_SECRET || 'correct-horse-staple-battery',
   JWT_EXPIRY: process.env.JWT_EXPIRY || '7d'
 };
