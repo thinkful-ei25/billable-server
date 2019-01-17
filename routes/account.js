@@ -10,7 +10,6 @@ router.get('/user', (req, res) => {
   const { sid } = req.user.twilio;
 
   //TODO: ERROR CHECK
-
   CLIENT.api.accounts(sid)
   .fetch()
   .then(account => { 
