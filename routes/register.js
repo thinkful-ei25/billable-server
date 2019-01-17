@@ -2,9 +2,9 @@
 
 const express = require('express'); 
 const router = express.Router(); 
-const { CLIENT } = require('../config'); 
+const { MASTER_CLIENT } = require('../config'); 
 const User = require('../models/user'); 
-const validateUser = require('../utils/validateUser'); 
+const validateUser = require('../utils/validators/user.validate'); 
 
 router.post('/user', (req, res, next) => { 
   console.log('CREATE A NEW USER'); 
@@ -14,7 +14,8 @@ router.post('/user', (req, res, next) => {
     .then((validatedUser) => {
       user = validatedUser; 
       password = user.password; 
-      return CLIENT.api.accounts.create({friendlyName: user.organizationName}); 
+      return MASTER_CLIENT.api.accounts
+        .create({friendlyName: user.organizationName}); 
     })
     .then(createdAccount => { 
       account = createdAccount;   
@@ -51,10 +52,10 @@ router.post('/user', (req, res, next) => {
 }); 
 
 router.get('/phones', (req, res) => { 
-
   console.log('FIND AVAILABLE LOCAL PHONE NUMBERS'); 
   const { areaCode } = req.body; 
-  CLIENT
+
+  MASTER_CLIENT
     .availablePhoneNumbers('US')
     .local.list({
       areaCode 
@@ -64,7 +65,8 @@ router.get('/phones', (req, res) => {
       let phoneNumbers = []; 
       subsetAvailableNumbers.forEach((number) => { 
         phoneNumbers.push(number.phoneNumber); 
-      }); 
+      });
+
       res
         .json(phoneNumbers)
         .done(); 
