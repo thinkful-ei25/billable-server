@@ -68,21 +68,25 @@ router.post('/inbound', (req, res, next) => {
 });
 
 router.post('/outbound', (req, res) => {
-  // console.log('Request Body', req.body);
-  // console.log('Request Params', req.params);
-  // console.log('Request Query', req.query);
-  CLIENT.calls
-    .create({
-      url: 'http://demo.twilio.com/docs/voice.xml',
-      to: '+13019803889',
-      from: '+18026488173'
+
+  createClient(req.user.email)
+    .then(client => { 
+      return client.calls.create({
+        url: 'http://demo.twilio.com/docs/voice.xml',
+        to: '+13019803889',
+        from: '+18026488173'
+      }); 
     })
     .then(call => {
       console.log('call', call.sid);
+      res
+        .json(call); 
     })
-    .done(() => {
-      res.end();
-    });
+    .catch(err => { 
+      console.log('err', err); 
+    })
+    .done(); 
+    
 });
 
 module.exports = router;
