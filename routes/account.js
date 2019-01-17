@@ -3,7 +3,6 @@ const express = require('express');
 const router = express.Router(); 
 const { CLIENT } = require('../config'); 
 const User = require('../models/user'); 
-const validateUser = require('../utils/validateUser'); 
 
 router.get('/user', (req, res) => { 
   console.log('GET A PRE-EXISTING SUBACCOUNT / USER'); 
