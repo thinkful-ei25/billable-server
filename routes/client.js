@@ -2,13 +2,13 @@
 const express = require('express'); 
 const router = express.Router(); 
 const Client = require('../models/client'); 
-const passport = require('passport')
-const jwtAuth = passport.authenticate('jwt', { session: false });
+
+
 
 
 
 //CREATE NEW CLIENT
-router.post('/', jwtAuth, (req, res) => {
+router.post('/', (req, res) => {
   console.log('req.body', req.body)
   const userId = req.user.id; 
   const {firstName,company, lastName, hourlyRate, phoneNumber} = req.body;
@@ -19,7 +19,6 @@ router.post('/', jwtAuth, (req, res) => {
       res 
         .location(`${req.originalUrl}/${result.id}`)
         .status(201)
-        .statusMessage('client created')
         .json(result);
     })
     .catch(err => {
@@ -27,7 +26,7 @@ router.post('/', jwtAuth, (req, res) => {
     });
 });
 
-router.get('/', jwtAuth, (req, res) => {
+router.get('/', (req, res) => {
   const userId = req.user.id;
   let filter = {};  
   
@@ -38,7 +37,6 @@ router.get('/', jwtAuth, (req, res) => {
     .then(results => {
       res
         .status(200)
-        .statusMessage('clients found')
         .json(results);
     })
     .catch(err => {
@@ -54,7 +52,6 @@ router.get('/:id', (req, res, next) => {
     .then(result => {
       res
         .status(200)
-        .statusMessage('client found')
         .json(result);
 
     })
@@ -100,11 +97,10 @@ router.delete('/:id', (req, res, next) => {
   Client.findOneAndRemove({_id:id, userId})
     .then(() => {
       res
-        .sendStatus(204)
-        .statusMessage('client successfully deleted');
+      .sendStatus(204) 
     })
     .catch(err => {
-      console.log('delete by id for client didn\'t work');
+      console.log('delete by id for client didn\'t work', err);
       next(err);
     });
 });
