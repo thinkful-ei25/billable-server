@@ -53,7 +53,7 @@ router.put('/user/:status', (req, res, next) => {
 
 
 const updateTwilioAccountPromise = (sid, status) =>  { 
-  return CLIENT.api.accounts(sid).update({status})
+  return MASTER_CLIENT.api.accounts(sid).update({status})
     .then(account => { 
       // console.log('friendly name', account.friendlyName); 
     })
