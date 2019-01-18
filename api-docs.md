@@ -117,11 +117,9 @@ Response body:
 ### GET /api/register/phones
 Purpose: Search for the available Twilio phone numbers
 
-Request body: 
-```
-{ 
+Request Params: 
+``` 
   "areaCode": "978"
-}
 ```
 
 Response body: 

@@ -5,6 +5,8 @@ const User = require('../models/user');
 const Client = require('../models/client');
 const VoiceResponse = require('twilio').twiml.VoiceResponse;
 const createSubAccountClient = require('../utils/createSubAccountClient');
+const ClientCapability = require('twilio').jwt.ClientCapability;
+const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_APP_SID } = require('../config');
 
 //TODO: Remove Get Route
 //TODO: Update Errors where possible
@@ -105,5 +107,47 @@ router.post('/outbound', (req, res) => {
     })
     .done();
 });
+
+router.post('/browser', (req, res) => {
+
+
+  capability.addScope(
+    new ClientCapability.IncomingClientScope("user")
+  );
+});
+
+router.get('/token', (req, res) => {
+  const capability = new ClientCapability({
+    accountSid: TWILIO_ACCOUNT_SID,
+    authToken: TWILIO_AUTH_TOKEN
+  });
+
+  capability.addScope(
+    new ClientCapability.OutgoingClientScope({
+      applicationSid: TWILIO_APP_SID
+    }));
+
+  const token = capability.toJwt();
+
+  res.send({
+    token: token,
+  });
+})
+
+router.post('/browser', (req, res) => {
+  let twiMl = new VoiceResponse();
+  twiMl.dial({
+    callerId: '+13017741485',
+  }, req.body.number);
+  res.type('txt/xml');
+  res.send(twiMl.toString());
+  }); 
+
+
+
+
+
+
+
 
 module.exports = router;

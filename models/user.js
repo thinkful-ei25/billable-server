@@ -7,7 +7,6 @@ const twilio = require('twilio');
 mongoose.Promise = global.Promise; 
 
 const UserSchema = mongoose.Schema({
-  // id:{type:mongoose.Schema.Types.ObjectId},
   email:{
     type:String,
     required:true,
@@ -35,8 +34,8 @@ UserSchema.set('toJSON', {
   virtuals: true, 
   transform: (doc, result) => {
     delete result._id; 
-    delete result.__v;
-    delete result.password
+    delete result.__v; 
+    delete result.password;
   }
 }); 
 
@@ -44,8 +43,7 @@ UserSchema.methods.validatePassword = function(password) {
   return bcrypt.compare(password, this.password);
 };
 
-UserSchema.methods.createClient = function() { 
-  console.log('hi brady'); 
+UserSchema.methods.createClient = function() {  
   return twilio(this.twilio.sid, this.twilio.authToken); 
 }; 
 

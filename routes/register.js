@@ -6,7 +6,7 @@ const { MASTER_CLIENT } = require('../config');
 const User = require('../models/user'); 
 const validateUser = require('../utils/validators/user.validate'); 
 const isExistingUser = require('../utils/validators/existingUser.validate'); 
-const { PHONE_NUMBER_LIMIT } = require('../utils/constants'); 
+
 
 router.post('/user', (req, res, next) => { 
   console.log('CREATE A NEW USER'); 
@@ -63,8 +63,8 @@ router.post('/user', (req, res, next) => {
 
 router.get('/phones', (req, res) => { 
   console.log('FIND AVAILABLE PHONE NUMBERS'); 
-  const { areaCode } = req.body; 
-
+  const { areaCode } = req.query; 
+console.log(areaCode);
   MASTER_CLIENT
     .availablePhoneNumbers('US')
     .local.list({
@@ -73,11 +73,16 @@ router.get('/phones', (req, res) => {
       voiceEnabled: 'true'
     })
     .then(availableNumbers => {
-
+      console.log(availableNumbers[0]);
       let phoneNumbers = []; 
-      for (let i = 0; i < PHONE_NUMBER_LIMIT; i++) { 
-        phoneNumbers.push(availableNumbers[i].phoneNumber); 
+      for (let i = 0; i < availableNumbers.length; i++) { 
+        let phoneNumber = {
+          response: availableNumbers[i].phoneNumber,
+          display: availableNumbers[0].friendlyName
+        }
+        phoneNumbers.push(phoneNumber); 
       }
+      console.log(phoneNumbers);
   
       res
         .json(phoneNumbers)
