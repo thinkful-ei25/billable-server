@@ -17,6 +17,7 @@ router.post('/', (req, res) => {
       res 
         .location(`${req.originalUrl}/${result.id}`)
         .status(201)
+        .statusMessage('client created')
         .json(result);
     })
     .catch(err => {
@@ -35,6 +36,7 @@ router.get('/', (req, res) => {
     .then(results => {
       res
         .status(200)
+        .statusMessage('clients found')
         .json(results);
     })
     .catch(err => {
@@ -48,7 +50,11 @@ router.get('/:id', (req, res, next) => {
 
   Client.findById({_id:id, userId})
     .then(result => {
-      res.json(result); 
+      res
+        .status(200)
+        .statusMessage('client found')
+        .json(result);
+
     })
     .catch(err => {
       console.log('ono, findbyId for client didn\'t work');
@@ -56,19 +62,52 @@ router.get('/:id', (req, res, next) => {
     });
 });
 
+router.put('/:id', (req, res, next) => {
+  const { id } = req.params;
+  const userId = req.user.id; 
+
+  const toUpdate = {};
+  const updateableFields = ['company', 'firstName', 'lastName', 'hourlyRate', 'phoneNumber' ];
+
+  updateableFields.forEach(field => {
+    if (field in req.body) {
+      toUpdate[field] = req.body[field];
+    }
+  });
+
+  Client.findOneAndUpdate({_id: id, userId}, toUpdate, { new: true })
+    .then(result => {
+      if (result) {
+        res
+          .json(result);
+      } else {
+        next();
+      }
+    })
+    .catch(err => {
+      next(err);
+    });
+});
+
+
+
 router.delete('/:id', (req, res, next) => {
   const {id} = req.params; 
   const userId = req.user.id; 
 
-  Client.deleteOne({_id:id, userId})
-    .then(result => {
-      res.json();
+  Client.findOneAndRemove({_id:id, userId})
+    .then(() => {
+      res
+        .sendStatus(204)
+        .statusMessage('client successfully deleted');
     })
     .catch(err => {
-      console.log('ono, delete by id for client didn\'t work');
+      console.log('delete by id for client didn\'t work');
       next(err);
     });
 });
+
+
 
 
 

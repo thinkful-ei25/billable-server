@@ -164,11 +164,11 @@ Purpose: Create a new client
 Request body:
 ```
 { 
-  "name":"Evil Corp", 
-  "phone-number": "(666)666-6666", 
-  //optional
-  "hourly-rate": "20"
-  //FEATURE TO ADD EMPLOYEES TO COME!
+  "company":"Evil Corp", 
+  "phoneNumber": "+16666666666", 
+  "firstName":"Doctor",
+  "lastName":"Evil",
+  "hourlyRate":"66.60"
 }
 ```
 
@@ -176,45 +176,148 @@ Response body:
 ```
 { 
   "code": "201",
-  "message": "User created successfully"
+  "statusMessage":"client created",
+  "company": "Evil Corp",
+  "userId": "000000000000000000000000",
+    "firstName": "Doctor",
+    "lastName": "Evil",
+    "hourlyRate": 66.6,
+    "phoneNumber": "+16666666666",
+    "invoice": [],
+    "id": "5c41ed3cf06a373988d2fbb1"
 }
 ```
 
 ### GET /api/client
-Purpose: Get a pre-existing client
+Purpose: Get all clients attached to a user
 Request body:
 ```
+nothing in req.body, the clients are filtered by the logged in user's id. 
 { 
-  "client-id": "20145d3"
 }
 ```
 
 Response body:
 ```
-{ 
-  "name":"Evil Corp", 
-  "number":"(666)666-6666,
-  "calls": []
+200 status code + message of "clients found"
+[
+    {
+        "company": "Evil Corp",
+        "userId": "000000000000000000000000",
+        "firstName": "Doctor",
+        "lastName": "Evil",
+        "hourlyRate": 66.6,
+        "phoneNumber": "+16666666666",
+        "invoice": [],
+        "id": "5c41ed3cf06a373988d2fbb1"
+    },
+    {
+        "company": "pika bois r us",
+        "userId": "000000000000000000000000",
+        "firstName": "grim",
+        "lastName": "reaper",
+        "hourlyRate": 666,
+        "phoneNumber": "+12246569676",
+        "invoice": [],
+        "id": "5c40fbbc8d1f76095cbde157"
+    },
+    {
+        "userId": "000000000000000000000000",
+        "clientId": "200000000000000000000000",
+        "firstName": "joe",
+        "lastName": "schmoe",
+        "company": "nodeitall R us",
+        "hourlyRate": 22,
+        "phoneNumber": "+141586753099",
+        "invoice": [
+            {
+                "_id": "5c40e0bd536b3a2c40aabb27",
+                "month": 2,
+                "year": 2017,
+                "paid": false
+            }
+        ],
+        "id": "5c40e0bd536b3a2c40aabb26"
+    },
+    {
+        "userId": "000000000000000000000000",
+        "clientId": "200000000000000000000001",
+        "firstName": "jonn",
+        "lastName": "snow",
+        "company": "nodeitStill R us",
+        "hourlyRate": 22,
+        "phoneNumber": "+13019803889",
+        "invoice": [
+            {
+                "_id": "5c40e0bd536b3a2c40aabb29",
+                "month": 3,
+                "year": 2018,
+                "paid": true
+            }
+        ],
+        "id": "5c40e0bd536b3a2c40aabb28"
+    }
+]
+
+```
+### GET /api/client/:id
+Purpose:Get a single client attached to a user
+
+Request body:
+```
+just params, in this case, the specific client id.
+{
 }
 ```
 
-### PUT /api/client
+Response body: 
+```
+statusCode:200 and statusMessage:"client found"
+{
+    "company": "pika bois r us",
+    "userId": "000000000000000000000000",
+    "firstName": "grim",
+    "lastName": "reaper",
+    "hourlyRate": 666,
+    "phoneNumber": "+12246569676",
+    "invoice": [],
+    "id": "5c40fbbc8d1f76095cbde157"
+}
+```
+### PUT /api/client/:id
 Purpose: Update a pre-existing client
 Request body:
 ```
+just params, in this case, the specific client id. 
 { 
-  //FIELDS THAT NEED TO BE EDITED
-  "name":"Bob"
-  "number":"(404)-123-4567", 
-  "hourly-rate":"11"
+  //any of these keys are valid
+  "company",
+  "firstName",
+  "lastName",
+  "hourlyRate",
+  "phoneNumber"
 }
 ```
 
 Response body:
 ```
-{ 
-  "code": "201",
-  "message": "User updated successfully"
+{
+    "userId": "000000000000000000000000",
+    "clientId": "200000000000000000000000",
+    "firstName": "joe",
+    "lastName": "schmoe",
+    "company": "nodeitall R us",
+    "hourlyRate": 22,
+    "phoneNumber": "+12245697878",
+    "invoice": [
+        {
+            "_id": "5c40e0bd536b3a2c40aabb27",
+            "month": 2,
+            "year": 2017,
+            "paid": false
+        }
+    ],
+    "id": "5c40e0bd536b3a2c40aabb26"
 }
 ```
 
@@ -222,8 +325,8 @@ Response body:
 Purpose: Delete a pre-existing client
 Request body:
 ```
+just params --> client id
 { 
-  "client-id": "20145d3"
 }
 ```
 
@@ -231,7 +334,6 @@ Response body:
 ```
 { 
   "code": "204",
-  "message": "User successfully deleted"
 }
 ```
 
