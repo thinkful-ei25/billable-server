@@ -6,66 +6,11 @@ const Client = require('../models/client');
 const VoiceResponse = require('twilio').twiml.VoiceResponse;
 const createSubAccountClient = require('../utils/createSubAccountClient');
 
-router.get('/', (req, res) => {
-  console.log('test');
-  createSubAccountClient(req.user.email)
-    .then(client => { 
-      console.log('client', client); 
-      res.json(client); 
-    }); 
-});
-
-/*
-
-Twilio#: +18026130389
-Organization#: 3019803889
-
-  Call Comes in to Twilio #
-  Check if the req.body.From = organizationPhoneNumber
-  If No - continue with normal process
-
-  If Yes  -
-    - Say - Who are you looking to call?
-    - Record Key Pad
-    - Repeat Numebrs and Confirm
-    - Say Sweet - calling now
-    -Dial Numbers entered from keypad
-    -Call ID = Organization Number
-*/
-
-
-// router.post('/inbound', (req, res, next) => {
-//   let twiMl = new VoiceResponse();
-//   let callInfo = {
-//     callerId: req.body.From
-//   };
-//   let allowedThrough;
-//   let allowedCallers = [];
-//   let reject = true;
-
-//   User.find({'twilio.phones.number': req.body.Called})
-//     .then(([user]) => {
-//       callInfo.phoneNumber = user.organizationPhoneNumber;
-//       callInfo.userId = user.id;
-      
-//       if (callInfo.callerId === callInfo.phoneNumber) {
-//         //Gather then dial
-//       } else {
-//         //look for client and 
-//       }
-
-
-//       return Client.find({userId: callInfo.userId},
-//         {_id: 0, phoneNumber: 1})
-//     })
-//     .then(clients => {
-
-
-//     })
-// });
+//TODO: Remove Get Route
+//TODO: Update Errors where possible
 
 router.post('/inbound', (req, res, next) => {
-  // Use the Twilio Node.js SDK to build an XML response
+
   let twiMl = new VoiceResponse();
   let callInfo = {
     callerId: req.body.From
@@ -73,7 +18,7 @@ router.post('/inbound', (req, res, next) => {
   let allowedThrough;
   let allowedCallers = [];
   let reject = true;
-  // Lookup the user with the Twilio Number that was Called
+
   User.find({ 'twilio.phones.number': req.body.Called })
     .then(([user]) => {
       callInfo.phoneNumber = user.organizationPhoneNumber;
@@ -130,17 +75,15 @@ router.post('/inbound', (req, res, next) => {
 router.post('/inbound/gather', (req, res) => {
   const twiMl = new VoiceResponse();
   let numberToCall = `+1${req.body.Digits}`;
-  console.log(typeof numberToCall);
-  console.log('Digits => ', req.body.Digits);
-  console.log('req.body.Caller => ', req.body.Caller);
   twiMl.dial(numberToCall);
 
   if (req.body.Digits) {
     const dial = twiMl.dial({ callerId: req.body.Caller });
     dial.number(numberToCall);
   }
-res.type('text/xml');
-res.send(twiMl.toString());
+
+  res.type('text/xml');
+  res.send(twiMl.toString());
 
 });
 
