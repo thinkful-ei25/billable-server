@@ -33,25 +33,36 @@ Organization#: 3019803889
     -Call ID = Organization Number
 */
 
-router.post('/inbound', (req, res, next) => {
-  let twiMl = new VoiceResponse();
-  let callInfo = {
-    callerId: req.body.From
-  };
-  let allowedThrough;
-  let allowedCallers = [];
-  let reject = true;
 
-  User.find({'twilio.phones.number': req.body.Called})
-    .then(([user]) => {
-      callInfo.phoneNumber = user.organizationPhoneNumber;
-      callInfo.userId = user.id;
-      return callInfo;
-    })
-    .then(callInfo => {
+// router.post('/inbound', (req, res, next) => {
+//   let twiMl = new VoiceResponse();
+//   let callInfo = {
+//     callerId: req.body.From
+//   };
+//   let allowedThrough;
+//   let allowedCallers = [];
+//   let reject = true;
 
-    })
-});
+//   User.find({'twilio.phones.number': req.body.Called})
+//     .then(([user]) => {
+//       callInfo.phoneNumber = user.organizationPhoneNumber;
+//       callInfo.userId = user.id;
+      
+//       if (callInfo.callerId === callInfo.phoneNumber) {
+//         //Gather then dial
+//       } else {
+//         //look for client and 
+//       }
+
+
+//       return Client.find({userId: callInfo.userId},
+//         {_id: 0, phoneNumber: 1})
+//     })
+//     .then(clients => {
+
+
+//     })
+// });
 
 router.post('/inbound', (req, res, next) => {
   // Use the Twilio Node.js SDK to build an XML response
@@ -79,7 +90,8 @@ router.post('/inbound', (req, res, next) => {
       if (callInfo.callerId === callInfo.phoneNumber) {
         const gather = twiMl.gather({
           numDigits: 10,
-          action: '/api/call/gather',
+          action: '/api/call/inbound/gather',
+          method: 'POST',
           finishOnKey: '#'
         });
         gather.say(
@@ -115,7 +127,7 @@ router.post('/inbound', (req, res, next) => {
     });
 });
 
-router.post('/gather', (req, res) => {
+router.post('/inbound/gather', (req, res) => {
   const twiMl = new VoiceResponse();
   let numberToCall = `+1${req.body.Digits}`;
   console.log(typeof numberToCall);
@@ -123,12 +135,13 @@ router.post('/gather', (req, res) => {
   console.log('req.body.Caller => ', req.body.Caller);
   twiMl.dial(numberToCall);
 
-  // if (req.body.Digits) {
-  //   const dial = twiMl.dial({ callerId: req.body.Caller });
-  //   dial.number(numberToCall);
-  // }
+  if (req.body.Digits) {
+    const dial = twiMl.dial({ callerId: req.body.Caller });
+    dial.number(numberToCall);
+  }
+res.type('text/xml');
+res.send(twiMl.toString());
 
-  return twiMl.toString();
 });
 
 router.post('/outbound', (req, res) => {
