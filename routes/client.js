@@ -2,12 +2,14 @@
 const express = require('express'); 
 const router = express.Router(); 
 const Client = require('../models/client'); 
-// const jwtAuth = passport.authenticate('jwt', { session: false });
+const passport = require('passport')
+const jwtAuth = passport.authenticate('jwt', { session: false });
 
 
 
 //CREATE NEW CLIENT
-router.post('/', (req, res) => {
+router.post('/', jwtAuth, (req, res) => {
+  console.log('req.body', req.body)
   const userId = req.user.id; 
   const {firstName,company, lastName, hourlyRate, phoneNumber} = req.body;
   const newClient = {company,userId, firstName, lastName, hourlyRate, phoneNumber}; 
@@ -24,7 +26,7 @@ router.post('/', (req, res) => {
     });
 });
 
-router.get('/', (req, res) => {
+router.get('/', jwtAuth, (req, res) => {
   const userId = req.user.id;
   let filter = {};  
   

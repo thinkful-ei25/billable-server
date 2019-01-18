@@ -7,7 +7,7 @@ const twilio = require('twilio');
 mongoose.Promise = global.Promise; 
 
 const UserSchema = mongoose.Schema({
-  id:{type:mongoose.Schema.Types.ObjectId},
+  // id:{type:mongoose.Schema.Types.ObjectId},
   email:{
     type:String,
     required:true,
@@ -35,7 +35,8 @@ UserSchema.set('toJSON', {
   virtuals: true, 
   transform: (doc, result) => {
     delete result._id; 
-    delete result.__v; 
+    delete result.__v;
+    delete result.password
   }
 }); 
 
