@@ -53,8 +53,8 @@ router.post('/user', (req, res, next) => {
       if (err.code === 11000) {
         err = new Error('The organization name already exists');
         err.status = 400;
-        err.reason = 'ValidationError'
-        next(err)
+        err.reason = 'ValidationError';
+        next(err);
       }
       else (err.status = 404);
       next(err);

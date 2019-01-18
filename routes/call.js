@@ -8,10 +8,11 @@ const createSubAccountClient = require('../utils/createSubAccountClient');
 
 router.get('/', (req, res) => {
   console.log('test');
-  createSubAccountClient(req.user.email).then(client => {
-    console.log('client', client);
-    res.json(client);
-  });
+  createSubAccountClient(req.user.email)
+    .then(client => { 
+      console.log('client', client); 
+      res.json(client); 
+    }); 
 });
 
 /*
