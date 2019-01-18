@@ -51,7 +51,7 @@ router.post('/user', (req, res, next) => {
     })
     .catch((err) => {
       if (err.code === 11000) {
-        err = new Error('The organization name already exists');
+        err = new Error('User with that email address already exists');
         err.status = 400;
         err.reason = 'ValidationError';
         next(err);
