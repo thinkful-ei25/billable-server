@@ -5,41 +5,46 @@ const User = require('../models/user');
 const Client = require('../models/client');
 const VoiceResponse = require('twilio').twiml.VoiceResponse;
 const createSubAccountClient = require('../utils/createSubAccountClient');
-const ClientCapability = require('twilio').jwt.ClientCapability;
 const {
   TWILIO_ACCOUNT_SID,
   TWILIO_AUTH_TOKEN,
   TWILIO_APP_SID,
   TWILIO_NUMBER
 } = require('../config');
-const twilio = require('twilio');
+const twilio = require('./twilio');
 
-//TODO: Remove Get Route
-//TODO: Update Errors where possible
+/**
+ * @api [post] /call/inbound Handles inbound calls and routes the call based on the caller.
+ * @apiName Inbound Call
+ * @apiGroup Call
+ *
+ * @apiParam (body) {String}  Called  The Twilio Number that was dialed
+ * @apiParam (body) {String} From  The number of the caller
+ *
+ *
+ * TODO: Document Responses for Success and Failed
+ * TODO: Review how to consolidate with new twilio file
+ *
+ */
 
-router.post('/inbound', (req, res, next) => {
-  let twiMl = new VoiceResponse();
-  let callInfo = {
-    callerId: req.body.From
-  };
+router.post('/inbound', (req, res) => {
+  const twiMl = new VoiceResponse();
+  const twilioNumberCalled = req.body.Called;
+  const callerNumber = req.body.From;
+  let userId;
+  let usersRealNumber;
+
   let allowedThrough;
   let allowedCallers = [];
   let reject = true;
-  console.log(req.body);
-  User.find({ 'twilio.phones.number': req.body.Called })
+  User.find({ 'twilio.phones.number': twilioNumberCalled })
     .then(([user]) => {
-      callInfo.phoneNumber = user.organizationPhoneNumber;
-      callInfo.userId = user.id;
-      return callInfo;
-    })
-    .then(callInfo => {
-      return Client.find(
-        { userId: callInfo.userId },
-        { _id: 0, phoneNumber: 1 }
-      );
+      userId = user.Id;
+      usersRealNumber = user.organizationPhoneNumber;
+      return Client.find({ userId: userId }, { _id: 0, phoneNumber: 1 });
     })
     .then(clients => {
-      if (callInfo.callerId === callInfo.phoneNumber) {
+      if (callerNumber === usersRealNumber) {
         const gather = twiMl.gather({
           numDigits: 10,
           action: '/api/call/inbound/gather',
@@ -79,71 +84,69 @@ router.post('/inbound', (req, res, next) => {
     });
 });
 
+/**
+ * @api [post] /call/inbound/gather Called by /call/inbound when User Calls their own Twilio Number
+ * @apiName Outbound Call
+ * @apiGroup Call
+ *
+ * @apiParam (body) {String}  toCallNumber Number entered in browser to call
+ *
+ * TODO: Document Responses for Success
+ * TODO: Review what happens if no numbers are inputted.
+ *
+ */
+
 router.post('/inbound/gather', (req, res) => {
-  const twiMl = new VoiceResponse();
-  let numberToCall = `+1${req.body.Digits}`;
-  twiMl.dial(numberToCall);
+  const toCallNumber = `+1${req.body.Digits}`;
+  const redirectCallTwiML = twilio.gather(toCallNumber);
+  res.send(redirectCallTwiML);
+});
 
-  // if (req.body.Digits) {
-  //   const dial = twiMl.dial({ callerId: req.body.Caller });
-  //   dial.number(numberToCall);
-  // }
+/**
+ * @api [post] /call/outbound Request outgoing call information
+ * @apiName Outbound Call
+ * @apiGroup Call
+ *
+ * @apiParam (body) {String}  toCallNumber Number entered in browser to call
+ *
+ * TODO: Document Responses for Success
+ *
+ */
 
+router.post('/outbound/old', (req, res) => {
+  const outgoingCallTwiML = twilio.browser(req.body.toCallNumber);
   res.type('text/xml');
-  res.send(twiMl.toString());
-});
-
-router.post('/outbound', (req, res) => {
-  createSubAccountClient(req.user.email)
-    .then(client => {
-      return client.calls.create({
-        url: 'http://demo.twilio.com/docs/voice.xml',
-        to: '+13019803889',
-        from: '+18026488173'
-      });
-    })
-    .then(call => {
-      console.log('call', call.sid);
-      res.json(call);
-    })
-    .catch(err => {
-      console.log('err', err);
-    })
-    .done();
-});
-
-router.get('/token', (req, res) => {
-  const capability = new ClientCapability({
-    accountSid: TWILIO_ACCOUNT_SID,
-    authToken: TWILIO_AUTH_TOKEN
-  });
-
-  capability.addScope(
-    new ClientCapability.OutgoingClientScope({
-      applicationSid: TWILIO_APP_SID
-    })
-  );
-
-  const token = capability.toJwt();
-
-  res.send({
-    token: token
-  });
-});
-
-// Create TwiML for outbound calls
-router.post('/browser', (req, res) => {
-  console.log('browser ', req.body);
-
-  let twiMl = new VoiceResponse();
-  twiMl.dial(
-    {
-      callerId: TWILIO_NUMBER
-    },
-    req.body.number
-  );
-  res.type('text/xml');
-  res.send(twiMl.toString());
+  res.send(outgoingCallTwiML);
 });
 
 module.exports = router;
+
+/**
+ * @api [post] /call/outbound Request outgoing call information
+ * @apiName Outbound Call (OLD)
+ * @apiGroup Call
+ *
+ * @apiParam (user) {String}  email Email associated with the user making the call
+ *
+ * TODO: Determine if route is needed and delete if not.
+ * TODO: Setup errors if not needed
+ */
+
+// router.post('/outbound', (req, res) => {
+//   createSubAccountClient(req.user.email)
+//     .then(client => {
+//       return client.calls.create({
+//         url: 'http://demo.twilio.com/docs/voice.xml',
+//         to: '+13019803889',
+//         from: '+18026488173'
+//       });
+//     })
+//     .then(call => {
+//       console.log('call', call.sid);
+//       res.json(call);
+//     })
+//     .catch(err => {
+//       console.log('err', err);
+//     })
+//     .done();
+// });

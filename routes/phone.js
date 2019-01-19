@@ -18,8 +18,6 @@ router.post('/', (req, res) => {
 
   createSubAccountClient(organizationName)
     .then(client => { 
-      //Configured for phone calls (redirect to use inbound call route)
-
       //FOR DEV
       // return client.incomingPhoneNumbers.create({ 
       //FOR TESTING (make sure client config is set to testing)
