@@ -3,7 +3,7 @@
 const express = require('express'); 
 const router = express.Router(); 
 const User = require('../models/user'); 
-const { MASTER_CLIENT } = require('../config'); 
+const { MASTER_CLIENT, BASE_URL } = require('../config'); 
 const createSubAccountClient = require('../utils/createSubAccountClient'); 
 
 router.post('/', (req, res) => { 
@@ -27,7 +27,7 @@ router.post('/', (req, res) => {
         phoneNumber: twilioPhoneNumber, 
         friendlyName: twilioPhoneNumberName, 
         voiceMethod: 'POST', 
-        voiceUrl: 'http://4fceaa26.ngrok.io/api/call/inbound' 
+        voiceUrl: `${BASE_URL}/call/inbound`
       }); 
     })
     .then(createdPhone => { 

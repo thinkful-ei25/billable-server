@@ -6,13 +6,18 @@ const Client = require('../models/client');
 const VoiceResponse = require('twilio').twiml.VoiceResponse;
 const createSubAccountClient = require('../utils/createSubAccountClient');
 const ClientCapability = require('twilio').jwt.ClientCapability;
-const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_APP_SID } = require('../config');
+const {
+  TWILIO_ACCOUNT_SID,
+  TWILIO_AUTH_TOKEN,
+  TWILIO_APP_SID,
+  TWILIO_NUMBER
+} = require('../config');
+const twilio = require('twilio');
 
 //TODO: Remove Get Route
 //TODO: Update Errors where possible
 
 router.post('/inbound', (req, res, next) => {
-
   let twiMl = new VoiceResponse();
   let callInfo = {
     callerId: req.body.From
@@ -20,7 +25,7 @@ router.post('/inbound', (req, res, next) => {
   let allowedThrough;
   let allowedCallers = [];
   let reject = true;
-
+  console.log(req.body);
   User.find({ 'twilio.phones.number': req.body.Called })
     .then(([user]) => {
       callInfo.phoneNumber = user.organizationPhoneNumber;
@@ -79,14 +84,13 @@ router.post('/inbound/gather', (req, res) => {
   let numberToCall = `+1${req.body.Digits}`;
   twiMl.dial(numberToCall);
 
-  if (req.body.Digits) {
-    const dial = twiMl.dial({ callerId: req.body.Caller });
-    dial.number(numberToCall);
-  }
+  // if (req.body.Digits) {
+  //   const dial = twiMl.dial({ callerId: req.body.Caller });
+  //   dial.number(numberToCall);
+  // }
 
   res.type('text/xml');
   res.send(twiMl.toString());
-
 });
 
 router.post('/outbound', (req, res) => {
@@ -108,14 +112,6 @@ router.post('/outbound', (req, res) => {
     .done();
 });
 
-router.post('/browser', (req, res) => {
-
-
-  capability.addScope(
-    new ClientCapability.IncomingClientScope("user")
-  );
-});
-
 router.get('/token', (req, res) => {
   const capability = new ClientCapability({
     accountSid: TWILIO_ACCOUNT_SID,
@@ -125,29 +121,29 @@ router.get('/token', (req, res) => {
   capability.addScope(
     new ClientCapability.OutgoingClientScope({
       applicationSid: TWILIO_APP_SID
-    }));
+    })
+  );
 
   const token = capability.toJwt();
 
   res.send({
-    token: token,
+    token: token
   });
-})
+});
 
+// Create TwiML for outbound calls
 router.post('/browser', (req, res) => {
+  console.log('browser ', req.body);
+
   let twiMl = new VoiceResponse();
-  twiMl.dial({
-    callerId: '+13017741485',
-  }, req.body.number);
-  res.type('txt/xml');
+  twiMl.dial(
+    {
+      callerId: TWILIO_NUMBER
+    },
+    req.body.number
+  );
+  res.type('text/xml');
   res.send(twiMl.toString());
-  }); 
-
-
-
-
-
-
-
+});
 
 module.exports = router;
