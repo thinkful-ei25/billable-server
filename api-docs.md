@@ -1,13 +1,12 @@
 # Billable API
 ## USER
 ### POST /api/register/users
-Purpose: Create a new user (register) 
 
-Example: POST https://example.com/api/register/user
+**Purpose**: Create a new user (register) 
 
-Place: Registration page
+**Place**: Registration page
 
-Request body:
+**Request body:**
 ```
 {
   "organizationName": "google", 
@@ -16,9 +15,8 @@ Request body:
 }
 ```
 
-Response body: 
+**Response body:** 
 ```
-
   {
     "organizationName": "Elon Musk's Mighty Devils",
     "password": "$2a$10$uN2lH0tpxKbsVVejH2Ft/enGw87FOjUc6bDzThQ56PV2Ln1TtjO1W",
@@ -33,20 +31,24 @@ Response body:
         "phones": []
     }
 }
-
 ```
 
-[Twilio Return User]:https://www.twilio.com/docs/iam/api/subaccounts?code-sample=code-return-a-subaccount-resource-by-its-account-sid&code-language=Node.js&code-sdk-version=3.x#authentication
+[**DOCS** Twilio Return User](https://www.twilio.com/docs/iam/api/subaccounts?code-sample=code-return-a-subaccount-resource-by-its-account-sid&code-language=Node.js&code-sdk-version=3.x#authentication)
 
 ### GET /api/account/user
-get pre-existing subaccount/user
+**PURPOSE:** get pre-existing subaccount/user
 
+**PLACE:** ?
+
+**Request Body:**
+```
 {
   sid: 'AC5ad320be60c4f745deea8e44f0888906"
 }
+```
 
-Response Body 
-
+**Response Body:** 
+```
 {
   "user":{
     'id':'000000000000000000000000',
@@ -72,13 +74,13 @@ Response Body
   }
  }
 }
-
+```
 ### PUT /api/account/user/:status
-Purpose: Update user status to active or suspended
+**Purpose:** Update user status to active or suspended
 
-Place: Settings page
+**Place:** Settings page
 
-Request body:
+**Request body:**
 ```
 Params: {"status":"active" || "suspended" || closed}
 
@@ -89,7 +91,7 @@ Params: {"status":"active" || "suspended" || closed}
   }
 }
 ```
-Response body: 
+**Response body:**
 ```
 {
   "code": "201",
@@ -100,14 +102,14 @@ Response body:
 
 ### POST /api/login 
 
-Request body: 
+**Request body:** 
 ```
 {
   "organizationName": "bestOrgName",
   "password":"badPassword"
 }
 ```
-Response body:
+**Response body:**
 ```
 {
   "authToken":"supersecrettoken"
@@ -115,14 +117,14 @@ Response body:
 ```
 
 ### GET /api/register/phones
-Purpose: Search for the available Twilio phone numbers
+**Purpose:** Search for the available Twilio phone numbers
 
-Request Params: 
+**Request Params:** DID WE CHANGE THIS?
 ``` 
   "areaCode": "978"
 ```
 
-Response body: 
+**Response body:**
 ```
 {
   "+18024788199",
@@ -132,13 +134,13 @@ Response body:
   "+18024788197"
 }
 ```
-[Twilio Search For Phone Numbers]:https://www.twilio.com/docs/phone-numbers/api/available-phone-numbers
+[**DOCS** Twilio Search For Phone Numbers](https://www.twilio.com/docs/phone-numbers/api/available-phone-numbers)
 
 ### POST /api/phone
 
-Purpose: Purchase a Twilio phone number from the selected number and store their organization phone number
+**Purpose:** Purchase a Twilio phone number from the selected number and store their organization phone number
 
-Request body: 
+**Request body:** 
 ```
 { 
   "twilioPhoneNumber":"+1802397178",
@@ -147,16 +149,17 @@ Request body:
 }
 ```
 
-Response body: 
+**Response body:** 
 ```
 {
   "message": "A phone was created" 
 }
 ```
-NOTE: Then we will do a promise to set the orginationPhoneNumber and the twilio number to the db
-[Twilio Create Phone Number]:https://www.twilio.com/docs/iam/api/subaccounts?code-sample=code-return-a-subaccount-resource-by-its-account-sid&code-language=Node.js&code-sdk-version=3.x#authentication
+**NOTE:** Then we will do a promise to set the orginationPhoneNumber and the twilio number to the db
 
-//FOR THIS LINE ONWARDS: NEEDS REVIEW
+[**DOCS** Twilio Create Phone Number](https://www.twilio.com/docs/iam/api/subaccounts?code-sample=code-return-a-subaccount-resource-by-its-account-sid&code-language=Node.js&code-sdk-version=3.x#authentication)
+
+**//FOR THIS LINE ONWARDS: NEEDS REVIEW**
 ### POST /api/client
 Purpose: Create a new client
 Request body:
