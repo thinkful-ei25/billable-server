@@ -14,6 +14,7 @@ module.exports = {
    */
 
   token: (accountSid, authToken) => {
+
     const capability = new ClientCapability({
       accountSid: accountSid,
       authToken: authToken
@@ -21,9 +22,12 @@ module.exports = {
 
     capability.addScope(
       new ClientCapability.OutgoingClientScope({
-        applicationSid: TWILIO_APP_SID
-      })
-    );
+        applicationSid: TWILIO_APP_SID}));
+        
+    let clientName = (page == "/dashboard"? "support_agent" : "customer");
+    capability.addScope(
+      new ClientCapability.IncomingClientScope( 
+        clientName)); 
 
     return capability.toJwt();
   },
