@@ -24,14 +24,18 @@ module.exports = {
       new ClientCapability.OutgoingClientScope({
         applicationSid: TWILIO_APP_SID}));
         
-    let clientName = (page == "/dashboard"? "client" : "uknown");
-
-    capability.addScope(
-      new ClientCapability.IncomingClientScope( 
-        clientName)); 
-
     return capability.toJwt();
   },
+
+  inboundToken: () => { 
+
+     // let clientName = (page == "/dashboard"? "client" : "uknown");
+
+    capability.addScope(
+      new ClientCapability.IncomingClientScope('client')); 
+
+    return capability.toJwt();
+  }
 
   /**
    * Create TwiML for Browser Call
