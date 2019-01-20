@@ -4,8 +4,6 @@
 
 **Purpose**: Create a new user (register) 
 
-
-
 **Place**: Registration page
 
 **Request body:**
