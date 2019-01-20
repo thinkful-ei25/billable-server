@@ -14,10 +14,10 @@ router.post('/', (req, res) => {
   //TODO: ERROR CHECK INCOMING DATA
 
   let twilioPhone; 
-  
-  //TODO: Explore replacing this with /twilio/token or /twilio/client or /twilio/client_two.
   createSubAccountClient(organizationName)
     .then(client => { 
+      //Configured for phone calls (redirect to use inbound call route)
+
       //FOR DEV
       // return client.incomingPhoneNumbers.create({ 
       //FOR TESTING (make sure client config is set to testing)

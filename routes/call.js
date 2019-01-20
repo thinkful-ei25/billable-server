@@ -114,39 +114,11 @@ router.post('/inbound/gather', (req, res) => {
  */
 
 router.post('/outbound', (req, res) => {
-  const outgoingCallTwiML = twilio.browser(req.body.toCallNumber);
+  console.log('call body ' + JSON.stringify(req.body));
+  const outgoingCallTwiML = twilio.browser(req.body.number);
   res.type('text/xml');
   res.send(outgoingCallTwiML);
 });
 
 module.exports = router;
 
-/**
- * @api [post] /call/outbound Request outgoing call information
- * @apiName Outbound Call (OLD)
- * @apiGroup Call
- *
- * @apiParam (user) {String}  email Email associated with the user making the call
- *
- * TODO: Determine if route is needed and delete if not.
- * TODO: Setup errors if not needed
- */
-
-// router.post('/outbound/old', (req, res) => {
-//   createSubAccountClient(req.user.email)
-//     .then(client => {
-//       return client.calls.create({
-//         url: 'http://demo.twilio.com/docs/voice.xml',
-//         to: '+13019803889',
-//         from: '+18026488173'
-//       });
-//     })
-//     .then(call => {
-//       console.log('call', call.sid);
-//       res.json(call);
-//     })
-//     .catch(err => {
-//       console.log('err', err);
-//     })
-//     .done();
-// });
