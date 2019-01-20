@@ -37,6 +37,10 @@ router.post('/inbound', (req, res) => {
   let allowedThrough;
   let allowedCallers = [];
   let reject = true;
+
+  let mode='browser';
+  // let mode='phone';
+
   User.find({ 'twilio.phones.number': twilioNumberCalled })
     .then(([user]) => {
       userId = user.Id;
@@ -44,16 +48,22 @@ router.post('/inbound', (req, res) => {
       return Client.find({ userId: userId }, { _id: 0, phoneNumber: 1 });
     })
     .then(clients => {
+      //CLIENT IS CALLING THEMSELVES
       if (callerNumber === usersRealNumber) {
-        const gather = twiMl.gather({
-          numDigits: 10,
-          action: '/api/call/inbound/gather',
-          method: 'POST',
-          finishOnKey: '#'
-        });
-        gather.say(
-          'Enter the number you are trying to reach followed by the pound sign.'
-        );
+        if (mode === 'browser'){ 
+          twilio.inbound(); 
+        }
+        else if (mode === 'phone') { 
+          const gather = twiMl.gather({
+            numDigits: 10,
+            action: '/api/call/inbound/gather',
+            method: 'POST',
+            finishOnKey: '#'
+          });
+          gather.say(
+            'Enter the number you are trying to reach followed by the pound sign.'
+          );
+        }
       } else {
         clients.map(phoneNumber => {
           allowedCallers.push(phoneNumber.phoneNumber);
