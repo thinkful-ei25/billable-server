@@ -35,7 +35,7 @@ module.exports = {
       new ClientCapability.IncomingClientScope('client')); 
 
     return capability.toJwt();
-  }
+  }, 
 
   /**
    * Create TwiML for Browser Call
