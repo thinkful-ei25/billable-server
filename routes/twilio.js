@@ -25,8 +25,8 @@ module.exports = {
         applicationSid: TWILIO_APP_SID}));
 
     
-      capability.addScope(
-        new ClientCapability.IncomingClientScope('client')); 
+    capability.addScope(
+      new ClientCapability.IncomingClientScope('client')); 
         
     return capability.toJwt();
   },
