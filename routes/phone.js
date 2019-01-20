@@ -15,7 +15,7 @@ router.post('/', (req, res) => {
 
   let twilioPhone; 
   
-
+  //TODO: Explore replacing this with /twilio/token or /twilio/client or /twilio/client_two.
   createSubAccountClient(organizationName)
     .then(client => { 
       //FOR DEV

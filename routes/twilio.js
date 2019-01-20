@@ -106,7 +106,7 @@ module.exports = {
    *
    * TODO: Determine if we could use client to replace our method for createSubAccountClient
    * TODO: Determine if V1 or V2 solves our needs.
-   *
+   * TODO: Added master organization to be able to update sub or master
    */
 
   client_two: (organizationName) => {

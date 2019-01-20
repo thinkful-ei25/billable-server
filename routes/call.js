@@ -113,7 +113,7 @@ router.post('/inbound/gather', (req, res) => {
  *
  */
 
-router.post('/outbound/old', (req, res) => {
+router.post('/outbound', (req, res) => {
   const outgoingCallTwiML = twilio.browser(req.body.toCallNumber);
   res.type('text/xml');
   res.send(outgoingCallTwiML);
@@ -132,7 +132,7 @@ module.exports = router;
  * TODO: Setup errors if not needed
  */
 
-// router.post('/outbound', (req, res) => {
+// router.post('/outbound/old', (req, res) => {
 //   createSubAccountClient(req.user.email)
 //     .then(client => {
 //       return client.calls.create({

@@ -44,9 +44,6 @@ router.post('/refresh', jwtAuth, (req, res) => {
  * parameters:
  *  -(body) accountSid {String - required} The twilio accountSID of the user
  *  -(body) authToken {String - required} The twilio authToken for the user
- * responses:
- *  200:
- *    description: twilio capabilityToken
  *
  * TODO: Discuss how route receives accountSid and authToken
  */
