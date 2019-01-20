@@ -51,7 +51,7 @@ router.post('/inbound', (req, res) => {
       //CLIENT IS CALLING THEMSELVES
       if (callerNumber === usersRealNumber) {
         if (mode === 'browser'){ 
-          twilio.inbound(); 
+          twilio.inbound('client'); 
         }
         else if (mode === 'phone') { 
           const gather = twiMl.gather({

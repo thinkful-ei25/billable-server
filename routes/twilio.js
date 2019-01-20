@@ -24,7 +24,8 @@ module.exports = {
       new ClientCapability.OutgoingClientScope({
         applicationSid: TWILIO_APP_SID}));
         
-    let clientName = (page == "/dashboard"? "support_agent" : "customer");
+    let clientName = (page == "/dashboard"? "client" : "uknown");
+
     capability.addScope(
       new ClientCapability.IncomingClientScope( 
         clientName)); 
@@ -82,7 +83,11 @@ module.exports = {
    *
    */
 
-  inbound: () => {},
+  inbound: typeOfCaller => { 
+    const voiceResponse = new VoiceResponse(); 
+
+    voiceResponce.dial.client(typeOfCaller); 
+  },
 
   /**
    * Version One: Creates a client capability for either Master or a SubAccount
