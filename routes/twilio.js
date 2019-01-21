@@ -24,10 +24,14 @@ module.exports = {
       new ClientCapability.OutgoingClientScope({
         applicationSid: TWILIO_APP_SID}));
 
-    
     capability.addScope(
-      new ClientCapability.IncomingClientScope('client')); 
-        
+      new ClientCapability.IncomingClientScope('Jim-Carey')); 
+    
+    // capability = ClientCapabilityToken(account_sid, auth_token)
+    // capability.allow_client_out
+    // capability.allow_client_outgoing(TWILIO_APP_SID); 
+    // capability.allow_client_incoming('Jim Carey'); 
+
     return capability.toJwt();
   },
 
@@ -81,10 +85,14 @@ module.exports = {
    *
    */
 
-  inbound: typeOfCaller => { 
+  inbound: (organizationName, callerId) => { 
     const voiceResponse = new VoiceResponse(); 
+    
+    let dial = voiceResponse.dial({callerId}); 
+    dial.client(organizationName); 
 
-    voiceResponce.dial.client(typeOfCaller); 
+    console.log(voiceResponse.toString(), dial); 
+    return voiceResponse.toString(); 
   },
 
   /**

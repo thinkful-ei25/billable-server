@@ -37,6 +37,8 @@ router.post('/inbound', (req, res) => {
   let allowedThrough;
   let allowedCallers = [];
   let reject = true;
+  let tokenName; 
+  let browser; 
 
   let mode='browser';
   // let mode='phone';
@@ -45,15 +47,19 @@ router.post('/inbound', (req, res) => {
     .then(([user]) => {
       userId = user.Id;
       usersRealNumber = user.organizationPhoneNumber;
+      // tokenName = user.organizationName; 
+      tokenName = 'Jim-Carey'; 
       return Client.find({ userId: userId }, { _id: 0, phoneNumber: 1 });
     })
     .then(clients => {
-      //CLIENT IS CALLING THEMSELVES
-      if (callerNumber === usersRealNumber) {
-        if (mode === 'browser'){ 
-          twilio.inbound('client'); 
-        }
-        else if (mode === 'phone') { 
+      if (mode === 'browser'){ 
+        console.log('browser'); 
+        browser = twilio.inbound(tokenName, callerNumber); 
+        
+      }
+      else { 
+        //CLIENT IS CALLING THEMSELVES
+        if (callerNumber === usersRealNumber) {
           const gather = twiMl.gather({
             numDigits: 10,
             action: '/api/call/inbound/gather',
@@ -62,36 +68,38 @@ router.post('/inbound', (req, res) => {
           });
           gather.say(
             'Enter the number you are trying to reach followed by the pound sign.'
-          );
-        }
-      } else {
-        clients.map(phoneNumber => {
-          allowedCallers.push(phoneNumber.phoneNumber);
-        });
-        // allowedThrough = allowedCallers.includes(callInfo.callerId);
-        allowedThrough = true;
-        if (allowedThrough) {
-          const dial = twiMl.dial({ callerId: callInfo.callerId });
-          dial.number(callInfo.phoneNumber);
-        } else {
-          if (reject) {
-            twiMl.reject();
+          ); }
+        else {
+          clients.map(phoneNumber => {
+            allowedCallers.push(phoneNumber.phoneNumber);
+          });
+          // allowedThrough = allowedCallers.includes(callInfo.callerId);
+          allowedThrough = true;
+          if (allowedThrough) {
+            const dial = twiMl.dial({ callerId: callerNumber });
+            dial.number(usersRealNumber);
           } else {
-            twiMl.say('Sorry you are calling a restricted number.');
+            if (reject) {
+              twiMl.reject();
+            } else {
+              twiMl.say('Sorry you are calling a restricted number.');
+            }
           }
         }
       }
       return;
-    })
+      })
     .then(() => {
+      console.log('broswer', browser); 
       res
         .type('text/xml')
-        .send(twiMl.toString())
-        .end();
+        .send(browser)
+        // .end();
     })
     .catch(err => {
       console.log(err);
     });
+      
 });
 
 /**
