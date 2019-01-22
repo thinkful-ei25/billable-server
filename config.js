@@ -18,9 +18,6 @@ module.exports = {
   JWT_SECRET: process.env.JWT_SECRET,
   JWT_EXPIRY: process.env.JWT_EXPIRY || '7d',
   TWILIO_APP_SID: process.env.TWILIO_APP_SID,
-  //Brady
   BASE_URL: '5421475d.ngrok.io',
-  //Sean 
-  // BASE_URL: 'a0f13081.ngrok.io', 
   TWILIO_NUMBER: process.env.TWILIO_NUMBER
 };
