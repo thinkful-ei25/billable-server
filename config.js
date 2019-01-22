@@ -5,9 +5,7 @@ const twilio = require('twilio');
 
 module.exports = {
   PORT: process.env.PORT || 8080,
-  CLIENT_ORIGIN:
-    process.env.CLIENT_ORIGIN ||
-    'http://ec2-13-58-72-205.us-east-2.compute.amazonaws.com:8080',
+  CLIENT_ORIGIN: process.env.CLIENT_ORIGIN || 'http://localhost:3000',
   DATABASE_URL:
     process.env.DATABASE_URL || 'mongodb://localhost/billable-backend',
   TEST_DATABASE_URL:
