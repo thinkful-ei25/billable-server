@@ -21,6 +21,6 @@ module.exports = {
   ),
   JWT_SECRET: process.env.JWT_SECRET,
   JWT_EXPIRY: process.env.JWT_EXPIRY || '7d',
-  BASE_URL: ' https://b87ba356.ngrok.io/api',
+  BASE_URL: (process.env.BASE_URL || 'https://b87ba356.ngrok.io') + '/api',
   TWILIO_NUMBER: process.env.TWILIO_NUMBER
 };
