@@ -55,7 +55,6 @@ router.post('/inbound', (req, res) => {
       if (mode === 'browser'){ 
         console.log('browser'); 
         browser = twilio.inbound(tokenName, callerNumber); 
-        
       }
       else { 
         //CLIENT IS CALLING THEMSELVES
