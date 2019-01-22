@@ -58,11 +58,11 @@ router.post('/inbound', (req, res) => {
         clients.map(phoneNumber => {
           allowedCallers.push(phoneNumber.phoneNumber);
         });
-        // allowedThrough = allowedCallers.includes(callInfo.callerId);
+        // allowedThrough = allowedCallers.includes(callerNumber);
         allowedThrough = true;
         if (allowedThrough) {
-          const dial = twiMl.dial({ callerId: callInfo.callerId });
-          dial.number(callInfo.phoneNumber);
+          const dial = twiMl.dial({ callerId: callerNumber });
+          dial.number(usersRealNumber);
         } else {
           if (reject) {
             twiMl.reject();
@@ -121,4 +121,3 @@ router.post('/outbound', (req, res) => {
 });
 
 module.exports = router;
-

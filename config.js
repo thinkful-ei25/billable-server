@@ -5,7 +5,9 @@ const twilio = require('twilio');
 
 module.exports = {
   PORT: process.env.PORT || 8080,
-  CLIENT_ORIGIN: process.env.CLIENT_ORIGIN || 'http://localhost:3000',
+  CLIENT_ORIGIN:
+    process.env.CLIENT_ORIGIN ||
+    'http://ec2-13-58-72-205.us-east-2.compute.amazonaws.com:8080',
   DATABASE_URL:
     process.env.DATABASE_URL || 'mongodb://localhost/billable-backend',
   TEST_DATABASE_URL:
@@ -21,6 +23,6 @@ module.exports = {
   ),
   JWT_SECRET: process.env.JWT_SECRET,
   JWT_EXPIRY: process.env.JWT_EXPIRY || '7d',
-  BASE_URL: ' https://9a12f376.ngrok.io/api',
+  BASE_URL: ' https://b87ba356.ngrok.io/api',
   TWILIO_NUMBER: process.env.TWILIO_NUMBER
 };

@@ -9,9 +9,9 @@ const VoiceResponse = twilio.twiml.VoiceResponse;
 
 module.exports = {
   /**
-   * Create outgoing call capability
-   * @returns {string} token
-   */
+  * Create outgoing call capability
+  * @returns {string} token
+  */
 
   token: (accountSid, authToken) => {
     const capability = new ClientCapability({

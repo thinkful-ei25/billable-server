@@ -20,6 +20,8 @@ router.post('/user', (req, res, next) => {
     .then((validatedUser) => {
       user = validatedUser; 
       password = user.password; 
+      console.log('USER => ', user);
+      console.log('MASTER CLIENT => ', MASTER_CLIENT);
       return MASTER_CLIENT.api.accounts
         .create({friendlyName: user.organizationName}); 
     })
