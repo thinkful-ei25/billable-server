@@ -9,9 +9,13 @@ const CallSchema = mongoose.Schema({
   }, 
   start:String, 
   end:String, 
-  phoneNumber: {type:String, required:true}, 
-  rating: Number, 
-  billable: Number
+  duration: String,
+  userPhoneNumber: {type:String, required:true},
+  clientPhoneNumer: {type: String, required: true},
+  callSid: String, 
+  billable: Boolean,
+  direction: String,
+  status: String,
 }); 
 
 CallSchema.set('toJSON', {

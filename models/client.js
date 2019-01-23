@@ -21,6 +21,7 @@ const ClientSchema = mongoose.Schema({
     required:true
   },
   hourlyRate:Number,
+  billable: Boolean,
   phoneNumber:{
     type:String,
     required:true
