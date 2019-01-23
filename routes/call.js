@@ -1,17 +1,12 @@
 'use strict';
 const express = require('express');
 const router = express.Router();
-const User = require('../models/user');
-const Client = require('../models/client');
-const VoiceResponse = require('twilio').twiml.VoiceResponse;
-const createSubAccountClient = require('../utils/createSubAccountClient');
-const {
-  TWILIO_ACCOUNT_SID,
-  TWILIO_AUTH_TOKEN,
-  TWILIO_APP_SID,
-  TWILIO_NUMBER
-} = require('../config');
-const twilio = require('./twilio');
+const findClients = require('../utils/queries/findClients'); 
+const findUser = require('../utils/queries/findUser'); 
+const twilio = require('../utils/twilio');
+
+// let mode='phone';
+let mode='browser'; 
 
 /**
  * @api [post] /call/inbound Handles inbound calls and routes the call based on the caller.
@@ -20,68 +15,30 @@ const twilio = require('./twilio');
  *
  * @apiParam (body) {String}  Called  The Twilio Number that was dialed
  * @apiParam (body) {String} From  The number of the caller
- *
- *
- * TODO: Document Responses for Success and Failed
- * TODO: Review how to consolidate with new twilio file
- *
+ * TODO: get incoming call from browswer to dial
  */
-
 router.post('/inbound', (req, res) => {
-  const twiMl = new VoiceResponse();
   const twilioNumberCalled = req.body.Called;
   const callerNumber = req.body.From;
-  let userId;
-  let usersRealNumber;
 
-  let allowedThrough;
-  let allowedCallers = [];
-  let reject = true;
-  User.find({ 'twilio.phones.number': twilioNumberCalled })
-    .then(([user]) => {
-      userId = user.Id;
-      usersRealNumber = user.organizationPhoneNumber;
-      return Client.find({ userId: userId }, { _id: 0, phoneNumber: 1 });
-    })
-    .then(clients => {
-      if (callerNumber === usersRealNumber) {
-        const gather = twiMl.gather({
-          numDigits: 10,
-          action: '/api/call/inbound/gather',
-          method: 'POST',
-          finishOnKey: '#'
-        });
-        gather.say(
-          'Enter the number you are trying to reach followed by the pound sign.'
-        );
-      } else {
-        clients.map(phoneNumber => {
-          allowedCallers.push(phoneNumber.phoneNumber);
-        });
-        // allowedThrough = allowedCallers.includes(callerNumber);
-        allowedThrough = true;
-        if (allowedThrough) {
-          const dial = twiMl.dial({ callerId: callerNumber });
-          dial.number(usersRealNumber);
-        } else {
-          if (reject) {
-            twiMl.reject();
-          } else {
-            twiMl.say('Sorry you are calling a restricted number.');
-          }
-        }
-      }
-      return;
-    })
-    .then(() => {
+  if (mode === 'browser'){ 
+    findUser(twilioNumberCalled)
+      .then(user => { 
+        const browserCallTwiMl = twilio.inboundBrowser(user.organizationName, callerNumber); 
+
+        res
+          .type('text/xml')
+          .send(browserCallTwiMl); 
+      }); 
+  }
+  else if (mode === 'phone'){ 
+    handlePhoneCalls(callerNumber, twilioNumberCalled).then(voiceResponse => { 
+      
       res
         .type('text/xml')
-        .send(twiMl.toString())
-        .end();
-    })
-    .catch(err => {
-      console.log(err);
-    });
+        .send(voiceResponse);
+    }); 
+  }
 });
 
 /**
@@ -89,16 +46,13 @@ router.post('/inbound', (req, res) => {
  * @apiName Outbound Call
  * @apiGroup Call
  *
- * @apiParam (body) {String}  toCallNumber Number entered in browser to call
- *
- * TODO: Document Responses for Success
+ * @param (body) {String}  toCallNumber Number entered in browser to call
  * TODO: Review what happens if no numbers are inputted.
- *
  */
-
 router.post('/inbound/gather', (req, res) => {
   const toCallNumber = `+1${req.body.Digits}`;
-  const redirectCallTwiML = twilio.gather(toCallNumber);
+
+  const redirectCallTwiML = twilio.phoneOutgoing(toCallNumber, req.body.From);
   res.send(redirectCallTwiML);
 });
 
@@ -109,15 +63,27 @@ router.post('/inbound/gather', (req, res) => {
  *
  * @apiParam (body) {String}  toCallNumber Number entered in browser to call
  *
- * TODO: Document Responses for Success
- *
  */
-
 router.post('/outbound', (req, res) => {
-  console.log('call body ' + JSON.stringify(req.body));
-  const outgoingCallTwiML = twilio.browser(req.body.number);
+  const outgoingCallTwiML = twilio.outboundBrowser(req.body.number);
   res.type('text/xml');
   res.send(outgoingCallTwiML);
 });
+
+//TODO: PUT THIS IN A UTIL
+function handlePhoneCalls(callerNumber, twilioNumberCalled){ 
+  return findUser(twilioNumberCalled)
+    .then(user => { 
+      if (callerNumber === user.organizationPhoneNumber) { 
+        return twilio.gather(user.organizationPhoneNumber); 
+      }
+      else { 
+        return findClients(twilioNumberCalled)
+          .then(clients => { 
+            return twilio.phoneIncoming(clients, callerNumber, user.organizationPhoneNumber); 
+        }); 
+      }
+    }); 
+}
 
 module.exports = router;
