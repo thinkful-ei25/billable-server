@@ -46,7 +46,8 @@ function handlePhoneCalls(callerNumber, twilioNumberCalled){
     }); 
 }
 
-let mode='phone';
+// let mode='phone';
+let mode='browser'; 
 
 /**
  * TODO: programatically determine the mode
@@ -55,13 +56,11 @@ router.post('/inbound', (req, res) => {
   const twilioNumberCalled = req.body.Called;
   const callerNumber = req.body.From;
 
-  console.log('my twilio number', twilioNumberCalled); 
-  console.log('your number', callerNumber); 
-
   if (mode === 'browser'){ 
     findUser(twilioNumberCalled)
       .then(user => { 
         const browserCallTwiMl = twilio.inboundBrowser(user.organizationName, callerNumber); 
+
         res
           .type('text/xml')
           .send(browserCallTwiMl); 
@@ -69,7 +68,6 @@ router.post('/inbound', (req, res) => {
   }
   else if (mode === 'phone'){ 
     handlePhoneCalls(callerNumber, twilioNumberCalled).then(voiceResponse => { 
-      console.log('voiceResponce.toString()', voiceResponse); 
 
       res
         .type('text/xml')
@@ -78,40 +76,6 @@ router.post('/inbound', (req, res) => {
   } 
 
 });
-
-  // User.find({ 'twilio.phones.number': twilioNumberCalled })
-  //   .then(([user]) => {
-  //     userId = user.Id;
-  //     usersRealNumber = user.organizationPhoneNumber;
-  //     tokenName = user.organizationName; 
-  //     return Client.find({ userId: userId }, { _id: 0, phoneNumber: 1 });
-  //   })
-  //   .then(clients => {
-  //     if (mode === 'browser'){ 
- 
-  //     }
-  //     else { 
-  //       //CLIENT IS CALLING THEMSELVES
-  //       if (callerNumber === usersRealNumber) {
-  //        twilio.phoneOutgoing(); 
-  //       }
-  //       else {
-  //         twilio.phoneIncoming(clients, usersRealNumber); 
-  //       }
-  //     }
-  //     return;
-  //     })
-  //   .then(() => {
-  //     console.log('broswer', browser); 
-
-  //     res
-  //       .type('text/xml')
-  //       .send(browser); 
-  //   })
-  //   .catch(err => {
-  //     console.log('err', err);
-  //   });
-      
 
 
 /**

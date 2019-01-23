@@ -26,7 +26,7 @@ module.exports = {
         applicationSid: TWILIO_APP_SID}));
 
     capability.addScope(
-      new ClientCapability.IncomingClientScope('Jim-Carey')); 
+      new ClientCapability.IncomingClientScope('Benevolent-Nezzler')); 
     
     return capability.toJwt();
   },
@@ -78,7 +78,7 @@ module.exports = {
    * @returns {string} TwiML describing the outgoing call
    *
    */
-  inboundBrowswer: (organizationName, callerId) => { 
+  inboundBrowser: (organizationName, callerId) => { 
     const voiceResponse = new VoiceResponse(); 
     
     let dial = voiceResponse.dial({callerId}); 
