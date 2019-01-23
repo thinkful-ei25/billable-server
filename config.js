@@ -11,8 +11,11 @@ module.exports = {
   TEST_DATABASE_URL:
         process.env.TEST_DATABASE_URL ||
         'mongodb://localhost/thinkful-backend-test', 
-       
-  TWILIO_ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID, 
+  JIM_ACCOUNT_SID: process.env.JIM_ACCOUNT_SID,
+  JIM_AUTH_TOKEN: process.env.JIM_AUTH_TOKEN,
+  JIM: twilio(process.env.JIM_ACCOUNT_SID,
+    process.env.JIM_AUTH_TOKEN),
+  TWILIO_ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID,
   TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN,
   MASTER_CLIENT: twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN), 
   JWT_SECRET: process.env.JWT_SECRET,
