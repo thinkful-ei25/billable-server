@@ -3,17 +3,10 @@ const express = require('express');
 const router = express.Router();
 const findClients = require('../utils/queries/findClients'); 
 const findUser = require('../utils/queries/findUser'); 
-
-//const createSubAccountClient = require('../utils/createSubAccountClient');
-
-// const {
-//   TWILIO_ACCOUNT_SID,
-//   TWILIO_AUTH_TOKEN,
-//   TWILIO_APP_SID,
-//   TWILIO_NUMBER
-// } = require('../config');
-
 const twilio = require('../utils/twilio');
+
+// let mode='phone';
+let mode='browser'; 
 
 /**
  * @api [post] /call/inbound Handles inbound calls and routes the call based on the caller.
@@ -22,32 +15,7 @@ const twilio = require('../utils/twilio');
  *
  * @apiParam (body) {String}  Called  The Twilio Number that was dialed
  * @apiParam (body) {String} From  The number of the caller
- *
- *
- * TODO: Document Responses for Success and Failed
- * TODO: Review how to consolidate with new twilio file
- *
- */
-function handlePhoneCalls(callerNumber, twilioNumberCalled){ 
-  return findUser(twilioNumberCalled)
-    .then(user => { 
-      if (callerNumber === user.organizationPhoneNumber) { 
-        return twilio.gather(user.organizationPhoneNumber); 
-      }
-      else { 
-        return findClients(twilioNumberCalled)
-          .then(clients => { 
-            return twilio.phoneIncoming(clients, callerNumber, user.organizationPhoneNumber); 
-        }); 
-      }
-    }); 
-}
-
-let mode='phone';
-// let mode='browser'; 
-
-/**
- * TODO: programatically determine the mode
+ * TODO: get incoming call from browswer to dial
  */
 router.post('/inbound', (req, res) => {
   const twilioNumberCalled = req.body.Called;
@@ -65,15 +33,13 @@ router.post('/inbound', (req, res) => {
   }
   else if (mode === 'phone'){ 
     handlePhoneCalls(callerNumber, twilioNumberCalled).then(voiceResponse => { 
-
+      
       res
         .type('text/xml')
         .send(voiceResponse);
     }); 
-  } 
-
+  }
 });
-
 
 /**
  * @api [post] /call/inbound/gather Called by /call/inbound when User Calls their own Twilio Number
@@ -82,7 +48,6 @@ router.post('/inbound', (req, res) => {
  *
  * @param (body) {String}  toCallNumber Number entered in browser to call
  * TODO: Review what happens if no numbers are inputted.
- *
  */
 router.post('/inbound/gather', (req, res) => {
   const toCallNumber = `+1${req.body.Digits}`;
@@ -98,15 +63,28 @@ router.post('/inbound/gather', (req, res) => {
  *
  * @apiParam (body) {String}  toCallNumber Number entered in browser to call
  *
- * TODO: Document Responses for Success
- *
  */
 router.post('/outbound', (req, res) => {
-  console.log('call body ' + JSON.stringify(req.body));
   const outgoingCallTwiML = twilio.outboundBrowser(req.body.number);
   res.type('text/xml');
   res.send(outgoingCallTwiML);
 });
+
+//TODO: PUT THIS IN A UTIL
+function handlePhoneCalls(callerNumber, twilioNumberCalled){ 
+  return findUser(twilioNumberCalled)
+    .then(user => { 
+      if (callerNumber === user.organizationPhoneNumber) { 
+        return twilio.gather(user.organizationPhoneNumber); 
+      }
+      else { 
+        return findClients(twilioNumberCalled)
+          .then(clients => { 
+            return twilio.phoneIncoming(clients, callerNumber, user.organizationPhoneNumber); 
+        }); 
+      }
+    }); 
+}
 
 module.exports = router;
 
