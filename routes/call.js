@@ -106,7 +106,6 @@ router.post('/inbound/gather', (req, res) => {
  * TODO: Document Responses for Success
  *
  */
-
 router.post('/outbound', (req, res) => {
   console.log('call body ' + JSON.stringify(req.body));
   const outgoingCallTwiML = twilio.outboundBrowser(req.body.number);

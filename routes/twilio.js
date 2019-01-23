@@ -39,7 +39,9 @@ module.exports = {
    * TODO: Discuss how to capture callerId;
    */
 
-  outBoundBrowser: toCallNumber => {
+  outboundBrowser: toCallNumber => {
+    console.log('hi to the outback'); 
+    
     const voiceResponse = new VoiceResponse();
     voiceResponse.dial(
       {
