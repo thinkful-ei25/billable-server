@@ -11,6 +11,7 @@ module.exports = {
   /**
    * Create outgoing call capability
    * @returns {string} token
+   * TODO: programatically determine the client scope
    */
 
   token: (accountSid, authToken) => {
@@ -27,23 +28,18 @@ module.exports = {
     capability.addScope(
       new ClientCapability.IncomingClientScope('Jim-Carey')); 
     
-    // capability = ClientCapabilityToken(account_sid, auth_token)
-    // capability.allow_client_out
-    // capability.allow_client_outgoing(TWILIO_APP_SID); 
-    // capability.allow_client_incoming('Jim Carey'); 
-
     return capability.toJwt();
   },
 
   /**
-   * Create TwiML for Browser Call
+   * Create TwiML for Outbound Browser Call
    * @param toCallNumber number to be called
    * @returns {string} TwiML describing the outgoing call
    *
    * TODO: Discuss how to capture callerId;
    */
 
-  browser: toCallNumber => {
+  outBoundBrowser: toCallNumber => {
     const voiceResponse = new VoiceResponse();
     voiceResponse.dial(
       {
@@ -77,23 +73,62 @@ module.exports = {
 
   /**
    * Possible other TwiML Creators for inbound call and for sub-account creation. @client could replace the createSubAccountClient.
-   * @param
-   * @returns
-   *
-   * TODO: Determine if inbound can be used on the /call/inbound route
-   * TODO: Determine if we could use client to replace our method for createSubAccountClient
+   * @param organizationName user's organization name
+   * @param callerId user's number
+   * @returns {string} TwiML describing the outgoing call
    *
    */
-
-  inbound: (organizationName, callerId) => { 
+  inboundBrowswer: (organizationName, callerId) => { 
     const voiceResponse = new VoiceResponse(); 
     
     let dial = voiceResponse.dial({callerId}); 
     dial.client(organizationName); 
 
-    console.log(voiceResponse.toString(), dial); 
     return voiceResponse.toString(); 
   },
+
+  /**
+   * Purpose: handle when user calls their own Twilio number (to make an outbound call)
+   */
+  phoneOutgoing: () => { 
+    const voiceResponse = new VoiceResponse();
+
+    const gather = voiceResponse.gather({
+      numDigits: 10,
+      action: '/api/call/inbound/gather',
+      method: 'POST',
+      finishOnKey: '#'
+    });
+
+    gather.say(
+      'Enter the number you are trying to reach followed by the pound sign.'
+    ); 
+
+    return voiceResponse.toString(); 
+  }, 
+
+  phoneIncoming: (clients, callerNumber, organizationNumber) => {
+    let allowedThrough; 
+
+    const voiceResponse = new VoiceResponse();
+
+    // let allowedCallers = clients.map(client => {
+    //   client.phoneNumber;
+    // });
+
+    TODO: 
+    //let allowedThrough = allowedCallers.includes(callerNumber); 
+    console.log(callerNumber, organizationNumber); 
+
+    allowedThrough = true; 
+    if (allowedThrough) {
+      voiceResponse.dial({ callerId: callerNumber }, organizationNumber );
+      return voiceResponse.toString(); 
+    } else {
+      voiceResponse.say('Sorry you are calling a restricted number.'); 
+      return; 
+    }
+  }, 
 
   /**
    * Version One: Creates a client capability for either Master or a SubAccount
@@ -104,7 +139,6 @@ module.exports = {
    * TODO: Determine if we could use client to replace our method for createSubAccountClient
    *
    */
-
   client: (accountSid, authToken) => {
     const capability = new ClientCapability({
       accountSid: accountSid,
