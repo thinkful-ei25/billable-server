@@ -1,5 +1,4 @@
 'use strict';
-//TODO: May need to move this file to different folder as it's not a route.
 
 const { TWILIO_APP_SID, TWILIO_NUMBER } = require('../config');
 const User = require('../models/user');
@@ -11,11 +10,11 @@ module.exports = {
   /**
    * Create outgoing call capability
    * @returns {string} token
+   * TODO: CLIENT SIDE ISSUES
    * TODO: programatically determine the client scope
+   * TODO: pass the user back to the token
    */
-
   token: (accountSid, authToken) => {
-
     const capability = new ClientCapability({
       accountSid: accountSid,
       authToken: authToken
@@ -35,13 +34,12 @@ module.exports = {
    * Create TwiML for Outbound Browser Call
    * @param toCallNumber number to be called
    * @returns {string} TwiML describing the outgoing call
-   *
-   * TODO: Discuss how to capture callerId;
+   * TODO: CLIENT SIDE ISSSUE 
+   * TODO: Discuss how to capture callerId (dynamic Twilio number: hardcoded: from caller)
    */
-
   outboundBrowser: toCallNumber => {
     console.log('hi to the outback'); 
-    
+
     const voiceResponse = new VoiceResponse();
     voiceResponse.dial(
       {
@@ -56,17 +54,12 @@ module.exports = {
    * Create TwiML to collect user input and call input
    * @param toCallNumber number to be called
    * @returns {string} TwiML describing the outgoing call
-   *
-   * TODO: Review if we can consolidate with browser above.
-   * TODO: Discuss how to capture callerId.
-   *
    */
-
-  gather: toCallNumber => {
+  phoneOutgoing: (toCallNumber, organizationPhoneNumber) => {
     const voiceResponse = new VoiceResponse();
     voiceResponse.dial(
       {
-        callerId: TWILIO_NUMBER
+        callerId: organizationPhoneNumber
       },
       toCallNumber
     );
@@ -92,9 +85,10 @@ module.exports = {
   /**
    * Purpose: handle when user calls their own Twilio number (to make an outbound call)
    */
-  phoneOutgoing: () => { 
+  gather: (organizationPhoneNumber) => { 
     const voiceResponse = new VoiceResponse();
 
+    //Calls the gather call/inbound/gather route
     const gather = voiceResponse.gather({
       numDigits: 10,
       action: '/api/call/inbound/gather',

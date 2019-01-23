@@ -3,7 +3,7 @@
 const express = require('express');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
-const twilio = require('./twilio');
+const twilio = require('../utils/twilio');
 
 const { JWT_SECRET, JWT_EXPIRY } = require('../config');
 

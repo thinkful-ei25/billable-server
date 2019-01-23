@@ -1,22 +1,19 @@
 'use strict';
 const express = require('express');
 const router = express.Router();
-// const User = require('../models/user');
-// const Client = require('../models/client');
-// const VoiceResponse = require('twilio').twiml.VoiceResponse;
 const findClients = require('../utils/queries/findClients'); 
 const findUser = require('../utils/queries/findUser'); 
 
-const createSubAccountClient = require('../utils/createSubAccountClient');
+//const createSubAccountClient = require('../utils/createSubAccountClient');
 
-const {
-  TWILIO_ACCOUNT_SID,
-  TWILIO_AUTH_TOKEN,
-  TWILIO_APP_SID,
-  TWILIO_NUMBER
-} = require('../config');
+// const {
+//   TWILIO_ACCOUNT_SID,
+//   TWILIO_AUTH_TOKEN,
+//   TWILIO_APP_SID,
+//   TWILIO_NUMBER
+// } = require('../config');
 
-const twilio = require('./twilio');
+const twilio = require('../utils/twilio');
 
 /**
  * @api [post] /call/inbound Handles inbound calls and routes the call based on the caller.
@@ -35,7 +32,7 @@ function handlePhoneCalls(callerNumber, twilioNumberCalled){
   return findUser(twilioNumberCalled)
     .then(user => { 
       if (callerNumber === user.organizationPhoneNumber) { 
-        return twilio.phoneOutgoing(); 
+        return twilio.gather(user.organizationPhoneNumber); 
       }
       else { 
         return findClients(twilioNumberCalled)
@@ -46,8 +43,8 @@ function handlePhoneCalls(callerNumber, twilioNumberCalled){
     }); 
 }
 
-// let mode='phone';
-let mode='browser'; 
+let mode='phone';
+// let mode='browser'; 
 
 /**
  * TODO: programatically determine the mode
@@ -83,16 +80,14 @@ router.post('/inbound', (req, res) => {
  * @apiName Outbound Call
  * @apiGroup Call
  *
- * @apiParam (body) {String}  toCallNumber Number entered in browser to call
- *
- * TODO: Document Responses for Success
+ * @param (body) {String}  toCallNumber Number entered in browser to call
  * TODO: Review what happens if no numbers are inputted.
  *
  */
-
 router.post('/inbound/gather', (req, res) => {
   const toCallNumber = `+1${req.body.Digits}`;
-  const redirectCallTwiML = twilio.gather(toCallNumber);
+
+  const redirectCallTwiML = twilio.phoneOutgoing(toCallNumber, req.body.From);
   res.send(redirectCallTwiML);
 });
 
