@@ -1,7 +1,7 @@
 {
-  "name": "thinkful-backend-template",
-  "version": "1.0.0",
-  "description": "Template for an Express backend",
+  "name": "Billable Server",
+  "version": "0.1.0",
+  "description": "Track And Bill Clients using Twilio",
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
@@ -12,7 +12,7 @@
     "heroku": "node index.js",
     "travis": "npm run mocha"
   },
-  "author": "Joe Turner <jturner@thinkful.com>",
+  "author": "Node It Alls nodeItAlls@gmail.com",
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.0",

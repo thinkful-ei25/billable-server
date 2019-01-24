@@ -84,6 +84,12 @@ module.exports = {
     return voiceResponse.toString(); 
   }, 
 
+  hangup: () => {
+    const response = new VoiceResponse();
+    response.hangup();
+    return response.toString();
+  },
+
   phoneIncoming: (client, callerNumber, organizationNumber) => {
     let allowedThrough;
     const voiceResponse = new VoiceResponse();

@@ -93,7 +93,6 @@ function formatIndClientCalls(calls) {
     let durationMin = call.duration > 60 ? call.duration / 60 : 0;
     let estimatedBilling =
       durationMin > 0 ? call.id.hourlyRate * (durationMin / 60) : 0;
-
     return {
       date: call.startTime,
       direction: call.direction,

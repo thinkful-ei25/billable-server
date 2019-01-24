@@ -19,6 +19,7 @@ let mode;
  * @apiParam (body) {String} From  The number of the caller
  * TODO: get incoming call from browswer to dial
  */
+
 router.post('/inbound', (req, res) => {
   const twilioNumberCalled = req.body.Called;
   const callerNumber = req.body.From;
@@ -71,8 +72,7 @@ router.post('/inbound/gather', (req, res) => {
       toCallNumber,
       organizationPhoneNumber
     );
-    res.type('text/xml');
-    res.send(redirectCallTwiML);
+    res.type('text/xml').send(redirectCallTwiML);
   });
 });
 
@@ -86,8 +86,7 @@ router.post('/inbound/gather', (req, res) => {
  */
 router.post('/outbound', (req, res) => {
   const outgoingCallTwiML = twilio.outboundBrowser(req.body.number);
-  res.type('text/xml');
-  res.send(outgoingCallTwiML);
+  res.type('text/xml').send(outgoingCallTwiML);
 });
 
 router.post('/events/:direction/:id/:to', (req, res) => {
@@ -114,7 +113,8 @@ router.post('/events/:direction/:id/:to', (req, res) => {
 
   return Call.create(newCall)
   .then(() => {
-    res.status(200).end();
+    let hangupTwiML = twilio.hangup();
+    res.type('text/xml').send(hangupTwiML);
   })
 
 });

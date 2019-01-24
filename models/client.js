@@ -22,7 +22,10 @@ const ClientSchema = mongoose.Schema({
   },
   category: String,
   hourlyRate:Number,
-  email: String,
+  email: { 
+    type: String,
+    required: true
+  },
   photo: String,
   address: {
     streetOne: String,
