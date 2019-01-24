@@ -129,7 +129,7 @@ function formatClientData(clients) {
 
 //GET All Contacts
 //TODO: Update name
-//Update with authentication
+//TODO: Update with authentication
 router.get('/contacts', (req, res, next) => {
   // const userSid = req.user.userSid;
   const userId = req.body.id
@@ -153,3 +153,5 @@ router.get('/contacts', (req, res, next) => {
 
 
 module.exports = router; 
+
+

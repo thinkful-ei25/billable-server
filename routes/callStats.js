@@ -20,12 +20,15 @@ function createSeries(results) {
  * @api [get] call/stats/all Returns an object to display aggregate call and time data for dashboard.
  * @apiName All Call Stats
  * @apiGroup Call Stats
+ * 
+ * @page used on the user dashboard upon login.
  *
  * @apiParam userSid {string} From Req.User
  *
  *
  * TODO: Update API Doc to include route.
  * TODO: Authenticate Route, and update userSid to come from req.body.
+ * TODO: Incorporate Invoice amount billed and new contact or update UI not to include it.
  */
 
 router.get('/stats/all', (req, res, next) => {
@@ -42,7 +45,7 @@ router.get('/stats/all', (req, res, next) => {
         moment: {
           $dateToString: { format: '%Y-%d', date: '$startTime' }
         },
-        duration: '$duration'
+        duration: '$duration',
       }
     },
     {
@@ -83,7 +86,7 @@ router.get('/stats/all', (req, res, next) => {
  *
  */
 
-//TODO: FORMATE dURATION WITH MOMENTJS
+//TODO: FORMATE DURATION WITH MOMENTJS
 
 function formatIndClientCalls(calls) {
   return calls.map(call => {
@@ -120,6 +123,20 @@ function formatAllClientCalls(calls) {
     };
   });
 }
+
+/**
+ * @api [get] /call/stats/:userSid Used to return All Call Data or Specific Client Data
+ * @apiName Client Call Data
+ * @apiGroup Call Stats
+ *
+ * @page Calls and/or Specific Client Page
+ *
+ * @apiParam userSid {string} Send back with Fetch to identify the user
+ * @apiQuery clientId {string} Used when asking for specific client call data/
+ *
+ *
+ * TODO: Authenticate Route, and update userSid to come from req.body.
+ */
 
 router.get('/stats/:userSid/', (req, res, next) => {
   // let {limit} = req.query
