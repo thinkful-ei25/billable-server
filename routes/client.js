@@ -49,7 +49,8 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/:id', (req, res, next) => {
+//TODO: fix route name (remove hello);
+router.get('/hello/:id', (req, res, next) => {
   const {id} = req.params; 
   const userId = req.user.id; 
 
@@ -108,6 +109,43 @@ router.delete('/:id', (req, res, next) => {
       console.log('delete by id for client didn\'t work', err);
       next(err);
     });
+});
+
+function formatClientData(clients) {
+  for(let i = 0; i < clients.length; i++) {
+    let client = clients[i]
+    let billed = 0;
+    let unpaid = 0;
+    client.invoice.map(invoice => {
+      billed += invoice.amount;
+      unpaid += (invoice.paid) ? 0 : invoice.amount;
+    })
+    client['billed'] = billed;
+    client['unpaid'] = unpaid;
+  }
+  return clients;
+}
+
+
+//GET All Contacts
+//TODO: Update name
+//Update with authentication
+router.get('/contacts', (req, res, next) => {
+  // const userSid = req.user.userSid;
+  const userId = req.body.id
+  Client.find({userId})
+  .then(clients => {
+    console.log(clients);
+    return formatClientData(clients)
+  } ).then(clientData => {
+    if (clientData) {
+      res.json(clientData)
+    } else {
+      next()
+    }
+  }).catch(err => {
+  next(err);
+})
 });
 
 
