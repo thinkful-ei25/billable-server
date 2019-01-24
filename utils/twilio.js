@@ -14,7 +14,7 @@ module.exports = {
    * TODO: programatically determine the client scope
    * TODO: pass the user back to the token
    */
-  token: (accountSid, authToken) => {
+  token: (accountSid, authToken, organizationName) => {
     const capability = new ClientCapability({
       accountSid: accountSid,
       authToken: authToken
@@ -25,7 +25,7 @@ module.exports = {
         applicationSid: TWILIO_APP_SID}));
 
     capability.addScope(
-      new ClientCapability.IncomingClientScope('Benevolent-Nezzler')); 
+      new ClientCapability.IncomingClientScope(organizationName)); 
     
     return capability.toJwt();
   },
