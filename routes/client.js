@@ -7,12 +7,16 @@ const Client = require('../models/client');
 
 
 
+
 //CREATE NEW CLIENT
 router.post('/', (req, res) => {
   console.log('req.body', req.body)
   const userId = req.user.id; 
-  const {firstName,company, lastName, hourlyRate, phoneNumber} = req.body;
-  const newClient = {company,userId, firstName, lastName, hourlyRate, phoneNumber}; 
+  const {firstName,company, lastName, hourlyRate, phoneNumber, category, email, streetOne, streetTwo, city, state, zip, photo64} = req.body;
+  console.log(photo64)
+  const newClient = {company,userId, firstName, lastName, hourlyRate, phoneNumber, category, email, 
+    address:  {streetOne, streetTwo, city, state, zip}, photo: photo64
+  }; 
 
   Client.create(newClient)
     .then(result => {
@@ -66,7 +70,7 @@ router.put('/:id', (req, res, next) => {
   const userId = req.user.id; 
 
   const toUpdate = {};
-  const updateableFields = ['company', 'firstName', 'lastName', 'hourlyRate', 'phoneNumber' ];
+  const updateableFields = ['company', 'firstName', 'lastName', 'hourlyRate', 'phoneNumber', 'category', 'email', 'streetOne', 'streetTwo', 'city', 'state', 'zip'];
 
   updateableFields.forEach(field => {
     if (field in req.body) {
