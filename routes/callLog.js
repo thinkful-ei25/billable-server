@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
 const Client = require('../models/client');
+const Call = require('../models/call');
 const VoiceResponse = require('twilio').twiml.VoiceResponse;
 const createSubAccountClient = require('../utils/createSubAccountClient');
 const momentJs = require('moment');
@@ -15,52 +16,80 @@ const {
 } = require('../config');
 const twilio = require('../utils/twilio');
 
+function createSeries(results) {
+  let durationArr = [];
+  let callsArr = [];
+  let durationTotal = 0;
+  let callsTotal = 0;
+  for (let i = 0; i < results.length; i++) {
+    durationArr.push(results[i].seconds);
+    callsArr.push(results[i].calls);
+    durationTotal += results[i].seconds;
+    callsTotal += results[i].calls;
+  }
+  return { durationArr, callsArr, durationTotal, callsTotal };
+}
+
 /**
- * @api [post] /call-log/status Handles updating call db once a status has changed.
- * @apiName Call Status Update
- * @apiGroup Call Log
+ * @api [get] call/stats/all Returns an object to display aggregate call and time data for dashboard.
+ * @apiName All Call Stats
+ * @apiGroup Call Stats
+ * 
+ * @apiParam userSid {string} From Req.User 
+ * 
  *
- * TODO: 
+ * TODO: Update API Doc to include route.
+ * TODO: Authenticate Route, and update userSid to come from req.body.
  */
 
-
- function totalsPromise(firstDay, lastDay) {
+router.get('/stats/all', (req, res, next) => {
+  // let userSid = req.user.userSid;
+  let { userSid } = req.body;
+  console.log(userSid);
   return Call.aggregate([
     {
       $match: {
-        startTime: {
-          $lte: new Date(lastDay),
-          $gte: new Date(firstDay)
-        }
+        userSid: userSid
+      }
+    },
+    {
+      $project: {
+        moment: {
+          $dateToString: { format: '%Y-%d', date: '$startTime' }
+        },
+        duration: '$duration'
       }
     },
     {
       $group: {
-        _id
+        _id: '$moment',
+        seconds: { $sum: '$duration' },
+        calls: { $sum: 1 }
+      }
+    },
+    {
+      $sort: {
+        _id: -1
       }
     }
   ])
- }
-
-
-router.get('/call/info', (req, res) => {
-
-  let userSid = req.user.userSid;
-    return Calls.aggregate([
-      {
-        $match: {
-          userSid: userSid
-        }
-      },
-      {
-        $group: {
-          _id: null,
-          minutes: { $sum: '$duration'},
-          calls: { $sum: 1}
-        } 
+    .then(result => {
+      console.log('RESULT => ', result);
+      if (!result) {
+        const err = new Error('No Call Results Found');
+        err.status(400);
+        next();
+      } else {
+        return createSeries(result);
       }
-    ])
-
+    })
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      console.log(err);
+      next(err);
+    });
 });
 
 /**
@@ -71,18 +100,14 @@ router.get('/call/info', (req, res) => {
  *
  */
 
-
-
 /**
-* @api [get] /call-log/find returns all calls associated to a User
-* @apiName Call Status Update
-* @apiGroup Call Log
-*
-* TODO: Setup route to be authenticated
-* TODO: Use user to setup twilio credentials
-*/
-
-
+ * @api [get] /call-log/find returns all calls associated to a User
+ * @apiName Call Status Update
+ * @apiGroup Call Log
+ *
+ * TODO: Setup route to be authenticated
+ * TODO: Use user to setup twilio credentials
+ */
 
 module.exports = router;
 
@@ -120,9 +145,3 @@ module.exports = router;
  *
  *
  */
-
-
-
-
-
-

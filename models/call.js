@@ -8,8 +8,8 @@ const CallSchema = mongoose.Schema({
     ref: 'Client'
   },
   userSid: String,
-  startTime: String,
-  endTime: String,
+  startTime: Date,
+  endTime: Date,
   duration: { type: Number, default: 0 },
   organizationPhoneNumber: { type: String, required: true },
   clientPhoneNumber: { type: String, required: true },
