@@ -14,7 +14,8 @@ router.post('/', (req, res) => {
   const userId = req.user.id; 
   const {firstName,company, lastName, hourlyRate, phoneNumber, category, email, streetOne, streetTwo, city, state, zip, photo64} = req.body;
   console.log(photo64)
-  const newClient = {company,userId, firstName, lastName, hourlyRate, phoneNumber, category, email, 
+  const clientNumber = '+1' + phoneNumber.replace(/-/g, '');
+  const newClient = {company,userId, firstName, lastName, hourlyRate, phoneNumber: clientNumber, category, email, 
     address:  {streetOne, streetTwo, city, state, zip}, photo: photo64
   }; 
 
