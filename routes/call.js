@@ -1,12 +1,14 @@
 'use strict';
 const express = require('express');
 const router = express.Router();
-const findClients = require('../utils/queries/findClients'); 
-const findUser = require('../utils/queries/findUser'); 
+const findClients = require('../utils/queries/findClients');
+const findUser = require('../utils/queries/findUser');
+const Call = require('../models/call');
 const twilio = require('../utils/twilio');
+const moment = require('moment');
 
-// let mode='phone';
-let mode='browser'; 
+let mode;
+// mode = 'browser';
 
 /**
  * @api [post] /call/inbound Handles inbound calls and routes the call based on the caller.
@@ -20,25 +22,35 @@ let mode='browser';
 router.post('/inbound', (req, res) => {
   const twilioNumberCalled = req.body.Called;
   const callerNumber = req.body.From;
+  let _user;
+  let responseTwiML;
 
-  if (mode === 'browser'){ 
-    findUser(twilioNumberCalled)
-      .then(user => { 
-        const browserCallTwiMl = twilio.inboundBrowser(user.organizationName, callerNumber); 
-
-        res
-          .type('text/xml')
-          .send(browserCallTwiMl); 
-      }); 
-  }
-  else if (mode === 'phone'){ 
-    handlePhoneCalls(callerNumber, twilioNumberCalled).then(voiceResponse => { 
-      
-      res
-        .type('text/xml')
-        .send(voiceResponse);
-    }); 
-  }
+  return findUser(twilioNumberCalled)
+    .then(user => {
+      _user = user;
+      if (mode === 'browser') {
+        responseTwiML = twilio.inboundBrowser(
+          user.organizationName,
+          callerNumber
+        );
+        return;
+      } else if (callerNumber === _user.organizationPhoneNumber) {
+        responseTwiML = twilio.gather();
+        return;
+      } else {
+        return findClients(twilioNumberCalled, callerNumber);
+      }
+    })
+    .then(client => {
+      if (client) {
+        responseTwiML = twilio.phoneIncoming(
+          client,
+          callerNumber,
+          _user.organizationPhoneNumber
+        );
+      }
+      res.type('text/xml').send(responseTwiML);
+    });
 });
 
 /**
@@ -51,9 +63,17 @@ router.post('/inbound', (req, res) => {
  */
 router.post('/inbound/gather', (req, res) => {
   const toCallNumber = `+1${req.body.Digits}`;
-
-  const redirectCallTwiML = twilio.phoneOutgoing(toCallNumber, req.body.From);
-  res.send(redirectCallTwiML);
+  let twilioNumberCalled = req.body.Called;
+  let organizationPhoneNumber = req.body.From;
+  findClients(twilioNumberCalled, toCallNumber).then(client => {
+    const redirectCallTwiML = twilio.phoneOutgoing(
+      client,
+      toCallNumber,
+      organizationPhoneNumber
+    );
+    res.type('text/xml');
+    res.send(redirectCallTwiML);
+  });
 });
 
 /**
@@ -70,20 +90,35 @@ router.post('/outbound', (req, res) => {
   res.send(outgoingCallTwiML);
 });
 
-//TODO: PUT THIS IN A UTIL
-function handlePhoneCalls(callerNumber, twilioNumberCalled){ 
-  return findUser(twilioNumberCalled)
-    .then(user => { 
-      if (callerNumber === user.organizationPhoneNumber) { 
-        return twilio.gather(user.organizationPhoneNumber); 
-      }
-      else { 
-        return findClients(twilioNumberCalled)
-          .then(clients => { 
-            return twilio.phoneIncoming(clients, callerNumber, user.organizationPhoneNumber); 
-        }); 
-      }
-    }); 
-}
+router.post('/events/:direction/:id/:to', (req, res) => {
+  let organizationPhoneNumber, clientPhoneNumber;
+  let { direction, id, to } = req.params;
+  let { From } = req.body;
+  to = '+1' + to;
+  organizationPhoneNumber = direction === 'outgoing' ? From : to;
+  clientPhoneNumber = direction === 'outgoing' ? to : From;
+
+  let newCall = {
+    id: id,
+    userSid: req.body.AccountSid,
+    startTime: moment()
+      .subtract(Number(req.body.DialCallDuration), 's')
+      .toDate(),
+    endTime: moment().toDate(),
+    duration: req.body.DialCallDuration,
+    organizationPhoneNumber,
+    clientPhoneNumber,
+    callSid: req.body.DialCallSid,
+    direction,
+    status: req.body.CallStatus
+  };
+
+  return Call.create(newCall)
+  .then(() => {
+    res.status(200).end();
+  })
+
+});
+
 
 module.exports = router;

@@ -38,8 +38,6 @@ module.exports = {
    * TODO: Discuss how to capture callerId (dynamic Twilio number: hardcoded: from caller)
    */
   outboundBrowser: toCallNumber => {
-    console.log('hi to the outback'); 
-
     const voiceResponse = new VoiceResponse();
     voiceResponse.dial(
       {
@@ -50,21 +48,6 @@ module.exports = {
     return voiceResponse.toString();
   },
 
-  /**
-   * Create TwiML to collect user input and call input
-   * @param toCallNumber number to be called
-   * @returns {string} TwiML describing the outgoing call
-   */
-  phoneOutgoing: (toCallNumber, organizationPhoneNumber) => {
-    const voiceResponse = new VoiceResponse();
-    voiceResponse.dial(
-      {
-        callerId: organizationPhoneNumber
-      },
-      toCallNumber
-    );
-    return voiceResponse.toString();
-  },
 
   /**
    * Possible other TwiML Creators for inbound call and for sub-account creation. @client could replace the createSubAccountClient.
@@ -85,15 +68,13 @@ module.exports = {
   /**
    * Purpose: handle when user calls their own Twilio number (to make an outbound call)
    */
-  gather: (organizationPhoneNumber) => { 
+  gather: () => { 
     const voiceResponse = new VoiceResponse();
-
-    //Calls the gather call/inbound/gather route
     const gather = voiceResponse.gather({
       numDigits: 10,
-      action: '/api/call/inbound/gather',
+      action: `/api/call/inbound/gather`,
       method: 'POST',
-      finishOnKey: '#'
+      finishOnKey: '#',
     });
 
     gather.say(
@@ -103,28 +84,42 @@ module.exports = {
     return voiceResponse.toString(); 
   }, 
 
-  phoneIncoming: (clients, callerNumber, organizationNumber) => {
-    let allowedThrough; 
-
+  phoneIncoming: (client, callerNumber, organizationNumber) => {
+    let allowedThrough;
     const voiceResponse = new VoiceResponse();
-
-    // let allowedCallers = clients.map(client => {
-    //   client.phoneNumber;
-    // });
-
-    TODO: 
-    //let allowedThrough = allowedCallers.includes(callerNumber); 
-    console.log(callerNumber, organizationNumber); 
-
+    let clientId = client[0]._id;
+    // let allowedThrough = (client.length === 1);
     allowedThrough = true; 
     if (allowedThrough) {
-      voiceResponse.dial({ callerId: callerNumber }, organizationNumber );
+      voiceResponse.dial(
+        { 
+          callerId: callerNumber,
+          action: `/api/call/events/inbound/${clientId}/${organizationNumber.slice(-10)}`
+        }, 
+        organizationNumber );
       return voiceResponse.toString(); 
     } else {
       voiceResponse.say('Sorry you are calling a restricted number.'); 
-      return; 
     }
   }, 
+
+  /**
+ * Create TwiML to collect user input and call input
+ * @param toCallNumber number to be called
+ * @returns {string} TwiML describing the outgoing call
+ */
+  phoneOutgoing: (client, toCallNumber, organizationPhoneNumber) => {
+    let clientId = client[0]._id;
+    const voiceResponse = new VoiceResponse();
+    voiceResponse.dial(
+      {
+        callerId: organizationPhoneNumber,
+        action: '/api/call/events/outgoing/' + clientId + '/' + toCallNumber
+      },
+      toCallNumber
+    );
+    return voiceResponse.toString();
+  },
 
   /**
    * Version One: Creates a client capability for either Master or a SubAccount

@@ -53,6 +53,7 @@ ClientSchema.set('toJSON', {
   }
 }); 
 
+
 const Client = mongoose.model('Client', ClientSchema); 
 
 module.exports = Client; 

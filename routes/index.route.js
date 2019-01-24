@@ -21,7 +21,7 @@ router.use('/call', call);
 router.use('/phone', jwtAuth, phone);
 router.use('/account', jwtAuth, account);
 router.use('/client', jwtAuth, client);
-router.use('/call-log', callLog);
+// router.use('/call-log', callLog);
 
 // Custom Error Handler
 router.use((err, req, res, next) => {
