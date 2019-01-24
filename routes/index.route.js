@@ -11,7 +11,7 @@ const register = require('./register');
 const call = require('./call');
 const account = require('./account');
 const client = require('./client');
-const callLog = require('./callStats');
+const callStats = require('./callStats');
 
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
@@ -21,7 +21,8 @@ router.use('/call', call);
 router.use('/phone', jwtAuth, phone);
 router.use('/account', jwtAuth, account);
 router.use('/client', jwtAuth, client);
-router.use('/call', callLog);
+//TODO: Authenticate this route;
+router.use('/call', callStats);
 
 // Custom Error Handler
 router.use((err, req, res, next) => {
