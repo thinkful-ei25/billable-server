@@ -94,8 +94,7 @@ router.post('/events/:direction/:id/:to', (req, res) => {
   let organizationPhoneNumber, clientPhoneNumber;
   let { direction, id, to } = req.params;
   let { From } = req.body;
-  to = '+1' + to;
-  organizationPhoneNumber = direction === 'outgoing' ? From : to;
+  organizationPhoneNumber = direction === 'outgoing' ? From : '+1' + to;
   clientPhoneNumber = direction === 'outgoing' ? to : From;
 
   let newCall = {

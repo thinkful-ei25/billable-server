@@ -36,13 +36,14 @@ const ClientSchema = mongoose.Schema({
     type:String,
     required:true
   },
-  invoice:[
+  invoice:[ 
     {
       month:Number, 
       year:Number, 
       paid:Boolean
     }
-  ]
+  ],
+  // calls: [{type: mongoose.Schema.Types.ObjectId, ref: 'Call'}],
 }); 
 
 ClientSchema.set('toJSON', {

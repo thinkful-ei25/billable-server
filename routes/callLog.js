@@ -34,9 +34,9 @@ function createSeries(results) {
  * @api [get] call/stats/all Returns an object to display aggregate call and time data for dashboard.
  * @apiName All Call Stats
  * @apiGroup Call Stats
- * 
- * @apiParam userSid {string} From Req.User 
- * 
+ *
+ * @apiParam userSid {string} From Req.User
+ *
  *
  * TODO: Update API Doc to include route.
  * TODO: Authenticate Route, and update userSid to come from req.body.
@@ -45,7 +45,6 @@ function createSeries(results) {
 router.get('/stats/all', (req, res, next) => {
   // let userSid = req.user.userSid;
   let { userSid } = req.body;
-  console.log(userSid);
   return Call.aggregate([
     {
       $match: {
@@ -74,7 +73,6 @@ router.get('/stats/all', (req, res, next) => {
     }
   ])
     .then(result => {
-      console.log('RESULT => ', result);
       if (!result) {
         const err = new Error('No Call Results Found');
         err.status(400);
@@ -87,7 +85,6 @@ router.get('/stats/all', (req, res, next) => {
       res.json(result);
     })
     .catch(err => {
-      console.log(err);
       next(err);
     });
 });
@@ -100,37 +97,88 @@ router.get('/stats/all', (req, res, next) => {
  *
  */
 
-/**
- * @api [get] /call-log/find returns all calls associated to a User
- * @apiName Call Status Update
- * @apiGroup Call Log
- *
- * TODO: Setup route to be authenticated
- * TODO: Use user to setup twilio credentials
- */
+//TODO: FORMATE dURATION WITH MOMENTJS
+
+function formatIndClientCalls(calls) {
+  return calls.map(call => {
+    let durationMin = call.duration > 60 ? call.duration / 60 : 0;
+    let estimatedBilling =
+      durationMin > 0 ? call.id.hourlyRate * (durationMin / 60) : 0;
+
+    return {
+      date: call.startTime,
+      direction: call.direction,
+      length: durationMin,
+      billable: call.billable,
+      estimatedBilling
+    };
+  });
+}
+
+function formatAllClientCalls(calls) {
+  return calls.map(call => {
+    let client = call.id;
+    let durationMin = call.duration > 60 ? call.duration / 60 : 0;
+    let estimatedBilling =
+      durationMin > 0 ? call.id.hourlyRate * (durationMin / 60) : 0;
+    return {
+      date: call.startTime,
+      direction: call.direction,
+      photo: client.photo || null,
+      contactName: `${client.firstName} ${client.lastName}`,
+      company: client.company,
+      phoneNumber: client.phoneNumber,
+      length: durationMin,
+      billable: call.billable,
+      estimatedBilling
+    };
+  });
+}
+
+router.get('/stats/:userSid/', (req, res, next) => {
+  // let {limit} = req.query
+  // let userSid = req.user.userSid;
+  let { clientId } = req.query;
+  let { userSid } = req.params;
+
+  if (clientId && userSid) {
+    return Call.find({ id: clientId, userSid })
+      .populate('id')
+      .then(calls => {
+        if (calls) {
+          return formatIndClientCalls(calls);
+        } else {
+          next();
+        }
+      })
+      .then(callsArr => {
+        res.json(callsArr);
+      })
+      .catch(err => {
+        next(err);
+      });
+  } else if (!clientId && userSid) {
+    return Call.find({ userSid })
+      .populate('id')
+      .then(calls => {
+        if (calls) {
+          return formatAllClientCalls(calls);
+        } else {
+          next();
+        }
+      })
+      .then(callsArr => {
+        res.json(callsArr);
+      })
+      .catch(err => {
+        next(err);
+      })
+  }
+});
 
 module.exports = router;
 
-/**a
- * 3.) Setup route for dashboard home
- *     Response:
- *       {
- *         totalMinutes: Num
- *         totalCalls: Num
- *         minutesArry: []
- *         callsArray: []
- *       }
- * 4.) Setup route for all calls
- *    query: for individual contact or all
- *     Response:
- *       {
- *         Contact:
- *         Start Time:
- *         Direction: (Inbound or outbound)
- *         Length: seconds
- *         Estimated Billing:
- *         Billable: Default True
- *        }
+/**
  * 5.) Setup route for all calls by user
  *     Response:
  *        {
