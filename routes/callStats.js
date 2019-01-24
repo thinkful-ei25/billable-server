@@ -1,20 +1,6 @@
-const express = require('express');
+ const express = require('express');
 const router = express.Router();
-const User = require('../models/user');
-const Client = require('../models/client');
 const Call = require('../models/call');
-const VoiceResponse = require('twilio').twiml.VoiceResponse;
-const createSubAccountClient = require('../utils/createSubAccountClient');
-const momentJs = require('moment');
-const {
-  TWILIO_ACCOUNT_SID,
-  TWILIO_AUTH_TOKEN,
-  TWILIO_APP_SID,
-  TWILIO_NUMBER,
-  MASTER_CLIENT,
-  JIM
-} = require('../config');
-const twilio = require('../utils/twilio');
 
 function createSeries(results) {
   let durationArr = [];
@@ -178,18 +164,3 @@ router.get('/stats/:userSid/', (req, res, next) => {
 
 module.exports = router;
 
-/**
- * 5.) Setup route for all calls by user
- *     Response:
- *        {
- *          Contact Name:
- *          Company:
- *          Phone Number:
- *          Category:
- *          Total Minutes:
- *          Total Calls:
- *          Total Cost:
- *        }
- *
- *
- */

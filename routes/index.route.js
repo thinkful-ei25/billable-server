@@ -11,7 +11,7 @@ const register = require('./register');
 const call = require('./call');
 const account = require('./account');
 const client = require('./client');
-const callLog = require('./callLog');
+const callLog = require('./callStats');
 
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
