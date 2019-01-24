@@ -10,7 +10,7 @@ const CallSchema = mongoose.Schema({
   userSid: String,
   startTime: String,
   endTime: String,
-  duration: { type: String, default: '0' },
+  duration: { type: Number, default: 0 },
   organizationPhoneNumber: { type: String, required: true },
   clientPhoneNumber: { type: String, required: true },
   callSid: String,
