@@ -20,7 +20,18 @@ const ClientSchema = mongoose.Schema({
     type:String,
     required:true
   },
+  category: String,
   hourlyRate:Number,
+  email: String,
+  photo: String,
+  address: {
+    streetOne: String,
+    streetTwo: String,
+    city: String,
+    state: String,
+    zip: Number
+  },
+  billable: Boolean,
   phoneNumber:{
     type:String,
     required:true
