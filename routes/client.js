@@ -131,8 +131,7 @@ function formatClientData(clients) {
 //TODO: Update name
 //TODO: Update with authentication
 router.get('/contacts', (req, res, next) => {
-  // const userSid = req.user.userSid;
-  const userId = req.body.id
+  const userId = req.user.id;
   Client.find({userId})
   .then(clients => {
     console.log(clients);

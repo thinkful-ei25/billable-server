@@ -22,7 +22,7 @@ router.use('/phone', jwtAuth, phone);
 router.use('/account', jwtAuth, account);
 router.use('/client', jwtAuth, client);
 //TODO: Authenticate this route;
-router.use('/call', callStats);
+router.use('/call', jwtAuth, callStats);
 
 // Custom Error Handler
 router.use((err, req, res, next) => {
