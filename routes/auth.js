@@ -27,33 +27,32 @@ function createAuthToken(user) {
   });
 }
 
-function findUserByID(userId) {
+function findCapabilityTokenByID(userId) {
   return User.findById(userId)
   .then(user => {
     let clientBrowserName = user.organizationName.replace(/ /g, '');
     const capabilityToken = twilio.token(user.twilio.sid, user.twilio.authToken, clientBrowserName);
     return capabilityToken;
-  })
+  }); 
 }
 
 router.post('/login', localAuth, (req, res) => {
   const authToken = createAuthToken(req.user);
   const {id} = req.user; 
-  console.log('id', id); 
   
-  return User.findById(id)
-    .then(capabilityToken => {
-    res.json({authToken, capabilityToken})
-  }); 
+  return findCapabilityTokenByID(id)
+    .then(capabilityToken => { 
+      res.json({authToken, capabilityToken}); 
+    }); 
 });
 
 router.post('/refresh', jwtAuth, (req, res) => {
   const authToken = createAuthToken(req.user);
   const {id} = req.user; 
-  return User.findById(id)
-    .then(capabilityToken => {
-      res.json({ authToken, capabilityToken }); 
-  });
+  return findCapabilityTokenByID(id)
+    .then(capabilityToken => { 
+      res.json({authToken, capabilityToken}); 
+    }); 
 });
 
 
