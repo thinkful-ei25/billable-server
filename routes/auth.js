@@ -29,17 +29,16 @@ function createAuthToken(user) {
 
 function findUserByID(userId) {
   return User.findById(userId)
-  .then(user => {
-    let clientBrowserName = user.organizationName.replace(/ /g, '');
-    console.log('##### REFRESH clientBrowserName:  ' + clientBrowserName + ' #####');
-    const capabilityToken = twilio.token(user.twilio.sid, user.twilio.authToken, clientBrowserName);
-    console.log('##### Capability Token:  ' + capabilityToken + ' #####');
-    return capabilityToken;
-  })
+    .then(user => {
+      let clientBrowserName = user.organizationName.replace(/ /g, '');
+      console.log('##### REFRESH clientBrowserName:  ' + user.twilio.authToken + ' #####');
+      const capabilityToken = twilio.token(user.twilio.sid, user.twilio.authToken, clientBrowserName);
+      console.log('##### Capability Token:  ' + capabilityToken + ' #####');
+      return capabilityToken;
+    }); 
 }
 
 router.post('/login', localAuth, (req, res) => {
-  console.log('user', req.user);
   const authToken = createAuthToken(req.user);
   return findUserByID(req.user)
     .then(capabilityToken => {
@@ -52,7 +51,7 @@ router.post('/refresh', jwtAuth, (req, res) => {
   return findUserByID(req.user)
     .then(capabilityToken => {
       res.json({ authToken, capabilityToken })
-});
+  });
 });
 
 
