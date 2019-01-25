@@ -10,10 +10,10 @@ const Client = require('../models/client');
 
 //CREATE NEW CLIENT
 router.post('/', (req, res) => {
-  console.log('req.body', req.body)
+  console.log('req.body', req.body);
   const userId = req.user.id; 
   const {firstName,company, lastName, hourlyRate, phoneNumber, category, email, streetOne, streetTwo, city, state, zip, photo64} = req.body;
-  console.log(photo64)
+  console.log(photo64);
   const clientNumber = '+1' + phoneNumber.replace(/-/g, '');
   const newClient = {company,userId, firstName, lastName, hourlyRate, phoneNumber: clientNumber, category, email, 
     address:  {streetOne, streetTwo, city, state, zip}, photo: photo64

@@ -66,7 +66,7 @@ router.post('/user', (req, res, next) => {
 router.get('/phones', (req, res) => { 
   console.log('FIND AVAILABLE PHONE NUMBERS'); 
   const { areaCode } = req.query; 
-console.log(areaCode);
+  console.log(areaCode);
   MASTER_CLIENT
     .availablePhoneNumbers('US')
     .local.list({
@@ -81,7 +81,7 @@ console.log(areaCode);
         let phoneNumber = {
           response: availableNumbers[i].phoneNumber,
           display: availableNumbers[0].friendlyName
-        }
+        };
         phoneNumbers.push(phoneNumber); 
       }
       console.log(phoneNumbers);
