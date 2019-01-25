@@ -38,17 +38,21 @@ function findUserByID(userId) {
 
 router.post('/login', localAuth, (req, res) => {
   const authToken = createAuthToken(req.user);
-  return findUserByID(req.user)
+  const {id} = req.user; 
+  console.log('id', id); 
+  
+  return User.findById(id)
     .then(capabilityToken => {
     res.json({authToken, capabilityToken})
-  })
+  }); 
 });
 
 router.post('/refresh', jwtAuth, (req, res) => {
   const authToken = createAuthToken(req.user);
-  return findUserByID(req.user)
+  const {id} = req.user; 
+  return User.findById(id)
     .then(capabilityToken => {
-      res.json({ authToken, capabilityToken })
+      res.json({ authToken, capabilityToken }); 
   });
 });
 
