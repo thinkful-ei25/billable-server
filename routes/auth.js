@@ -27,43 +27,34 @@ function createAuthToken(user) {
   });
 }
 
+function findUserByID(userId) {
+  return User.findById(userId)
+  .then(user => {
+    let clientBrowserName = user.organizationName.replace(/ /g, '');
+    console.log('##### REFRESH clientBrowserName:  ' + clientBrowserName + ' #####');
+    const capabilityToken = twilio.token(user.twilio.sid, user.twilio.authToken, clientBrowserName);
+    console.log('##### Capability Token:  ' + capabilityToken + ' #####');
+    return capabilityToken;
+  })
+}
+
 router.post('/login', localAuth, (req, res) => {
   console.log('user', req.user);
   const authToken = createAuthToken(req.user);
-  User.findByID(req.user.id).then(user => {
-    let clientBrowserName = user.organizationName.replace(/ /g, '');
-    console.log('##### clientBrowserName:  ' + clientBrowserName + ' #####');
-    const capabilityToken = twilio.token(user.twilio.accountSid, user.twilio.authToken, clientBrowserName);
-    console.log('##### Capability Token:  ' + capabilityToken + ' #####');
-    return capabilityToken
-  })
-  .then(capabilityToken => {
-    res.json({ authToken, capabilityToken });
+  return findUserByID(req.user)
+    .then(capabilityToken => {
+    res.json({authToken, capabilityToken})
   })
 });
 
 router.post('/refresh', jwtAuth, (req, res) => {
   const authToken = createAuthToken(req.user);
-  res.json({ authToken });
+  return findUserByID(req.user)
+    .then(capabilityToken => {
+      res.json({ authToken, capabilityToken })
+});
 });
 
-/**
- * @api [post] /token
- * description: "Returns a capability token to allow user to make inbrowser calling"
- * parameters:
- *  -(body) accountSid {String - required} The twilio accountSID of the user
- *  -(body) authToken {String - required} The twilio authToken for the user
- *
- * TODO: Discuss how route receives accountSid and authToken
- */
 
-// router.post('/token', (req, res) => {
-//   const accountSid = req.body.accountSid;
-//   const authToken = req.body.authToken;
-//   // console.log('POST /token for account SID: ' + accountSid);
-//   const capabilityToken = twilio.token(accountSid, authToken);
-//   console.log('##### Capability Token:  ' + capabilityToken + ' #####');
-//   res.send(capabilityToken);
-// });
 
 module.exports = router;
