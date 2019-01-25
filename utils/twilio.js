@@ -61,7 +61,6 @@ module.exports = {
     
     let dial = voiceResponse.dial({callerId}); 
     dial.client(organizationName); 
-
     return voiceResponse.toString(); 
   },
 

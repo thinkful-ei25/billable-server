@@ -75,7 +75,7 @@ router.get('/phones', (req, res) => {
       voiceEnabled: 'true'
     })
     .then(availableNumbers => {
-      console.log('availableNumber', availableNumbers[0]);
+      // console.log('availableNumber', availableNumbers[0]);
       let phoneNumbers = []; 
       for (let i = 0; i < availableNumbers.length; i++) { 
 
@@ -85,7 +85,7 @@ router.get('/phones', (req, res) => {
         }
         phoneNumbers.push(phoneNumber); 
       }
-      console.log('phoneNumber', phoneNumbers);
+      // console.log('phoneNumber', phoneNumbers);
   
       res
         .json(phoneNumbers); 
