@@ -56,10 +56,9 @@ router.post('/inbound', (req, res) => {
 
 /**
  * @api [post] /call/inbound/gather Called by /call/inbound when User Calls their own Twilio Number
- * @apiName Outbound Call
+ * @apiName Gather Call
  * @apiGroup Call
  *
- * @param (body) {String}  toCallNumber Number entered in browser to call
  * TODO: Review what happens if no numbers are inputted.
  */
 router.post('/inbound/gather', (req, res) => {
@@ -89,6 +88,19 @@ router.post('/outbound', (req, res) => {
   res.type('text/xml').send(outgoingCallTwiML);
 });
 
+/**
+ * @api [post] /call/events Handles all completed calls.
+ * @apiName Call Events
+ * @apiGroup Call
+ *
+ * @apiParam {String}  direction determines if the call was inbound or outbound
+ * @apiParam {String} the client associated with the call
+ * @apiParam {String} the number of the recipient of the call.
+ * 
+ * TODO: Review edge cases of callers.
+ *
+ */
+
 router.post('/events/:direction/:id/:to', (req, res) => {
   let organizationPhoneNumber, clientPhoneNumber;
   let { direction, id, to } = req.params;
@@ -111,13 +123,10 @@ router.post('/events/:direction/:id/:to', (req, res) => {
     status: req.body.CallStatus
   };
 
-  return Call.create(newCall)
-  .then(() => {
+  return Call.create(newCall).then(() => {
     let hangupTwiML = twilio.hangup();
     res.type('text/xml').send(hangupTwiML);
-  })
-
+  });
 });
-
 
 module.exports = router;

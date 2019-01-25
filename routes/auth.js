@@ -31,15 +31,12 @@ function findUserByID(userId) {
   return User.findById(userId)
   .then(user => {
     let clientBrowserName = user.organizationName.replace(/ /g, '');
-    console.log('##### REFRESH clientBrowserName:  ' + clientBrowserName + ' #####');
     const capabilityToken = twilio.token(user.twilio.sid, user.twilio.authToken, clientBrowserName);
-    console.log('##### Capability Token:  ' + capabilityToken + ' #####');
     return capabilityToken;
   })
 }
 
 router.post('/login', localAuth, (req, res) => {
-  console.log('user', req.user);
   const authToken = createAuthToken(req.user);
   return findUserByID(req.user)
     .then(capabilityToken => {

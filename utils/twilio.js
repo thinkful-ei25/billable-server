@@ -1,18 +1,18 @@
 'use strict';
 
 const { TWILIO_APP_SID, TWILIO_NUMBER } = require('../config');
-const User = require('../models/user');
 const twilio = require('twilio');
 const ClientCapability = twilio.jwt.ClientCapability;
 const VoiceResponse = twilio.twiml.VoiceResponse;
 
 module.exports = {
   /**
-   * Create outgoing call capability
-   * @returns {string} token
-   * TODO: CLIENT SIDE ISSUES
-   * TODO: programatically determine the client scope
-   * TODO: pass the user back to the token
+   * Creates outgoing and incoming client scope for Browser Dialing.
+   * @param accountSid the sid associated the with user.
+   * @param authToken the token associated with the user.
+   * @param organizationName the name of the organization to create client capability.
+   * 
+   * @returns {string} clientcapability token
    */
   token: (accountSid, authToken, organizationName) => {
     const capability = new ClientCapability({
@@ -50,7 +50,7 @@ module.exports = {
 
 
   /**
-   * Possible other TwiML Creators for inbound call and for sub-account creation. @client could replace the createSubAccountClient.
+   * Create TwiML for inbound calls to the browser 
    * @param organizationName user's organization name
    * @param callerId user's number
    * @returns {string} TwiML describing the outgoing call
@@ -66,7 +66,8 @@ module.exports = {
   },
 
   /**
-   * Purpose: handle when user calls their own Twilio number (to make an outbound call)
+   * Collects input when user calls their own Twilio Number and 
+   * directs call to /call/inbound/gather once digits have been gathered. 
    */
   gather: () => { 
     const voiceResponse = new VoiceResponse();
@@ -84,13 +85,31 @@ module.exports = {
     return voiceResponse.toString(); 
   }, 
 
+  /**
+  * Handles the hangup when the Recipient of the phone call hangs up first. 
+  * Called by /call/events
+  * @returns {string} TwiML for hanging up the call.
+  */
+
   hangup: () => {
     const response = new VoiceResponse();
     response.hangup();
     return response.toString();
   },
 
-  phoneIncoming: (client, callerNumber, organizationNumber) => {
+  /**
+  * Verifies the caller is allowed through & directs the call accordingly.
+  * Called by /calls/inbound
+  * 
+  * @param client the client/contact calling the Twilio Number.
+  * @param callerNumber the number calling the Twilio Number.
+  * @param organizationPhoneNumber the number of the user connected to the Twilio Account.
+  * 
+  * @returns {string} If allowed through returns TwiML to connect caller to User
+  * @return {string} If not allowed through returns TwiML saying they are not allowed.
+  */
+
+  phoneIncoming: (client, callerNumber, organizationPhoneNumber) => {
     let allowedThrough;
     const voiceResponse = new VoiceResponse();
     let clientId = client[0]._id;
@@ -100,9 +119,9 @@ module.exports = {
       voiceResponse.dial(
         { 
           callerId: callerNumber,
-          action: `/api/call/events/inbound/${clientId}/${organizationNumber.slice(-10)}`
+          action: `/api/call/events/inbound/${clientId}/${organizationPhoneNumber.slice(-10)}`
         }, 
-        organizationNumber );
+        organizationPhoneNumber );
       return voiceResponse.toString(); 
     } else {
       voiceResponse.say('Sorry you are calling a restricted number.'); 
@@ -110,8 +129,11 @@ module.exports = {
   }, 
 
   /**
- * Create TwiML to collect user input and call input
+ * Creates TwiML for calling a contact/client 
  * @param toCallNumber number to be called
+ * @param client client being call
+ * @param organizationPhoneNumebr used as the callerId
+ * 
  * @returns {string} TwiML describing the outgoing call
  */
   phoneOutgoing: (client, toCallNumber, organizationPhoneNumber) => {
@@ -125,46 +147,5 @@ module.exports = {
       toCallNumber
     );
     return voiceResponse.toString();
-  },
-
-  /**
-   * Version One: Creates a client capability for either Master or a SubAccount
-   * @param accountSid
-   * @param authToken
-   * @returns {string} token
-   *
-   * TODO: Determine if we could use client to replace our method for createSubAccountClient
-   *
-   */
-  client: (accountSid, authToken) => {
-    const capability = new ClientCapability({
-      accountSid: accountSid,
-      authToken: authToken
-    });
-
-    return capability.toJwt();
-  },
-
-  /**
-   * Version Two: Creates a client capability for either Master or a SubAccount
-   * @param organizationName
-   * @returns {string} capability
-   *
-   * TODO: Determine if we could use client to replace our method for createSubAccountClient
-   * TODO: Determine if V1 or V2 solves our needs.
-   * TODO: Added master organization to be able to update sub or master
-   */
-
-  client_two: (organizationName) => {
-    return User.findOne({organizationName})
-      .then(user => {
-        console.log('##### client_two user sid ##### ' + user.twilio.sid);
-        console.log('##### client_two user authToken ##### ' + user.twilio.authToken);
-        const capability = new ClientCapability({accountSid: user.twilio.sid, authToken: user.twilio.authToken});
-        return capability;
-      })
-      .catch(err => {
-        console.log('#### client_two error #### ' + err);
-      })
   }
 };
