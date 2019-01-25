@@ -50,7 +50,7 @@ router.get('/', (req, res) => {
 });
 
 //TODO: fix route name (remove hello);
-router.get('/hello/:id', (req, res, next) => {
+router.get('/contacts/:id', (req, res, next) => {
   const {id} = req.params; 
   const userId = req.user.id; 
 
