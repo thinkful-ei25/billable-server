@@ -8,7 +8,7 @@ const twilio = require('../utils/twilio');
 const moment = require('moment');
 
 let mode;
-// mode = 'browser';
+mode = 'browser';
 
 /**
  * @api [post] /call/inbound Handles inbound calls and routes the call based on the caller.

@@ -66,7 +66,7 @@ router.post('/user', (req, res, next) => {
 router.get('/phones', (req, res) => { 
   console.log('FIND AVAILABLE PHONE NUMBERS'); 
   const { areaCode } = req.query; 
-console.log(areaCode);
+
   MASTER_CLIENT
     .availablePhoneNumbers('US')
     .local.list({
@@ -75,21 +75,24 @@ console.log(areaCode);
       voiceEnabled: 'true'
     })
     .then(availableNumbers => {
-      console.log(availableNumbers[0]);
+      console.log('availableNumber', availableNumbers[0]);
       let phoneNumbers = []; 
       for (let i = 0; i < availableNumbers.length; i++) { 
+
         let phoneNumber = {
           response: availableNumbers[i].phoneNumber,
           display: availableNumbers[0].friendlyName
         }
         phoneNumbers.push(phoneNumber); 
       }
-      console.log(phoneNumbers);
+      console.log('phoneNumber', phoneNumbers);
   
       res
-        .json(phoneNumbers)
-        .done();
-    });
+        .json(phoneNumbers); 
+    })
+    .catch(err => { 
+      console.log('err', err); 
+    }); 
 });
 
 module.exports = router; 
