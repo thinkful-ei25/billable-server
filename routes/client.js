@@ -2,9 +2,7 @@
 const express = require('express'); 
 const router = express.Router(); 
 const Client = require('../models/client'); 
-
-
-
+const findClient = require('../utils/queries/findClients'); 
 
 
 
@@ -66,6 +64,25 @@ router.get('/contacts/:id', (req, res, next) => {
       next(err);
     });
 });
+
+/**
+ * finds a client in a user's contact based on phonenumber
+ * user to display client picture durring an incoming call
+ */
+router.get('/contacts/:phoneNumber', (req, res, next) => { 
+  const { phoneNumber } = req.params; 
+  const { organizationPhoneNumber } = req.user; 
+
+  findClient(organizationPhoneNumber, phoneNumber)
+    .then(client => { 
+
+      req
+        .json(client); 
+    })
+    .catch(err => { 
+      console.log('err', err); 
+    }) 
+}); 
 
 router.put('/:id', (req, res, next) => {
   const { id } = req.params;
