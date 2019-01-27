@@ -26,7 +26,7 @@ router.use('/call', jwtAuth, callStats);
 
 // Custom Error Handler
 // router.use((err, req, res, next) => {
-//   if (err.status) {
+//   if (err.status) 
 //     const errBody = Object.assign({}, err, { message: err.message });
 //     res.status(err.status).json(errBody);
 //   } else {

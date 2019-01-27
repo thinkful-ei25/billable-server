@@ -54,9 +54,10 @@ router.get('/contacts/:id', (req, res, next) => {
 
   Client.findById({_id:id, userId})
     .then(result => {
+  
       res
         .status(200)
-        .json(result);
+        .json(result[0]);
 
     })
     .catch(err => {
@@ -69,19 +70,19 @@ router.get('/contacts/:id', (req, res, next) => {
  * finds a client in a user's contact based on phonenumber
  * user to display client picture durring an incoming call
  */
-router.get('/contacts/:phoneNumber', (req, res, next) => { 
-  const { phoneNumber } = req.params; 
-  const { organizationPhoneNumber } = req.user; 
+router.get('/contacts/phone/:phoneNumber', (req, res, next) => { 
+  const callerNumber = '+1' + req.params.phoneNumber; 
+  const twilioNumber = req.user.twilio.phones[0].number; 
 
-  findClient(organizationPhoneNumber, phoneNumber)
+  findClient(twilioNumber, callerNumber)
     .then(client => { 
 
-      req
-        .json(client); 
+      res
+        .json(client[0]); 
     })
     .catch(err => { 
       console.log('err', err); 
-    }) 
+    }); 
 }); 
 
 router.put('/:id', (req, res, next) => {
