@@ -1,7 +1,7 @@
-'use strict'; 
-const express = require('express'); 
-const router = express.Router(); 
-const Client = require('../models/client'); 
+'use strict';
+const express = require('express');
+const router = express.Router();
+const Client = require('../models/client');
 
 
 
@@ -11,31 +11,32 @@ const Client = require('../models/client');
 //CREATE NEW CLIENT
 router.post('/', (req, res) => {
   console.log('req.body', req.body)
-  const userId = req.user.id; 
-  const {firstName,company, lastName, hourlyRate, phoneNumber, category, email, streetOne, streetTwo, city, state, zip, photo64} = req.body;
+  const userId = req.user.id;
+  const { firstName, company, lastName, hourlyRate, phoneNumber, category, email, streetOne, streetTwo, city, state, zip, photo64 } = req.body;
   console.log(photo64)
   const clientNumber = '+1' + phoneNumber.replace(/-/g, '');
-  const newClient = {company,userId, firstName, lastName, hourlyRate, phoneNumber: clientNumber, category, email, 
-    address:  {streetOne, streetTwo, city, state, zip}, photo: photo64
-  }; 
+  const newClient = {
+    company, userId, firstName, lastName, hourlyRate, phoneNumber: clientNumber, category, email,
+    address: { streetOne, streetTwo, city, state, zip }, photo: photo64
+  };
 
   Client.create(newClient)
     .then(result => {
-      res 
+      res
         .location(`${req.originalUrl}/${result.id}`)
         .status(201)
         .json(result);
     })
     .catch(err => {
-      console.log(err +'client creation error');
+      console.log(err + 'client creation error');
     });
 });
 
 router.get('/', (req, res) => {
   const userId = req.user.id;
-  let filter = {};  
-  
-  filter.userId = userId; 
+  let filter = {};
+
+  filter.userId = userId;
 
   Client.find(filter)
     .sort('lastName')
@@ -51,10 +52,10 @@ router.get('/', (req, res) => {
 
 //TODO: fix route name (remove hello);
 router.get('/contacts/:id', (req, res, next) => {
-  const {id} = req.params; 
-  const userId = req.user.id; 
+  const { id } = req.params;
+  const userId = req.user.id;
 
-  Client.findById({_id:id, userId})
+  Client.findById({ _id: id, userId })
     .then(result => {
       res
         .status(200)
@@ -69,7 +70,7 @@ router.get('/contacts/:id', (req, res, next) => {
 
 router.put('/:id', (req, res, next) => {
   const { id } = req.params;
-  const userId = req.user.id; 
+  const userId = req.user.id;
 
   const toUpdate = {};
   const updateableFields = ['company', 'firstName', 'lastName', 'hourlyRate', 'phoneNumber', 'category', 'email', 'streetOne', 'streetTwo', 'city', 'state', 'zip'];
@@ -80,7 +81,7 @@ router.put('/:id', (req, res, next) => {
     }
   });
 
-  Client.findOneAndUpdate({_id: id, userId}, toUpdate, { new: true })
+  Client.findOneAndUpdate({ _id: id, userId }, toUpdate, { new: true })
     .then(result => {
       if (result) {
         res
@@ -97,13 +98,13 @@ router.put('/:id', (req, res, next) => {
 
 
 router.delete('/:id', (req, res, next) => {
-  const {id} = req.params; 
-  const userId = req.user.id; 
+  const { id } = req.params;
+  const userId = req.user.id;
 
-  Client.findOneAndRemove({_id:id, userId})
+  Client.findOneAndRemove({ _id: id, userId })
     .then(() => {
       res
-      .sendStatus(204) 
+        .sendStatus(204)
     })
     .catch(err => {
       console.log('delete by id for client didn\'t work', err);
@@ -112,45 +113,45 @@ router.delete('/:id', (req, res, next) => {
 });
 
 function formatClientData(clients) {
-  for(let i = 0; i < clients.length; i++) {
-    let client = clients[i]
+
+
+  clients = JSON.parse(JSON.stringify(clients))
+  for (let i = 0; i < clients.length; i++) {
     let billed = 0;
     let unpaid = 0;
-    client.invoice.map(invoice => {
+    clients[i].invoice.map(invoice => {
       billed += invoice.amount;
       unpaid += (invoice.paid) ? 0 : invoice.amount;
     })
-    client['billed'] = billed;
-    client['unpaid'] = unpaid;
+    clients[i].billed = billed
+    clients[i].unpaid = unpaid;
   }
-  return clients;
+  return clients
 }
-
 
 //GET All Contacts
 //TODO: Update name
 //TODO: Update with authentication
 router.get('/contacts', (req, res, next) => {
   const userId = req.user.id;
-  Client.find({userId})
-  .then(clients => {
-    console.log(clients);
-    return formatClientData(clients)
-  } ).then(clientData => {
-    if (clientData) {
-      res.json(clientData)
-    } else {
-      next()
-    }
-  }).catch(err => {
-  next(err);
-})
+  Client.find({ userId })
+    .then(clients => {
+      return formatClientData(clients)
+    }).then(clientData => {
+      if (clientData) {
+        res.json(clientData)
+      } else {
+        next()
+      }
+    }).catch(err => {
+      next(err);
+    })
 });
 
 
 
 
 
-module.exports = router; 
+module.exports = router;
 
 
