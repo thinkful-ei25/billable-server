@@ -47,7 +47,7 @@ router.post('/login', localAuth, (req, res) => {
       return User.findByIdAndUpdate(id, { isLoggedIn : true }); 
     })
     .then(user => { 
-      console.log(`${user.organizationName} has been logged in`); 
+      // console.log(`${user.organizationName} has been logged in`); 
     })
     .catch(err => { 
       console.log('err', err); 
@@ -55,12 +55,10 @@ router.post('/login', localAuth, (req, res) => {
 });
 
 router.post('/logout', jwtAuth, (req, res) => { 
-  console.log('logging out'); 
   const {id} = req.user; 
 
   return User.findByIdAndUpdate(id, { isLoggedIn: false})
     .then(user => { 
-      console.log(`${user.organizationName} has been logged out`); 
       res
         .status(200)
         .end(); 
