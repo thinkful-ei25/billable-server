@@ -26,7 +26,7 @@ router.post('/inbound', (req, res) => {
   return findUser(twilioNumberCalled)
     .then(user => {
       _user = user;
-      
+
       if (user.isLoggedIn) { 
         responseTwiML = twilio.inboundBrowser(
           user.organizationName,
