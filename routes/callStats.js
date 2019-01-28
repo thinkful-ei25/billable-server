@@ -5,15 +5,18 @@ const Call = require('../models/call');
 function createSeries(results) {
   let durationArr = [];
   let callsArr = [];
+  let datesArr = [];
   let durationTotal = 0;
   let callsTotal = 0;
   for (let i = 0; i < results.length; i++) {
+    console.log(results);
+    datesArr.push(results[i]._id);
     durationArr.push(results[i].seconds);
     callsArr.push(results[i].calls);
     durationTotal += results[i].seconds;
     callsTotal += results[i].calls;
   }
-  return { durationArr, callsArr, durationTotal, callsTotal };
+  return { datesArr, durationArr, callsArr, durationTotal, callsTotal };
 }
 
 /**
@@ -32,8 +35,8 @@ function createSeries(results) {
  */
 
 router.get('/stats/all', (req, res, next) => {
-  // let userSid = req.user.userSid;
-  let { userSid } = req.body;
+  let userSid  = req.user.twilio.sid;
+
   return Call.aggregate([
     {
       $match: {
@@ -43,7 +46,7 @@ router.get('/stats/all', (req, res, next) => {
     {
       $project: {
         moment: {
-          $dateToString: { format: '%Y-%d', date: '$startTime' }
+          $dateToString: { format: '%m-%d-%Y', date: '$startTime' }
         },
         duration: '$duration',
       }
