@@ -77,9 +77,13 @@ router.put('/:id', (req, res, next) => {
 
   updateableFields.forEach(field => {
     if (field in req.body) {
-      toUpdate[field] = req.body[field];
+     toUpdate[field] = req.body[field];
+      }
+    });
+
+    if ('phoneNumber' in req.body) {
+      toUpdate['phoneNumber'] = '+1' + req.body.phoneNumber.replace(/-/g, '');
     }
-  });
 
   Client.findOneAndUpdate({ _id: id, userId }, toUpdate, { new: true })
     .then(result => {
