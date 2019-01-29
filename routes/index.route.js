@@ -12,6 +12,7 @@ const call = require('./call');
 const account = require('./account');
 const client = require('./client');
 const callStats = require('./callStats');
+const settings = require('./settings'); 
 
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
@@ -21,6 +22,7 @@ router.use('/call', call);
 router.use('/phone', jwtAuth, phone);
 router.use('/account', jwtAuth, account);
 router.use('/client', jwtAuth, client);
+router.use('/settings', jwtAuth, settings);
 //TODO: Authenticate this route;
 router.use('/call', jwtAuth, callStats);
 

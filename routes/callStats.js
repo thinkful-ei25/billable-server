@@ -1,4 +1,6 @@
- const express = require('express');
+'use strict';
+
+const express = require('express');
 const router = express.Router();
 const Call = require('../models/call');
 
@@ -174,7 +176,7 @@ router.get('/stats/:userSid/', (req, res, next) => {
       })
       .catch(err => {
         next(err);
-      })
+      });
   }
 });
 
