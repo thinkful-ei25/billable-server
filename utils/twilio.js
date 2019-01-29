@@ -41,7 +41,8 @@ module.exports = {
     const voiceResponse = new VoiceResponse();
     voiceResponse.dial(
       {
-        callerId: TWILIO_NUMBER
+        callerId: TWILIO_NUMBER,
+        action: `/api/call/events/inbound/${clientId}/${organizationPhoneNumber.slice(-10)}`
       },
       toCallNumber
     );
@@ -59,7 +60,11 @@ module.exports = {
   inboundBrowser: (organizationName, callerId) => { 
     const voiceResponse = new VoiceResponse(); 
     
-    let dial = voiceResponse.dial({callerId}); 
+    let dial = voiceResponse.dial(
+      {
+        callerId,
+        action: `/api/call/events/inbound/${clientId}/${organizationPhoneNumber.slice(-10)}`
+      }); 
     dial.client(organizationName); 
     return voiceResponse.toString(); 
   },

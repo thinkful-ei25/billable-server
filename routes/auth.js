@@ -43,8 +43,30 @@ router.post('/login', localAuth, (req, res) => {
   return findCapabilityTokenByID(id)
     .then(capabilityToken => { 
       res.json({authToken, capabilityToken}); 
+      
+      return User.findByIdAndUpdate(id, { isLoggedIn : true }); 
+    })
+    .then(user => { 
+      // console.log(`${user.organizationName} has been logged in`); 
+    })
+    .catch(err => { 
+      console.log('err', err); 
     }); 
 });
+
+router.post('/logout', jwtAuth, (req, res) => { 
+  const {id} = req.user; 
+
+  return User.findByIdAndUpdate(id, { isLoggedIn: false})
+    .then(user => { 
+      res
+        .status(200)
+        .end(); 
+    })
+    .catch(err => { 
+      console.log('err', err); 
+    }); 
+}); 
 
 router.post('/refresh', jwtAuth, (req, res) => {
   const authToken = createAuthToken(req.user);

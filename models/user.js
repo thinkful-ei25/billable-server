@@ -12,6 +12,7 @@ const UserSchema = mongoose.Schema({
     required:true,
     unique:true
   },
+  isLoggedIn:{type: Boolean, default: false}, 
   organizationName:{type:String, required:true},
   organizationPhoneNumber:String,
   globalHourlyRate:Number,

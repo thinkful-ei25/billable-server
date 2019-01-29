@@ -7,9 +7,6 @@ const Call = require('../models/call');
 const twilio = require('../utils/twilio');
 const moment = require('moment');
 
-let mode;
-mode = 'browser';
-
 /**
  * @api [post] /call/inbound Handles inbound calls and routes the call based on the caller.
  * @apiName Inbound Call
@@ -29,7 +26,8 @@ router.post('/inbound', (req, res) => {
   return findUser(twilioNumberCalled)
     .then(user => {
       _user = user;
-      if (mode === 'browser') {
+
+      if (user.isLoggedIn) { 
         responseTwiML = twilio.inboundBrowser(
           user.organizationName,
           callerNumber

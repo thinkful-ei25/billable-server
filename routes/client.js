@@ -1,10 +1,8 @@
-'use strict';
-const express = require('express');
-const router = express.Router();
-const Client = require('../models/client');
-
-
-
+'use strict'; 
+const express = require('express'); 
+const router = express.Router(); 
+const Client = require('../models/client'); 
+const findClient = require('../utils/queries/findClients'); 
 
 
 
@@ -57,9 +55,10 @@ router.get('/contacts/:id', (req, res, next) => {
 
   Client.findById({ _id: id, userId })
     .then(result => {
+  
       res
         .status(200)
-        .json(result);
+        .json(result[0]);
 
     })
     .catch(err => {
@@ -67,6 +66,25 @@ router.get('/contacts/:id', (req, res, next) => {
       next(err);
     });
 });
+
+/**
+ * finds a client in a user's contact based on phonenumber
+ * user to display client picture durring an incoming call
+ */
+router.get('/contacts/phone/:phoneNumber', (req, res, next) => { 
+  const callerNumber = '+1' + req.params.phoneNumber; 
+  const twilioNumber = req.user.twilio.phones[0].number; 
+
+  findClient(twilioNumber, callerNumber)
+    .then(client => { 
+
+      res
+        .json(client[0]); 
+    })
+    .catch(err => { 
+      console.log('err', err); 
+    }); 
+}); 
 
 router.put('/:id', (req, res, next) => {
   const { id } = req.params;
