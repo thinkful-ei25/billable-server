@@ -40,15 +40,34 @@ passport.use(jwtStrategy);
 
 app.use('/api', allRouters); 
 
-function runServer(port = PORT) {
-  const server = app
-    .listen(port, () => {
-      console.info(`App listening on port ${server.address().port}`);
-    })
-    .on('error', err => {
-      console.error('Express failed to start');
-      console.error(err);
+let server;
+
+function runServer() {
+  const port = PORT;
+  return new Promise((resolve, reject) => {
+    server = app
+      .listen(port, () => {
+        console.info(`App listening on port ${server.address().port}`);
+        resolve(server);
+      })
+      .on('error', err => {
+        console.error('Express failed to start');
+        console.error(err);
+        reject(err);
+      });
+  });  
+}
+
+function closeServer(){
+  return new Promise((resolve,reject) => {
+    console.log('closing server'); 
+    server.close(err => {
+      if (err) {
+        reject(err);
+      }
+      resolve(); 
     });
+  });
 }
 
 if (require.main === module) {
@@ -56,4 +75,6 @@ if (require.main === module) {
   runServer();
 }
 
-module.exports = { app };
+
+
+module.exports = { app, runServer, closeServer };
