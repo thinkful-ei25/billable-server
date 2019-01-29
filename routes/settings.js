@@ -78,7 +78,22 @@ router.put('/', (req, res, next) => {
   }
 });
     
+router.get('/', (req,res,next)=>{
+  const userId = req.user.id; 
 
+  User.findById({_id:userId}, {email:1, password:1, globalHourlyRate:1, organizationPhoneNumber:1})
+    .then(result => {
+      if(result){
+      console.log(result);
+      res.json(result);
+      }
+    })
+    .catch(err => {
+      next(err); 
+    }
+    );
+
+}); 
 
 
 
