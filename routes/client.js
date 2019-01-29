@@ -8,10 +8,10 @@ const findClient = require('../utils/queries/findClients');
 
 //CREATE NEW CLIENT
 router.post('/', (req, res) => {
-  console.log('req.body', req.body)
+  console.log('req.body', req.body);
   const userId = req.user.id; 
   const {firstName,company, lastName, hourlyRate, phoneNumber, category, email, streetOne, streetTwo, city, state, zip, photo64} = req.body;
-  console.log(photo64)
+  console.log(photo64);
   const clientNumber = '+1' + phoneNumber.replace(/-/g, '');
   const newClient = {company,userId, firstName, lastName, hourlyRate, phoneNumber: clientNumber, category, email, 
     address:  {streetOne, streetTwo, city, state, zip}, photo: photo64
@@ -121,7 +121,7 @@ router.delete('/:id', (req, res, next) => {
   Client.findOneAndRemove({_id:id, userId})
     .then(() => {
       res
-      .sendStatus(204) 
+        .sendStatus(204); 
     })
     .catch(err => {
       console.log('delete by id for client didn\'t work', err);
@@ -131,13 +131,13 @@ router.delete('/:id', (req, res, next) => {
 
 function formatClientData(clients) {
   for(let i = 0; i < clients.length; i++) {
-    let client = clients[i]
+    let client = clients[i];
     let billed = 0;
     let unpaid = 0;
     client.invoice.map(invoice => {
       billed += invoice.amount;
       unpaid += (invoice.paid) ? 0 : invoice.amount;
-    })
+    });
     client['billed'] = billed;
     client['unpaid'] = unpaid;
   }
@@ -151,18 +151,18 @@ function formatClientData(clients) {
 router.get('/contacts', (req, res, next) => {
   const userId = req.user.id;
   Client.find({userId})
-  .then(clients => {
-    console.log(clients);
-    return formatClientData(clients)
-  } ).then(clientData => {
-    if (clientData) {
-      res.json(clientData)
-    } else {
-      next()
-    }
-  }).catch(err => {
-  next(err);
-})
+    .then(clients => {
+      console.log(clients);
+      return formatClientData(clients);
+    } ).then(clientData => {
+      if (clientData) {
+        res.json(clientData);
+      } else {
+        next();
+      }
+    }).catch(err => {
+      next(err);
+    });
 });
 
 

@@ -29,11 +29,11 @@ function createAuthToken(user) {
 
 function findCapabilityTokenByID(userId) {
   return User.findById(userId)
-  .then(user => {
-    let clientBrowserName = user.organizationName.replace(/ /g, '');
-    const capabilityToken = twilio.token(user.twilio.sid, user.twilio.authToken, clientBrowserName);
-    return capabilityToken;
-  }); 
+    .then(user => {
+      let clientBrowserName = user.organizationName.replace(/ /g, '');
+      const capabilityToken = twilio.token(user.twilio.sid, user.twilio.authToken, clientBrowserName);
+      return capabilityToken;
+    }); 
 }
 
 router.post('/login', localAuth, (req, res) => {

@@ -387,82 +387,54 @@ Response body:
 }
 ```
 
-<!-- ### POST /api/analytics
-Purpose: When a call ends save metadata relating to that call
+###PUT api/settings
+Purpose allow user to change their 
+'email', 'password','organizationPhoneNumber' and/or 'globalHourlyRate'
 
-Request body: 
+request body 
 ```
-{   
-  "answered_by": "Captain Morgan",
-  "caller_name": "Jack Daniels",
-  "date_created": "Tue, 31 Aug 2010 20:36:28 +0000",
-  "date_updated": "Tue, 31 Aug 2010 20:36:44 +0000",
-  "direction": "outbound",
-  "duration": "15",
-  "end_time": "Tue, 31 Aug 2010 20:36:44 +0000",
-  "from": "+15017122661",
-  "from_formatted": "(501) 712-2661",
-  "price": -0.03000,
-  "price_unit": "USD",
-  "start_time": "Tue, 31 Aug 2010 20:36:29 +0000",
-  "status": "completed",
-  "to": "+14155551212",
-  "to_formatted": "(415) 555-1212",
-}
-```
-Response body: 
-``` 
 {
-  "code": "201",
-  "message": "Analytics updated successfully"
+  "email":"newemail@gmail.com",
+  "password":"newPassword", 
+  "organizationPhoneNumber":"1+7747474773", 
+  "globalHourlyRate":5555
 }
 ```
 
-### GET /api/analytics/user
-Purpose: Get analytics relating to the user
+Response body
+```
+{
+    "twilio": {
+        "status": "active",
+        "sid": "AC2e7a44e170e3b135bbc2bb0c4e45679d",
+        "authToken": "c8a35d572246cf3287dca121277e1103",
+        "accountFriendlyName": "jsantiag Inc",
+        "dateCreated": "2019-01-29T00:32:12.000Z",
+        "dateUpdated": "2019-01-29T00:32:12.000Z",
+        "phones": []
+    },
+    "organizationName": "jsantiag Inc",
+    "organizationPhoneNumber":"1+7747474773",
+    "email": "newemail@gmail.com",
+    "id": "5c4f9f0d21186d277421983e", 
+    "globalHourlyRate":5555,
+    "password":"$2a$10$X6UdL9fufmd4XPb4dTAkIO38DLpWo.BJSkYdK9Ft7X6yvCyuZYeYO"
 
-Request body: 
-```
-{ 
-  "user-id": "2104926325"
-}
-```
-Response body: 
-``` 
-{ 
-  "average-time-phone-call": "10", 
-  "last-call": REF-TO-CLIENT
-  "total-call": 23, 
-  "total-billable-time": "23", 
-  "total-billed": "23,023", 
-  "amount-recieve": "1", 
-  "amount-owed":"21,022"
-  //MORE TO COME! :)
-}
-```
-
-### GET /api/analytics/client
-Purpose: Get analytics relating to a specific client
-
-Request body: 
-```
-{ 
-  "user-id": "2104926325"
 }
 ```
 
-Response body: 
-``` 
-{ 
-  "last-call": REF-TO-CALL, 
-  "calls": [REF-TO-CALL], 
-  "total-calls": "22", 
-  "average-length-call", "9"
-  //MORE TO COME! :)
+###DELETE api/settings/user-delete
+Purpose: allow user to delete their own account and remove all linked clients and calls 
+
+Request body 
+```
+user Sid and user id are extracted from logged in user to power this request
+{
+
 }
-``` -->
+```
 
-
+Response is just a 200 status code.
 
 
 
