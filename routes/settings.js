@@ -48,8 +48,6 @@ router.put('/', (req, res, next) => {
     }
   });
 
-  
-  console.log('pre findoneandupdate toupdate',toUpdate); 
 
   if(toUpdate.hasOwnProperty('password')){
     User.hashPassword(req.body['password'])
@@ -78,7 +76,22 @@ router.put('/', (req, res, next) => {
   }
 });
     
+router.get('/user', (req,res,next)=>{
+  let userId = req.user.id; 
 
+  User.findById({_id:userId}, {email:1, organizationPhoneNumber:1, globalHourlyRate:1})
+    .then(result => {
+      if(result){
+        res.json(result)
+          .sendStatus(200);
+      }else{
+        next();
+      }
+    })
+    .catch(err => {
+      next(err);
+    });
+});
 
 
 
