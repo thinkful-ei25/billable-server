@@ -23,7 +23,7 @@ router.get('/user', (req, res) => {
 
 //NOT MVP
 router.delete('/user', (req, res) => { 
-  const { sid} = req.body; 
+  const {sid} = req.body; 
 
   MASTER_CLIENT.api.accounts(sid).update({status: 'closed'})
     .then(account => { 
