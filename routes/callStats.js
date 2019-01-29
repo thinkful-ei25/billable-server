@@ -177,7 +177,7 @@ router.get('/calls', (req, res, next) => {
   return Call.find({ userSid })
     .populate('id')
     .then(calls => {
-      console.log(calls)
+     
       if (calls) {
         return formatAllClientCalls(calls);
       } else {

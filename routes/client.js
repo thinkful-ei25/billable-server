@@ -55,7 +55,7 @@ router.get('/contacts/:id', (req, res, next) => {
 
   Client.findById({ _id: id, userId })
     .then(result => {
-      console.log(result)
+      
       res
         .status(200)
         .json(result);
