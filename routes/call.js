@@ -20,19 +20,23 @@ const moment = require('moment');
 router.post('/inbound', (req, res) => {
   const twilioNumberCalled = req.body.Called;
   const callerNumber = req.body.From;
+  // console.log('callerNumber', callerNumber); 
   let _user;
   let responseTwiML;
-
+  
   return findUser(twilioNumberCalled)
     .then(user => {
       _user = user;
 
       if (user.isLoggedIn) { 
-        responseTwiML = twilio.inboundBrowser(
-          user.organizationName,
-          callerNumber
-        );
-        return;
+        return findClients(twilioNumberCalled, callerNumber)
+          .then(client => { 
+            let clientId = client[0]._id; 
+            responseTwiML = twilio.inboundBrowser(
+              user.organizationName, callerNumber, clientId, twilioNumberCalled); 
+            
+          }); 
+        // return;
       } else if (callerNumber === _user.organizationPhoneNumber) {
         responseTwiML = twilio.gather();
         return;

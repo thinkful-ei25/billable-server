@@ -42,13 +42,12 @@ module.exports = {
     voiceResponse.dial(
       {
         callerId: TWILIO_NUMBER,
-        action: `/api/call/events/inbound/${clientId}/${organizationPhoneNumber.slice(-10)}`
+        // action: `/api/call/events/inbound/${clientId}/${organizationPhoneNumber.slice(-10)}`
       },
       toCallNumber
     );
     return voiceResponse.toString();
   },
-
 
   /**
    * Create TwiML for inbound calls to the browser 
@@ -57,7 +56,7 @@ module.exports = {
    * @returns {string} TwiML describing the outgoing call
    *
    */
-  inboundBrowser: (organizationName, callerId) => { 
+  inboundBrowser: (organizationName, callerId, clientId, organizationPhoneNumber) => { 
     const voiceResponse = new VoiceResponse(); 
     
     let dial = voiceResponse.dial(
