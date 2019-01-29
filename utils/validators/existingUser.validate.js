@@ -9,7 +9,6 @@ function isExistingUser(organizationName){
 
         //If that user already exists
         if (user){ 
-          console.log('hi'); 
           let err = new Error(`User with the name ${organizationName} already exists`); 
           err.status = 422; 
           rej(err);
