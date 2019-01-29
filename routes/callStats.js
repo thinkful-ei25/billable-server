@@ -37,7 +37,7 @@ function createSeries(results) {
  */
 
 router.get('/stats/all', (req, res, next) => {
-  let userSid  = req.user.twilio.sid;
+  let userSid = req.user.twilio.sid;
 
   return Call.aggregate([
     {
@@ -117,10 +117,10 @@ function formatAllClientCalls(calls) {
     return {
       date: call.startTime,
       direction: call.direction,
-      photo: client.photo || null,
-      contactName: `${client.firstName} ${client.lastName}`,
-      company: client.company,
-      phoneNumber: client.phoneNumber,
+      photo: client ? client.photo : null,
+      contactName: client ? `${client.firstName} ${client.lastName}` : null,
+      company: client ? client.company : null,
+      phoneNumber: client ? client.phoneNumber : null,
       length: durationMin,
       billable: call.billable,
       estimatedBilling
@@ -141,47 +141,57 @@ function formatAllClientCalls(calls) {
  *
  * TODO: Authenticate Route, and update userSid to come from req.body.
  */
+router.get('/calls/:clientId', (req, res, next) => {
+  let { clientId } = req.params
+  let userSid = req.user.twilio.sid;
+  return Call.find({ id: clientId, userSid })
+    .populate('id')
+    .then(calls => {
 
-router.get('/stats/:clientId/', (req, res, next) => {
+      if (calls) {
+        return formatIndClientCalls(calls);
+      } else {
+        next();
+      }
+    })
+    .then(callsArr => {
+      res.json(callsArr);
+    })
+    .catch(err => {
+      next(err);
+    });
+
+
+});
+
+
+
+
+router.get('/calls', (req, res, next) => {
   // let {limit} = req.query
   // let userSid = req.user.userSid;
-  let { clientId } = req.params;
+
   let userSid = req.user.twilio.sid;
 
-  if (clientId && userSid) {
-    return Call.find({ id: clientId, userSid })
-      .populate('id')
-      .then(calls => {
-        if (calls) {
-          return formatIndClientCalls(calls);
-        } else {
-          next();
-        }
-      })
-      .then(callsArr => {
-        res.json(callsArr);
-      })
-      .catch(err => {
-        next(err);
-      });
-  } else if (!clientId && userSid) {
-    return Call.find({ userSid })
-      .populate('id')
-      .then(calls => {
-        if (calls) {
-          return formatAllClientCalls(calls);
-        } else {
-          next();
-        }
-      })
-      .then(callsArr => {
-        res.json(callsArr);
-      })
-      .catch(err => {
-        next(err);
-      });
-  }
+
+  return Call.find({ userSid })
+    .populate('id')
+    .then(calls => {
+      console.log(calls)
+      if (calls) {
+        return formatAllClientCalls(calls);
+      } else {
+        next();
+      }
+    })
+    .then(callsArr => {
+      res.json(callsArr);
+    })
+    .catch(err => {
+      next(err);
+    });
 });
+
 
 module.exports = router;
 
