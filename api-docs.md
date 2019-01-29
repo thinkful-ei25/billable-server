@@ -438,6 +438,23 @@ Response is just a 200 status code.
 
 
 
+###GET api/settings 
+Purpose: get editable fields from current user 
+
+request body 
+```
+{
+
+}
+```
+response body 
+```
+{
+  email:
+  password: 
+  
+}
+```
 
 
 
