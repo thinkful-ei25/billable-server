@@ -121,11 +121,11 @@ describe('Auth endpoints', function () {
     });
   });
 
-  describe('/api/auth/refresh', function () {
+  describe('/api/refresh', function () {
     it('Should reject requests with no credentials', function () {
       return chai
         .request(app)
-        .post('/api/auth/refresh')
+        .post('/api/refresh')
         .then(() =>
           expect.fail(null, null, 'Request should not succeed')
         )
@@ -185,7 +185,7 @@ describe('Auth endpoints', function () {
 
       return chai
         .request(app)
-        .post('/api/auth/refresh')
+        .post('/api/refresh')
         .set('authorization', `Bearer ${token}`)
         .then(() =>
           expect.fail(null, null, 'Request should not succeed')
