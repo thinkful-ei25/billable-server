@@ -39,14 +39,16 @@ function findCapabilityTokenByID(userId) {
 router.post('/login', localAuth, (req, res) => {
   const authToken = createAuthToken(req.user);
   const {id} = req.user; 
+  let capabilityToken;
   
   return findCapabilityTokenByID(id)
-    .then(capabilityToken => { 
-      res.json({authToken, capabilityToken}); 
-      
+    .then(recievedCapabilityToken => { 
+      capabilityToken = recievedCapabilityToken;
       return User.findByIdAndUpdate(id, { isLoggedIn : true }); 
     })
     .then(user => { 
+      const {tutorialCompleted} = user;
+      res.json({authToken, capabilityToken, tutorialCompleted}); 
       // console.log(`${user.organizationName} has been logged in`); 
     })
     .catch(err => { 

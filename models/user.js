@@ -12,6 +12,7 @@ const UserSchema = mongoose.Schema({
     required:true,
     unique:true
   },
+  tutorialCompleted: {type: Boolean, default: false},
   isLoggedIn:{type: Boolean, default: false}, 
   organizationName:{type:String, required:true},
   organizationPhoneNumber:String,

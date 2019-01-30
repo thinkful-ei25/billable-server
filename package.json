@@ -1,5 +1,5 @@
 {
-  "name": "Billable Server",
+  "name": "billableserver",
   "version": "0.1.0",
   "description": "Track And Bill Clients using Twilio",
   "main": "index.js",
