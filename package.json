@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD
-  "name": "billable-server",
-=======
   "name": "billableserver",
->>>>>>> c47171a3ea0e690dcb09309b26d6a223ad8b3979
   "version": "0.1.0",
   "description": "Track And Bill Clients using Twilio",
   "main": "index.js",
