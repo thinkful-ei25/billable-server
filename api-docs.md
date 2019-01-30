@@ -450,9 +450,9 @@ request body
 response body 
 ```
 {
-  email:
-  password: 
-  
+  email:,
+  organizationPhoneNumber:,
+  globalHourlyRate:, 
 }
 ```
 
