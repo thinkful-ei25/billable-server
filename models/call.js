@@ -16,7 +16,8 @@ const CallSchema = mongoose.Schema({
   callSid: String,
   billable: { type: Boolean, default: true },
   direction: String,
-  status: String
+  status: String,
+  invoiced: Boolean
 });
 
 CallSchema.set('toJSON', {

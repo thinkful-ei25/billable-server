@@ -41,6 +41,7 @@ const ClientSchema = mongoose.Schema({
   },
   invoice:[ 
     {
+      sentDate: { type: Date, required: true },
       month:Number, 
       amount: Number,
       year:Number, 
