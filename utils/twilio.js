@@ -50,9 +50,7 @@ module.exports = {
       {
         answerOnBridge: true,
         callerId: twilioNumber,
-        action: `/api/call/events/inbound/${clientId}/${organizationPhoneNumber.slice(
-          -10
-        )}`
+        action: `/api/call/events/outbound/${clientId}/${toCallNumber}`
       },
       toCallNumber
     );
