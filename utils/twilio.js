@@ -36,15 +36,14 @@ module.exports = {
    * Create TwiML for Outbound Browser Call
    * @param toCallNumber number to be called
    * @returns {string} TwiML describing the outgoing call
-   * TODO: CLIENT SIDE ISSSUE 
-   * TODO: Discuss how to capture callerId (dynamic Twilio number: hardcoded: from caller)
    */
-  outboundBrowser: (toCallNumber, clientId, organizationPhoneNumber) => {
+  outboundBrowser: (toCallNumber, clientId, organizationPhoneNumber, twilioNumber) => {
+    console.log('OUTBOUND BROWSER => ', toCallNumber, clientId, organizationPhoneNumber, twilioNumber );
     const voiceResponse = new VoiceResponse();
     voiceResponse.dial(
       {
         answerOnBridge: true, 
-        callerId: TWILIO_NUMBER,
+        callerId: twilioNumber,
         action: `/api/call/events/inbound/${clientId}/${organizationPhoneNumber.slice(-10)}`
       },
       toCallNumber

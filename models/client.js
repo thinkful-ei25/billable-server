@@ -26,7 +26,7 @@ const ClientSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  photo: { type: String, default: defaultImg},
+  photo: { type: String },
   address: {
     streetOne: String,
     streetTwo: String,
