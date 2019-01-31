@@ -6,6 +6,7 @@ const ClientCapability = twilio.jwt.ClientCapability;
 const VoiceResponse = twilio.twiml.VoiceResponse;
 
 module.exports = {
+  
   /**
    * Creates outgoing and incoming client scope for Browser Dialing.
    * @param accountSid the sid associated the with user.
@@ -14,7 +15,8 @@ module.exports = {
    * 
    * @returns {string} clientcapability token
    */
-  token: (accountSid, authToken, organizationName) => {
+
+  token: (accountSid, authToken, organizationName, appSid) => {
     const capability = new ClientCapability({
       accountSid: accountSid,
       authToken: authToken
@@ -22,7 +24,7 @@ module.exports = {
 
     capability.addScope(
       new ClientCapability.OutgoingClientScope({
-        applicationSid: TWILIO_APP_SID}));
+        applicationSid: appSid}));
 
     capability.addScope(
       new ClientCapability.IncomingClientScope(organizationName)); 

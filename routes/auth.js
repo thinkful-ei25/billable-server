@@ -31,7 +31,7 @@ function findCapabilityTokenByID(userId) {
   return User.findById(userId)
     .then(user => {
       let clientBrowserName = user.organizationName.replace(/ /g, '');
-      const capabilityToken = twilio.token(user.twilio.sid, user.twilio.authToken, clientBrowserName);
+      const capabilityToken = twilio.token(user.twilio.sid, user.twilio.authToken, clientBrowserName, user.twilio.appSid);
       return capabilityToken;
     }); 
 }
