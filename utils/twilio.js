@@ -37,12 +37,13 @@ module.exports = {
    * TODO: CLIENT SIDE ISSSUE 
    * TODO: Discuss how to capture callerId (dynamic Twilio number: hardcoded: from caller)
    */
-  outboundBrowser: toCallNumber => {
+  outboundBrowser: (toCallNumber, clientId, organizationPhoneNumber) => {
     const voiceResponse = new VoiceResponse();
     voiceResponse.dial(
       {
+        answerOnBridge: true, 
         callerId: TWILIO_NUMBER,
-        // action: `/api/call/events/inbound/${clientId}/${organizationPhoneNumber.slice(-10)}`
+        action: `/api/call/events/inbound/${clientId}/${organizationPhoneNumber.slice(-10)}`
       },
       toCallNumber
     );
