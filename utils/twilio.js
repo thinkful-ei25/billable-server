@@ -75,14 +75,10 @@ module.exports = {
     organizationPhoneNumber
   ) => {
     const voiceResponse = new VoiceResponse();
-    console.log(callerId.slice(2));
-    console.log(callerId.slice(-10));
-
     let dial = voiceResponse.dial({
       callerId: callerId.slice(2),
-      action: `/api/call/events/inbound/${clientId}/${organizationPhoneNumber.slice(
-        -10
-      )}`
+      // action: `/api/call/events/inbound/${clientId}/${organizationPhoneNumber.slice(
+      //   -10)}`
     });
     const organizationNameNoSpaces = organizationName.replace(/ /g, '-');
     dial.client(organizationNameNoSpaces);
@@ -116,6 +112,7 @@ module.exports = {
    */
 
   hangup: () => {
+    console.log('HANGUP');
     const response = new VoiceResponse();
     response.hangup();
     return response.toString();
