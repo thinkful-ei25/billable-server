@@ -89,22 +89,16 @@ router.post('/inbound/gather', (req, res) => {
  *
  */
 router.post('/outbound', (req, res) => {
-  console.log('outbound', req.body); 
   let clientPhoneNumber = '+1' + req.body.number.toString(); 
   let organizationPhoneNumber, twilioNumber; 
-  console.log('CLIENTPHONENUMBER => ', clientPhoneNumber);
-
   User.findOne({'twilio.sid' : req.body.AccountSid} )
     .then((user) => { 
-      console.log('USER => ', user);
       organizationPhoneNumber = user.organizationPhoneNumber; 
       twilioNumber = user.twilio.phones[0].number;
-      console.log('ORGANIZATION NUMBER => ', organizationPhoneNumber);
-      console.log('TWILIO NUMBER => ', twilioNumber);
+
       return Client.findOne({phoneNumber: clientPhoneNumber, userId: user._id}); 
     })
     .then(client => { 
-      console.log('CLIENT => ', client);
       const outgoingCallTwiML = twilio.outboundBrowser(req.body.number, client._id, organizationPhoneNumber, twilioNumber);
       res.type('text/xml').send(outgoingCallTwiML);
     })
