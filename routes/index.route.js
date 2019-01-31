@@ -24,7 +24,6 @@ router.use('/phone', jwtAuth, phone);
 router.use('/account',jwtAuth, account);
 router.use('/client', jwtAuth, client);
 router.use('/settings', jwtAuth, settings);
-//TODO: Authenticate this route;
 router.use('/call', jwtAuth, callStats);
 router.use('/invoices', jwtAuth, invoices);
 

@@ -40,7 +40,6 @@ router.post('/login', localAuth, (req, res) => {
   const authToken = createAuthToken(req.user);
   const {id} = req.user; 
   let capabilityToken;
-  console.log('ID ', id)
   return findCapabilityTokenByID(id)
     .then(recievedCapabilityToken => { 
       capabilityToken = recievedCapabilityToken;

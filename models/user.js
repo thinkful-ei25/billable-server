@@ -12,7 +12,6 @@ const UserSchema = mongoose.Schema({
     required:true,
     unique:true
   },
-  tutorialCompleted: {type: Boolean, default: false},
   isLoggedIn:{type: Boolean, default: false}, 
   organizationName:{type:String, required:true},
   organizationPhoneNumber:String,
@@ -20,10 +19,11 @@ const UserSchema = mongoose.Schema({
   password:{type:String, required: true}, 
   twilio: {
     authToken:{type:String, required:true}, 
+    sid: { type: String },
+    appSid: {type: String},
     dateCreated:{type:Date},
     dateUpdated:{type:Date}, 
     accountFriendlyName:{type:String, required:true}, 
-    sid:{type:String},
     status:{type:String, default: 'active'},
     phones:[{
       phoneFriendlyName:String,
