@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "description": "Track And Bill Clients using Twilio",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thinkful-ei25/billable-server.git"
+  },
   "scripts": {
     "start": "nodemon index.js",
     "now-start": "node",
