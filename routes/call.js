@@ -3,9 +3,12 @@ const express = require('express');
 const router = express.Router();
 const findClients = require('../utils/queries/findClients');
 const findUser = require('../utils/queries/findUser');
+const User = require('../models/user'); 
+const Client = require('../models/client'); 
 const Call = require('../models/call');
 const twilio = require('../utils/twilio');
 const moment = require('moment');
+
 
 /**
  * @api [post] /call/inbound Handles inbound calls and routes the call based on the caller.
@@ -18,6 +21,7 @@ const moment = require('moment');
  */
 
 router.post('/inbound', (req, res) => {
+  console.log('inbound', req.body); 
   const twilioNumberCalled = req.body.Called;
   const callerNumber = req.body.From;
   let _user;
@@ -85,8 +89,19 @@ router.post('/inbound/gather', (req, res) => {
  *
  */
 router.post('/outbound', (req, res) => {
-  const outgoingCallTwiML = twilio.outboundBrowser(req.body.number);
-  res.type('text/xml').send(outgoingCallTwiML);
+  console.log('outbound', req.body); 
+  let clientPhoneNumber = '+1' + req.body.number.toString(); 
+  let organizationPhoneNumber; 
+
+  User.findOne({'twilio.sid' : req.body.AccountSid} )
+    .then((user) => { 
+      organizationPhoneNumber = user.organizationPhoneNumber; 
+      return Client.findOne({phoneNumber: clientPhoneNumber}); 
+    })
+    .then(client => { 
+      const outgoingCallTwiML = twilio.outboundBrowser(req.body.number, client._id, organizationPhoneNumber);
+      res.type('text/xml').send(outgoingCallTwiML);
+    }); 
 });
 
 /**
