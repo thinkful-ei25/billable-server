@@ -1,5 +1,5 @@
 'use strict'; 
-
+const {defaultImg} = require('../utils/constants');
 const mongoose = require('mongoose'); 
 
 const ClientSchema = mongoose.Schema({
@@ -26,7 +26,7 @@ const ClientSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  photo: String,
+  photo: { type: String, default: defaultImg},
   address: {
     streetOne: String,
     streetTwo: String,

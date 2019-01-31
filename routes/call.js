@@ -20,7 +20,6 @@ const moment = require('moment');
 router.post('/inbound', (req, res) => {
   const twilioNumberCalled = req.body.Called;
   const callerNumber = req.body.From;
-  // console.log('callerNumber', callerNumber); 
   let _user;
   let responseTwiML;
   
