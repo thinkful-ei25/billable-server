@@ -26,20 +26,20 @@ router.post('/inbound', (req, res) => {
   const callerNumber = req.body.From;
   let _user;
   let responseTwiML;
+ 
   
   return findUser(twilioNumberCalled)
     .then(user => {
       _user = user;
-
+      console.log('/inbound user line 34 => ', _user);
       if (user.isLoggedIn) { 
         return findClients(twilioNumberCalled, callerNumber)
           .then(client => { 
             let clientId = client[0]._id; 
             responseTwiML = twilio.inboundBrowser(
               user.organizationName, callerNumber, clientId, twilioNumberCalled); 
-            
+              //return;
           }); 
-        // return;
       } else if (callerNumber === _user.organizationPhoneNumber) {
         responseTwiML = twilio.gather();
         return;
@@ -48,6 +48,8 @@ router.post('/inbound', (req, res) => {
       }
     })
     .then(client => {
+      console.log('/INBOUND => Client ', client )
+      console.log('INBOUND RESPONSE TWIML  =>', responseTwiML);
       if (client) {
         responseTwiML = twilio.phoneIncoming(
           client,
