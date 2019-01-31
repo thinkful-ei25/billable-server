@@ -82,7 +82,8 @@ module.exports = {
         -10
       )}`
     });
-    dial.client(organizationName);
+    const organizationNameNoSpaces = organizationName.replace(/ /g, '-');
+    dial.client(organizationNameNoSpaces);
     return voiceResponse.toString();
   },
 
