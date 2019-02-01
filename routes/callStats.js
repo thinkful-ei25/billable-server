@@ -11,7 +11,6 @@ function createSeries(results) {
   let durationTotal = 0;
   let callsTotal = 0;
   for (let i = 0; i < results.length; i++) {
-    console.log(results);
     datesArr.push(results[i]._id);
     durationArr.push(results[i].seconds);
     callsArr.push(results[i].calls);
@@ -168,9 +167,6 @@ router.get('/calls/:clientId', (req, res, next) => {
 
 
 router.get('/calls', (req, res, next) => {
-  // let {limit} = req.query
-  // let userSid = req.user.userSid;
-
   let userSid = req.user.twilio.sid;
 
 
