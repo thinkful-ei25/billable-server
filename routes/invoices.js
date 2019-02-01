@@ -74,7 +74,7 @@ router.post('/email', (req, res) => {
   const { seconds, calls, email,  clientId, hourlyRate, invoiceAmount, company, firstName, lastName} = req.body; 
   
   sendEmail((email), templates.confirm(
-    seconds, calls, hourlyRate, invoiceAmount, company, firstName, lastName
+    calls, hourlyRate, invoiceAmount, company, firstName, lastName
   ));
 
   res.
