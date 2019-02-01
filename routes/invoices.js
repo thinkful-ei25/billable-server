@@ -2,17 +2,8 @@
 
 const express = require('express');
 const router = express.Router();
-const User = require('../models/user'); 
-const Client = require('../models/client'); 
 const Call = require('../models/call');
 const _ = require('lodash');
-
-// Contact Name
-// # of Calls
-// # of Minutes
-// Total invoiced
-// Total Uninvoiced
-// Send
 
 /**
  * @api [get] invoices Returns an object to display all invoices grouped by project
@@ -25,15 +16,13 @@ const _ = require('lodash');
  *
  *
  */
-
-
 router.get('/', (req, res, next) => {
   let userSid = req.user.twilio.sid;
 
   return Call.aggregate([
     {
       $match: {
-        userSid: userSid
+        userSid: userSid  
       }
     },
     {
@@ -68,7 +57,6 @@ router.get('/', (req, res, next) => {
       }
     }
   ]).then(basicInvoice => { 
-    console.log('basicInvoice', basicInvoice); 
 
     res
     .json(basicInvoice)
