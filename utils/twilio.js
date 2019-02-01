@@ -1,6 +1,4 @@
 'use strict';
-
-const { TWILIO_APP_SID, TWILIO_NUMBER } = require('../config');
 const twilio = require('twilio');
 const ClientCapability = twilio.jwt.ClientCapability;
 const VoiceResponse = twilio.twiml.VoiceResponse;
@@ -21,7 +19,7 @@ module.exports = {
       authToken: authToken
     });
 
-    const organizationNameNoSpaces = organizationName.replace(/ /g, '-');
+    const organizationNameNoSpaces = organizationName.replace(/ /g, '');
 
     capability.addScope(
       new ClientCapability.OutgoingClientScope({
@@ -52,9 +50,7 @@ module.exports = {
       {
         answerOnBridge: true,
         callerId: twilioNumber,
-        action: `/api/call/events/inbound/${clientId}/${organizationPhoneNumber.slice(
-          -10
-        )}`
+        action: `/api/call/events/outbound/${clientId}/${toCallNumber}`
       },
       toCallNumber
     );
@@ -80,7 +76,7 @@ module.exports = {
       action: `/api/call/events/inbound/${clientId}/${organizationPhoneNumber.slice(
         -10)}`
     });
-    const organizationNameNoSpaces = organizationName.replace(/ /g, '-');
+    const organizationNameNoSpaces = organizationName.replace(/ /g, '');
     dial.client(organizationNameNoSpaces);
     return voiceResponse.toString();
   },
