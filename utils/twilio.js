@@ -162,7 +162,7 @@ module.exports = {
     voiceResponse.dial(
       {
         callerId: organizationPhoneNumber,
-        action: '/api/call/events/outgoing/' + clientId + '/' + toCallNumber
+        action: '/api/call/events/outbound/' + clientId + '/' + toCallNumber
       },
       toCallNumber
     );
