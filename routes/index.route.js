@@ -27,14 +27,4 @@ router.use('/settings', jwtAuth, settings);
 router.use('/call', jwtAuth, callStats);
 router.use('/invoices', jwtAuth, invoices);
 
-// Custom Error Handler
-// router.use((err, req, res, next) => {
-//   if (err.status) 
-//     const errBody = Object.assign({}, err, { message: err.message });
-//     res.status(err.status).json(errBody);
-//   } else {
-//     res.status(500).json({ message: 'Internal Server Error' });
-//   }
-// });
-
 module.exports = router;
