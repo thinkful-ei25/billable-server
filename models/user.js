@@ -18,10 +18,10 @@ const UserSchema = mongoose.Schema({
   globalHourlyRate:Number,
   password:{type:String, required: true}, 
   twilio: {
-    authToken:{type:String, required:true}, 
+    authToken:{type:String}, 
     dateCreated:{type:Date},
     dateUpdated:{type:Date}, 
-    accountFriendlyName:{type:String, required:true}, 
+    accountFriendlyName:{type:String}, 
     sid:{type:String},
     status:{type:String, default: 'active'},
     phones:[{

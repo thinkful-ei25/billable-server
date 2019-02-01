@@ -8,29 +8,28 @@ const Call = require('../models/call');
 
 router.delete('/user-delete', (req,res,next)=>{
   const userId = req.user.twilio.sid; 
-  console.log(userId);
   const clientRef = req.user.id; 
-  console.log(clientRef); 
 
   Call.deleteMany({userSid:userId})
     .then(() => 
-      console.log('deleting the calls...'),
-    res.status(200)
-      .json()
+      res.status(200)
+        .json()
     ).catch(err => {
       next(err); 
     }); 
 
   Client.deleteMany({userId:clientRef})
     .then(() =>
-      console.log('deleting the clients...') 
+      res.status(200)
+        .json()
     ).catch(err => {
       next(err); 
     }); 
 
   User.deleteOne({_id:clientRef})
     .then(()=>
-      console.log('deleting the user')
+      res.status(200)
+        .json()
     ).catch(err=> {
       next(err); 
     }); 
@@ -48,9 +47,6 @@ router.put('/', (req, res, next) => {
     }
   });
 
-  
-  console.log('pre findoneandupdate toupdate',toUpdate); 
-
   if(toUpdate.hasOwnProperty('password')){
     User.hashPassword(req.body['password'])
       .then((digest)=>{
@@ -64,10 +60,9 @@ router.put('/', (req, res, next) => {
 
     User.findOneAndUpdate({_id: userId}, toUpdate, { new: true })
       .then(result =>{
-        console.log('after result', toUpdate); 
         if(result){
-          console.log(result);
-          res.json(result);
+          res.json(result)
+            .status(201);
         } else {
           next();
         }
@@ -84,19 +79,13 @@ router.get('/', (req,res,next)=>{
   User.findById({_id:userId}, {email:1, password:1, globalHourlyRate:1, organizationPhoneNumber:1})
     .then(result => {
       if(result){
-      console.log(result);
-      res.json(result);
+        res.json(result)
+          .status(200);
       }
     })
     .catch(err => {
       next(err); 
-    }
-    );
-
+    });
 }); 
-
-
-
-// router.delete('/delete', (req, res, next) => )
 
 module.exports = router; 
