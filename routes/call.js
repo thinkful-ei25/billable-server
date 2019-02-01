@@ -37,7 +37,7 @@ router.post('/inbound', (req, res) => {
           .then(client => { 
             let clientId = client[0]._id; 
             responseTwiML = twilio.inboundBrowser(
-              user.organizationName, callerNumber, clientId, twilioNumberCalled); 
+              user.organizationName, callerNumber, clientId, _user.organizationPhoneNumber); 
               //return;
           }); 
       } else if (callerNumber === _user.organizationPhoneNumber) {
