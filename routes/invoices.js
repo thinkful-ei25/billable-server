@@ -5,6 +5,8 @@ const router = express.Router();
 const Call = require('../models/call');
 const _ = require('lodash');
 const nodemailer = require('nodemailer')
+const sendEmail = require('../utils/email/email.send');
+const templates = require('../utils/email/email.template');
 
 /**
  * @api [get] invoices Returns an object to display all invoices grouped by project
@@ -58,7 +60,7 @@ router.get('/', (req, res, next) => {
       }
     }
   ]).then(basicInvoice => { 
-    console.log('basicinvoice', basicInvoice); 
+    // console.log('basicinvoice', basicInvoice); 
     res
     .json(basicInvoice)
     .end();   
@@ -68,12 +70,13 @@ router.get('/', (req, res, next) => {
   });
 }); 
 
-// router.post('/email', (req, res) => { 
-//   console.log('email'); 
-//   res.
-//     send('foo bar')
-//     .end(); 
-// })
+router.post('/email', (req, res) => { 
+  sendEmail( templates.confirm());
+  console.log('email'); 
+  res.
+    send('foo bar')
+    .end(); 
+})
 
 module.exports = router;
 

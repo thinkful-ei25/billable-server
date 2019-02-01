@@ -1,4 +1,4 @@
-const { CLIENT_ORIGIN } = require('../config')
+const { CLIENT_ORIGIN } = require('../../config')
 
 // This file is exporting an Object with a single key/value pair.
 // However, because this is not a part of the logic of the application
@@ -7,14 +7,12 @@ const { CLIENT_ORIGIN } = require('../config')
 // (eg. unsubscribe) in the future.
 module.exports = {
 
-  confirm: id => ({
-    subject: 'React Confirm Email',
+  confirm: () => ({
+    subject: 'HEY BUDDY BRADY',
     html: `
-      <a href='${CLIENT_ORIGIN}/confirm/${id}'>
-        click to confirm email
-      </a>
+     <h1>HI BRADY!</h1>
     `,      
-    text: `Copy and paste this link: ${CLIENT_ORIGIN}/confirm/${id}`
+    text: `Wazzup yo!`
   })
   
 }; 

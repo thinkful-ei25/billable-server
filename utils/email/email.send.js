@@ -7,8 +7,8 @@ const credentials = {
   secure: true,
   auth: {
     // These environment variables will be pulled from the .env file
-    user: process.env.MAIL_USER, 
-    pass: process.env.MAIL_PASS  
+    user: process.env.EMAIL, 
+    pass: process.env.EMAIL_PASSWORD 
   }
 }
 
@@ -18,12 +18,13 @@ const transporter = nodemailer.createTransport(credentials)
 
 // exporting an 'async' function here allows 'await' to be used
 // as the return value of this function.
-module.exports = async (to, content) => {
+module.exports = async ( content) => {
   
   // The from and to addresses for the email that is about to be sent.
   const contacts = {
-    from: process.env.MAIL_USER,
-    to
+
+    from: process.env.EMAIL,
+    to: 'signalflowsean@gmail.com, bradycfox@gmail.com'
   }
   
   // Combining the content and contacts into a single object that can
