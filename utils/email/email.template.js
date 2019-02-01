@@ -7,10 +7,17 @@ const { CLIENT_ORIGIN } = require('../../config')
 // (eg. unsubscribe) in the future.
 module.exports = {
 
-  confirm: () => ({
-    subject: 'HEY BUDDY BRADY',
+  confirm: (seconds, calls, hourlyRate, invoiceAmount, company, firstName, lastName) => ({
+    subject: `INVOICE TO ${company}`,
     html: `
-     <h1>HI BRADY!</h1>
+     <p>Dear ${firstName} ${lastName},</p>
+     <br></br>
+     <p>
+      Total Calls: ${calls}, 
+      Total Seconds: ${seconds} 
+      Hourly Rate: ${hourlyRate}
+      Invoice Amount: ${invoiceAmount}
+    </p>
     `,      
     text: `Wazzup yo!`
   })

@@ -1,5 +1,7 @@
 const nodemailer = require('nodemailer'); 
 
+console.log('proccess', process.env.EMAIL)
+console.log('proccess', process.env.EMAIL_PASSWORD); 
 // The credentials for the email account you want to send mail from. 
 const credentials = {
   host: 'smtp.gmail.com',
@@ -18,13 +20,13 @@ const transporter = nodemailer.createTransport(credentials)
 
 // exporting an 'async' function here allows 'await' to be used
 // as the return value of this function.
-module.exports = async ( content) => {
+module.exports = async (to, content) => {
   
   // The from and to addresses for the email that is about to be sent.
   const contacts = {
 
     from: process.env.EMAIL,
-    to: 'signalflowsean@gmail.com, bradycfox@gmail.com'
+    to
   }
   
   // Combining the content and contacts into a single object that can

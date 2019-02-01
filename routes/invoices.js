@@ -4,7 +4,6 @@ const express = require('express');
 const router = express.Router();
 const Call = require('../models/call');
 const _ = require('lodash');
-const nodemailer = require('nodemailer')
 const sendEmail = require('../utils/email/email.send');
 const templates = require('../utils/email/email.template');
 
@@ -57,10 +56,11 @@ router.get('/', (req, res, next) => {
           firstName: {"$arrayElemAt": ["$client.firstName", 0] },
           lastName: {"$arrayElemAt": ["$client.lastName", 0] },
           company:  {"$arrayElemAt": ["$client.company", 0] },
+          email: {"$arrayElemAt": ["$client.email", 0] }
       }
     }
   ]).then(basicInvoice => { 
-    // console.log('basicinvoice', basicInvoice); 
+    console.log('basicinvoice', basicInvoice); 
     res
     .json(basicInvoice)
     .end();   
@@ -71,11 +71,14 @@ router.get('/', (req, res, next) => {
 }); 
 
 router.post('/email', (req, res) => { 
-  sendEmail( templates.confirm());
-  console.log('email'); 
+  const { seconds, calls, email,  clientId, hourlyRate, invoiceAmount, company, firstName, lastName} = req.body; 
+  
+  sendEmail((email), templates.confirm(
+    seconds, calls, hourlyRate, invoiceAmount, company, firstName, lastName
+  ));
+
   res.
-    send('foo bar')
-    .end(); 
+    json('foo bar')
 })
 
 module.exports = router;
