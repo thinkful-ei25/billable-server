@@ -95,7 +95,7 @@ router.get('/phones', (req, res) => {
       for (let i = 0; i < availableNumbers.length; i++) {
         let phoneNumber = {
           response: availableNumbers[i].phoneNumber,
-          display: availableNumbers[0].friendlyName
+          display: availableNumbers[i].friendlyName
         };
         phoneNumbers.push(phoneNumber);
       }

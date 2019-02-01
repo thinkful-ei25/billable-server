@@ -4,7 +4,8 @@ const express = require('express');
 const router = express.Router();
 const Call = require('../models/call');
 const _ = require('lodash');
-const nodemailer = require('nodemailer')
+const sendEmail = require('../utils/email/email.send');
+const templates = require('../utils/email/email.template');
 
 /**
  * @api [get] invoices Returns an object to display all invoices grouped by project
@@ -55,6 +56,7 @@ router.get('/', (req, res, next) => {
           firstName: {"$arrayElemAt": ["$client.firstName", 0] },
           lastName: {"$arrayElemAt": ["$client.lastName", 0] },
           company:  {"$arrayElemAt": ["$client.company", 0] },
+          email: {"$arrayElemAt": ["$client.email", 0] }
       }
     }
   ]).then(basicInvoice => { 
@@ -68,12 +70,16 @@ router.get('/', (req, res, next) => {
   });
 }); 
 
-// router.post('/email', (req, res) => { 
-//   console.log('email'); 
-//   res.
-//     send('foo bar')
-//     .end(); 
-// })
+router.post('/email', (req, res) => { 
+  const { seconds, calls, email,  clientId, hourlyRate, invoiceAmount, company, firstName, lastName} = req.body; 
+  
+  sendEmail((email), templates.confirm(
+    calls, hourlyRate, invoiceAmount, company, firstName, lastName
+  ));
+
+  res.
+    json('foo bar')
+})
 
 module.exports = router;
 
