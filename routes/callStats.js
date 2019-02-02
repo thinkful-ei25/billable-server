@@ -182,7 +182,7 @@ router.get('/calls', (req, res, next) => {
       }
     })
     .then(callsArr => {
-      console.log(callsArr)
+      console.log(callsArr);
       res.json(callsArr);
     })
     .catch(err => {
