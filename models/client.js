@@ -1,5 +1,5 @@
 'use strict'; 
-const {defaultImg} = require('../utils/constants');
+// const {defaultImg} = require('../utils/constants');
 const mongoose = require('mongoose'); 
 
 const ClientSchema = mongoose.Schema({
@@ -47,7 +47,6 @@ const ClientSchema = mongoose.Schema({
       year:Number, 
       paid:Boolean,
       paidDate: Date,
-      sentDate: { type: Date, required: true },
       invoiceId: String
     }
   ]
