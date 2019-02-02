@@ -16,14 +16,17 @@ Check us out at <a href="https://callmeter.netlify.com/">callmeter.netlify.com</
 ### Preview: 
 Landing Page
 
+<img src="images/LandingPageCM.JPG" width="500">
+
 
 Client Profile
+
+<img src="images/profileContactCM.JPG" width="500">
 
 
 Stats Dashboard
 
-
-Browser Calling
+<img src="images/dashCM.JPG" width="500">
 
 
 ### Tech Stack:
