@@ -15,15 +15,23 @@ const UserSchema = mongoose.Schema({
   isLoggedIn:{type: Boolean, default: false}, 
   organizationName:{type:String, required:true},
   organizationPhoneNumber:String,
-  globalHourlyRate:Number,
+  globalHourlyRate:{type:Number, required:true},
   password:{type:String, required: true}, 
   twilio: {
+<<<<<<< HEAD
     authToken:{type:String, required:true}, 
     sid: { type: String },
     appSid: {type: String},
     dateCreated:{type:Date},
     dateUpdated:{type:Date}, 
     accountFriendlyName:{type:String, required:true},
+=======
+    authToken:{type:String}, 
+    dateCreated:{type:Date},
+    dateUpdated:{type:Date}, 
+    accountFriendlyName:{type:String}, 
+    sid:{type:String},
+>>>>>>> feature/tests
     status:{type:String, default: 'active'},
     phones:[{
       phoneFriendlyName:String,

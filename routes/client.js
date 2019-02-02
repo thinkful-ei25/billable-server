@@ -8,33 +8,32 @@ const findClient = require('../utils/queries/findClients');
 
 //CREATE NEW CLIENT
 router.post('/', (req, res) => {
-  console.log('req.body', req.body)
-  const userId = req.user.id;
-  const { firstName, company, lastName, hourlyRate, phoneNumber, category, email, streetOne, streetTwo, city, state, zip, photo64 } = req.body;
-  console.log(photo64)
+  console.log('req.body', req.body);
+  const userId = req.user.id; 
+  const {firstName,company, lastName, hourlyRate, phoneNumber, category, email, streetOne, streetTwo, city, state, zip, photo64} = req.body;
+  console.log(photo64);
   const clientNumber = '+1' + phoneNumber.replace(/-/g, '');
-  const newClient = {
-    company, userId, firstName, lastName, hourlyRate, phoneNumber: clientNumber, category, email,
-    address: { streetOne, streetTwo, city, state, zip }, photo: photo64
-  };
+  const newClient = {company,userId, firstName, lastName, hourlyRate, phoneNumber: clientNumber, category, email, 
+    address:  {streetOne, streetTwo, city, state, zip}, photo: photo64
+  }; 
 
   Client.create(newClient)
     .then(result => {
-      res
+      res 
         .location(`${req.originalUrl}/${result.id}`)
         .status(201)
         .json(result);
     })
     .catch(err => {
-      console.log(err + 'client creation error');
+      console.log(err +'client creation error');
     });
 });
 
 router.get('/', (req, res) => {
   const userId = req.user.id;
-  let filter = {};
-
-  filter.userId = userId;
+  let filter = {};  
+  
+  filter.userId = userId; 
 
   Client.find(filter)
     .sort('lastName')
@@ -50,15 +49,15 @@ router.get('/', (req, res) => {
 
 //TODO: fix route name (remove hello);
 router.get('/contacts/:id', (req, res, next) => {
-  const { id } = req.params;
-  const userId = req.user.id;
+  const {id} = req.params; 
+  const userId = req.user.id; 
 
-  Client.findById({ _id: id, userId })
+  Client.findById({_id:id, userId})
     .then(result => {
-      
+  
       res
         .status(200)
-        .json(result);
+        .json(result[0]);
 
     })
     .catch(err => {
@@ -88,22 +87,18 @@ router.get('/contacts/phone/:phoneNumber', (req, res, next) => {
 
 router.put('/:id', (req, res, next) => {
   const { id } = req.params;
-  const userId = req.user.id;
+  const userId = req.user.id; 
 
   const toUpdate = {};
   const updateableFields = ['company', 'firstName', 'lastName', 'hourlyRate', 'phoneNumber', 'category', 'email', 'streetOne', 'streetTwo', 'city', 'state', 'zip'];
 
   updateableFields.forEach(field => {
     if (field in req.body) {
-     toUpdate[field] = req.body[field];
-      }
-    });
-
-    if ('phoneNumber' in req.body) {
-      toUpdate['phoneNumber'] = '+1' + req.body.phoneNumber.replace(/-/g, '');
+      toUpdate[field] = req.body[field];
     }
+  });
 
-  Client.findOneAndUpdate({ _id: id, userId }, toUpdate, { new: true })
+  Client.findOneAndUpdate({_id: id, userId}, toUpdate, { new: true })
     .then(result => {
       if (result) {
         res
@@ -120,13 +115,13 @@ router.put('/:id', (req, res, next) => {
 
 
 router.delete('/:id', (req, res, next) => {
-  const { id } = req.params;
-  const userId = req.user.id;
+  const {id} = req.params; 
+  const userId = req.user.id; 
 
-  Client.findOneAndRemove({ _id: id, userId })
+  Client.findOneAndRemove({_id:id, userId})
     .then(() => {
       res
-        .sendStatus(204)
+        .sendStatus(204); 
     })
     .catch(err => {
       console.log('delete by id for client didn\'t work', err);
@@ -135,45 +130,45 @@ router.delete('/:id', (req, res, next) => {
 });
 
 function formatClientData(clients) {
-
-
-  clients = JSON.parse(JSON.stringify(clients))
-  for (let i = 0; i < clients.length; i++) {
+  for(let i = 0; i < clients.length; i++) {
+    let client = clients[i];
     let billed = 0;
     let unpaid = 0;
-    clients[i].invoice.map(invoice => {
+    client.invoice.map(invoice => {
       billed += invoice.amount;
       unpaid += (invoice.paid) ? 0 : invoice.amount;
-    })
-    clients[i].billed = billed
-    clients[i].unpaid = unpaid;
+    });
+    client['billed'] = billed;
+    client['unpaid'] = unpaid;
   }
-  return clients
+  return clients;
 }
+
 
 //GET All Contacts
 //TODO: Update name
 //TODO: Update with authentication
 router.get('/contacts', (req, res, next) => {
   const userId = req.user.id;
-  Client.find({ userId })
+  Client.find({userId})
     .then(clients => {
-      return formatClientData(clients)
-    }).then(clientData => {
+      console.log(clients);
+      return formatClientData(clients);
+    } ).then(clientData => {
       if (clientData) {
-        res.json(clientData)
+        res.json(clientData);
       } else {
-        next()
+        next();
       }
     }).catch(err => {
       next(err);
-    })
+    });
 });
 
 
 
 
 
-module.exports = router;
+module.exports = router; 
 
 

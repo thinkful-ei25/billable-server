@@ -51,7 +51,9 @@ router.post('/login', localAuth, (req, res) => {
       // console.log(`${user.organizationName} has been logged in`); 
     })
     .catch(err => { 
-      console.log('err', err); 
+      
+      err.status(400); 
+      res.send(400);  
     }); 
 });
 
