@@ -24,7 +24,7 @@ function createSeries(results) {
  * @api [get] call/stats/all Returns an object to display aggregate call and time data for dashboard.
  * @apiName All Call Stats
  * @apiGroup Call Stats
- * 
+ *
  * @page used on the user dashboard upon login.
  *
  * @apiParam userSid {string} From Req.User
@@ -37,7 +37,6 @@ function createSeries(results) {
 
 router.get('/stats/all', (req, res, next) => {
   let userSid = req.user.twilio.sid;
-
   return Call.aggregate([
     {
       $match: {
@@ -49,7 +48,7 @@ router.get('/stats/all', (req, res, next) => {
         moment: {
           $dateToString: { format: '%m-%d-%Y', date: '$startTime' }
         },
-        duration: '$duration',
+        duration: '$duration'
       }
     },
     {
@@ -108,18 +107,27 @@ function formatIndClientCalls(calls) {
 }
 
 function formatAllClientCalls(calls) {
+  let durationMin;
+  let estimatedBilling;
   return calls.map(call => {
     let client = call.id;
-    let durationMin = call.duration > 60 ? call.duration / 60 : 0;
-    let estimatedBilling =
-      durationMin > 0 ? call.id.hourlyRate * (durationMin / 60) : 0;
+    if (client) {
+      durationMin = call.duration > 60 ? call.duration / 60 : 0;
+      estimatedBilling =
+        durationMin > 0 ? call.id.hourlyRate * (durationMin / 60) : 0;
+    } else {
+      durationMin = 0;
+      estimatedBilling = 0;
+    }
     return {
       date: call.startTime,
       direction: call.direction,
-      photo: client ? client.photo : null,
-      contactName: client ? `${client.firstName} ${client.lastName}` : null,
-      company: client ? client.company : null,
-      phoneNumber: client ? client.phoneNumber : null,
+      photo: client ? client.photo : 'deleted',
+      contactName: client
+        ? `${client.firstName} ${client.lastName}`
+        : 'deleted',
+      company: client ? client.company : 'deleted',
+      phoneNumber: client ? client.phoneNumber : 'deleted',
       length: durationMin,
       billable: call.billable,
       estimatedBilling
@@ -141,12 +149,11 @@ function formatAllClientCalls(calls) {
  * TODO: Authenticate Route, and update userSid to come from req.body.
  */
 router.get('/calls/:clientId', (req, res, next) => {
-  let { clientId } = req.params
+  let { clientId } = req.params;
   let userSid = req.user.twilio.sid;
   return Call.find({ id: clientId, userSid })
     .populate('id')
     .then(calls => {
-
       if (calls) {
         return formatIndClientCalls(calls);
       } else {
@@ -159,21 +166,15 @@ router.get('/calls/:clientId', (req, res, next) => {
     .catch(err => {
       next(err);
     });
-
-
 });
-
-
-
 
 router.get('/calls', (req, res, next) => {
   let userSid = req.user.twilio.sid;
-
-
+  console.log('USERSID => ', userSid);
   return Call.find({ userSid })
     .populate('id')
     .then(calls => {
-     
+      console.log(calls);
       if (calls) {
         return formatAllClientCalls(calls);
       } else {
@@ -181,6 +182,7 @@ router.get('/calls', (req, res, next) => {
       }
     })
     .then(callsArr => {
+      console.log(callsArr)
       res.json(callsArr);
     })
     .catch(err => {
@@ -188,6 +190,4 @@ router.get('/calls', (req, res, next) => {
     });
 });
 
-
 module.exports = router;
-

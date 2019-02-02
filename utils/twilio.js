@@ -74,7 +74,7 @@ module.exports = {
     let dial = voiceResponse.dial({
       callerId: callerId.slice(2),
       action: `/api/call/events/inbound/${clientId}/${organizationPhoneNumber.slice(
-        -10)}`
+        -10)}`,
     });
     const organizationNameNoSpaces = organizationName.replace(/ /g, '');
     dial.client(organizationNameNoSpaces);
