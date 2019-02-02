@@ -5,6 +5,9 @@ This project was bootstrapped with Create React App.
 
 CallMEter is a tool for business owners and freelancers that takes the admin work out of tracking and invoicing for billable time spent on calls. 
 Check us out at <a href="https://callmeter.netlify.com/">callmeter.netlify.com</a>!
+Try our demo account: 
+org name: CallMeter Demo 
+password: password123
 
 ### Features:
 - CallMEter provides a phone number powered by twilio, allowing for call time tracking, that reroutes to your provided business number. 
