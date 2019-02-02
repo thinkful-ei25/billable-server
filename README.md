@@ -76,16 +76,18 @@ NodeMailer for invoice mailing
 ### Server-side Core Dependencies:
 ```
   "dependencies": {
-    "bcryptjs": "^2.4.0",
+   "bcryptjs": "^2.4.0",
     "body-parser": "^1.15.2",
     "cors": "^2.8.4",
     "dotenv": "^6.2.0",
     "express": "^4.16.3",
     "jsonwebtoken": "^8.2.0",
     "knex": "^0.16.3",
+    "lodash": "^4.17.11",
     "moment": "^2.24.0",
     "mongoose": "^5.2.6",
     "morgan": "^1.9.0",
+    "nodemailer": "^5.1.1",
     "nodemon": "^1.18.9",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
