@@ -109,7 +109,9 @@ function formatIndClientCalls(calls) {
 function formatAllClientCalls(calls) {
   let durationMin;
   let estimatedBilling;
-  return calls.map(call => {
+  return calls.filter(call => {
+    return call.id !== null;
+  }).map(call => {
     let client = call.id;
     if (client) {
       durationMin = call.duration > 60 ? call.duration / 60 : 0;
@@ -170,11 +172,11 @@ router.get('/calls/:clientId', (req, res, next) => {
 
 router.get('/calls', (req, res, next) => {
   let userSid = req.user.twilio.sid;
-  console.log('USERSID => ', userSid);
+  //console.log('USERSID => ', userSid);
   return Call.find({ userSid })
     .populate('id')
     .then(calls => {
-      console.log(calls);
+      //console.log(calls);
       if (calls) {
         return formatAllClientCalls(calls);
       } else {
@@ -182,7 +184,7 @@ router.get('/calls', (req, res, next) => {
       }
     })
     .then(callsArr => {
-      console.log(callsArr);
+      //console.log(callsArr)
       res.json(callsArr);
     })
     .catch(err => {
