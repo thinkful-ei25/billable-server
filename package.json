@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "name": "billableserver",
+=======
+  "name": "billable_server",
+>>>>>>> feature/tests
   "version": "0.1.0",
   "description": "Track And Bill Clients using Twilio",
   "main": "index.js",
@@ -9,16 +13,20 @@
   },
   "scripts": {
     "start": "nodemon index.js",
+<<<<<<< HEAD
     "now-start": "node",
     "mocha": "mocha --exit --file test/setup.test.js '!(node_modules)/**/*test.js'",
     "mocha-exit0": "mocha --exit --file test/setup.test.js '!(node_modules)/**/*test.js' || true",
+=======
+    "mocha": "mocha --exit --file test/setup.test.js '!(node_modules)'",
+    "mocha-exit0": "mocha --exit --file test/setup.test.js",
+>>>>>>> feature/tests
     "test": "nodemon --exec npm run mocha-exit0",
     "cover": "nodemon --exec nyc --reporter=lcov --reporter=text-summary npm run mocha-exit0",
     "heroku": "node index.js",
     "travis": "npm run mocha"
   },
   "author": "Node It Alls nodeItAlls@gmail.com",
-  "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.0",
     "body-parser": "^1.15.2",
@@ -37,6 +45,7 @@
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "pg": "^7.4.3",
+    "sinon": "^7.2.3",
     "twilio": "^3.27.1"
   },
   "devDependencies": {

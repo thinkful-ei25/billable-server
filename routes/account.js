@@ -7,7 +7,6 @@ const User = require('../models/user');
 router.get('/user', (req, res) => {
   console.log('GET A PRE-EXISTING SUBACCOUNT / USER');
   const { sid } = req.user.twilio;
-
   //TODO: ERROR CHECK
   MASTER_CLIENT.api
     .accounts(sid)

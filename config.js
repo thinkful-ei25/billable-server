@@ -10,7 +10,7 @@ module.exports = {
     process.env.DATABASE_URL || 'mongodb://localhost/billable-backend',
   TEST_DATABASE_URL:
     process.env.TEST_DATABASE_URL ||
-    'mongodb://localhost/thinkful-backend-test',
+    'mongodb://localhost/billable-test',
   JIM_ACCOUNT_SID: process.env.JIM_ACCOUNT_SID,
   JIM_AUTH_TOKEN: process.env.JIM_AUTH_TOKEN,
   JIM: twilio(process.env.JIM_ACCOUNT_SID, process.env.JIM_AUTH_TOKEN),
