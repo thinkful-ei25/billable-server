@@ -75,6 +75,7 @@ describe('CallStats endpoints', function () {
         .get('/api/call/stats/all')
         .set('Authorization', `Bearer ${authToken}`)// <<== Add this
         .then(res => {
+          console.log('call stats',res.body); 
           expect(res).to.be.an('object');
           expect(res).to.have.status(200); 
         });

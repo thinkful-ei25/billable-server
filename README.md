@@ -1,45 +1,93 @@
-# Thinkful Backend Template
+# CallMEter 
+This project was bootstrapped with Create React App.
 
-A template for developing and deploying Node.js apps.
+## Welcome to CallMEter 
 
-## Getting started
+CallMEter is a tool for business owners and freelancers that takes the admin work out of tracking and invoicing for billable time spent on calls. 
+Check us out at <a href="https://callmeter.netlify.com/">callmeter.netlify.com</a>!
 
-### Setting up a project
+### Features:
+- CallMEter provides a phone number powered by twilio, allowing for call time tracking, that reroutes to your provided business number. 
+- Client management, easily create, call, and edit clients from their profile. 
+- In app inbound and outbound browser calling and call redirects to your phone while you're offline. 
+- Automated invoicing system. CallMEter programmatically generates invoices unique to each client and delivers them via email with a single click. 
+- Graphic breakdown of calls made over time and the time spent on each.
 
-* Move into your projects directory: `cd ~/YOUR_PROJECTS_DIRECTORY`
-* Clone this repository: `git clone https://github.com/Thinkful-Ed/backend-template YOUR_PROJECT_NAME`
-* Move into the project directory: `cd YOUR_PROJECT_NAME`
-* Install the dependencies: `npm install`
-* Create a new repo on GitHub: https://github.com/new
-    * Make sure the "Initialize this repository with a README" option is left unchecked
-* Update the remote to point to your GitHub repository: `git remote set-url origin https://github.com/YOUR_GITHUB_USERNAME/YOUR_REPOSITORY_NAME`
+### Preview: 
+Landing Page
 
-### Working on the project
 
-* Move into the project directory: `cd ~/YOUR_PROJECTS_DIRECTORY/YOUR_PROJECT_NAME`
-* Run the development task: `npm start`
-    * Starts a server running at http://localhost:8080
-    * Automatically restarts when any of your files change
+Client Profile
 
-## Databases
 
-By default, the template is configured to connect to a MongoDB database using Mongoose.  It can be changed to connect to a PostgreSQL database using Knex by replacing any imports of `db-mongoose.js` with imports of `db-knex.js`, and uncommenting the Postgres `DATABASE_URL` lines in `config.js`.
+Stats Dashboard
 
-## Deployment
 
-Requires the [Heroku CLI client](https://devcenter.heroku.com/articles/heroku-command-line).
+Browser Calling
 
-### Setting up the project on Heroku
 
-* Move into the project directory: `cd ~/YOUR_PROJECTS_DIRECTORY/YOUR_PROJECT_NAME`
-* Create the Heroku app: `heroku create PROJECT_NAME`
+### Tech Stack:
 
-* If your backend connects to a database, you need to configure the database URL:
-    * For a MongoDB database: `heroku config:set DATABASE_URL=mongodb://USERNAME:PASSWORD@HOST:PORT/DATABASE_NAME`
-    * For a PostgreSQL database: `heroku config:set DATABASE_URL=postgresql://USERNAME:PASSWORD@HOST:PORT/DATABASE_NAME`
+React and Redux for state management on the frontend
 
-* If you are creating a full-stack app, you need to configure the client origin: `heroku config:set CLIENT_ORIGIN=https://www.YOUR_DEPLOYED_CLIENT.com`
+MongoDb for backend data management -clients, users, calls
 
-### Deploying to Heroku
+Twilio for call functionality
 
-* Push your code to Heroku: `git push heroku master`
+NodeMailer for invoice mailing
+
+
+### Client-side Core Dependencies:
+```
+"dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.12",
+    "@fortawesome/free-solid-svg-icons": "^5.6.3",
+    "@fortawesome/react-fontawesome": "^0.1.4",
+    "animejs": "^3.0.1",
+    "chart.js": "^2.7.3",
+    "jquery": "^3.3.1",
+    "jwt-decode": "^2.2.0",
+    "namor": "^1.1.1",
+    "normalize.css": "^8.0.1",
+    "react": "^16.7.0",
+    "react-burger-menu": "^2.6.1",
+    "react-chartjs-2": "^2.7.4",
+    "react-dom": "^16.7.0",
+    "react-redux": "^6.0.0",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "2.1.3",
+    "react-sparklines": "^1.7.0",
+    "react-table": "^6.8.6",
+    "redux": "^4.0.1",
+    "redux-devtools": "^3.5.0",
+    "redux-form": "^8.1.0",
+    "redux-thunk": "^2.3.0",
+    "twilio": "^3.25.0",
+    "twilio-client": "^1.6.5"
+  }
+```
+
+### Server-side Core Dependencies:
+```
+  "dependencies": {
+    "bcryptjs": "^2.4.0",
+    "body-parser": "^1.15.2",
+    "cors": "^2.8.4",
+    "dotenv": "^6.2.0",
+    "express": "^4.16.3",
+    "jsonwebtoken": "^8.2.0",
+    "knex": "^0.16.3",
+    "moment": "^2.24.0",
+    "mongoose": "^5.2.6",
+    "morgan": "^1.9.0",
+    "nodemon": "^1.18.9",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
+    "pg": "^7.4.3",
+    "twilio": "^3.27.1"
+  }
+```
+
+
+### Check out our api docs in <a href="https://gist.github.com/jsantiag/1c6ce266616343d228bd2279781b1f62">this public gist</a>
