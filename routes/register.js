@@ -74,8 +74,10 @@ router.post('/user', (req, res, next) => {
         err.status = 400;
         err.reason = 'ValidationError';
         next(err);
-      } else err.status = 404;
+      } else {
+      err.status = 404;
       next(err);
+       }
     });
 });
 
