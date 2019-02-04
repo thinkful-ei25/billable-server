@@ -57,7 +57,7 @@ router.get('/contacts/:id', (req, res, next) => {
   
       res
         .status(200)
-        .json(result[0]);
+        .json(result);
 
     })
     .catch(err => {
