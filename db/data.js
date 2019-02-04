@@ -2,23 +2,23 @@
 
 const users = [
   {
-    'id': '000000000000000000000030',
-    'email': 'test@wingo.edu',
+    'id': '',
+    'email': '',
     'organizationName': 'testUser',
-    'organizationPhoneNumer': '+18025055504',
+    'organizationPhoneNumer': '',
     'globalHourlyRate': '20',
     'password': '$2a$10$swigcZnoxlNuqXIzKP/k1eUqKjjL02Y5FM7IUau9K75H0yXp1xp1i',
     'twilio': {
-      'authToken': 'bcb71fb96c505025c24ba785f26692f3',
+      'authToken': '',
       'dateCreated': '2016-05-18T16:00:00Z',
       'dateUpdated': '2017-05-18T16:00:00Z',
-      'accountFriendlyName': 'jsantiag@wellesley.edu',
-      'sid': 'AC96d4f4dbad42367168ac2012b1430a04',
+      'accountFriendlyName': '',
+      'sid': '',
       'status': 'active',
       'phones': [
         {
-          'phoneFriendlyName': 'jangles@gmail.com',
-          'number': '+18026488173'
+          'phoneFriendlyName': '',
+          'number': ''
         }
       ]
     }
@@ -41,7 +41,7 @@ const clients = [
     'company':'nodeitStill R us',
     'hourlyRate':'22',
     'email':'clientEmail@gmail.com',
-    'phoneNumber':'+13019803889',
+    'phoneNumber':'',
     'photo':'bingbing',
     'billable':true,
     'invoice':[
@@ -61,12 +61,12 @@ const clients = [
 const calls = [
   {
     'id':'200000000000000000000003',
-    'userSid':'AC96d4f4dbad42367168ac2012b1430a04',
+    'userSid':'',
     'start':'Tue, 31 Aug 2018 20:36:29 +0000',
     'end':'Tue, 31 Aug 2018 20:36:44 +0000',
     'duration':'.15',
-    'organizationPhoneNumber':'+12246679955',
-    'clientPhoneNumber':'+13019803889',
+    'organizationPhoneNumber':'',
+    'clientPhoneNumber':'',
     'billable':true,
     'direction': 'outbound',
     'status':'active'

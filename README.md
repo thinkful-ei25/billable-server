@@ -5,6 +5,9 @@ This project was bootstrapped with Create React App.
 
 CallMEter is a tool for business owners and freelancers that takes the admin work out of tracking and invoicing for billable time spent on calls. 
 Check us out at <a href="https://callmeter.netlify.com/">callmeter.netlify.com</a>!
+Try our demo account: 
+org name: CallMeter Demo 
+password: password123
 
 ### Features:
 - CallMEter provides a phone number powered by twilio, allowing for call time tracking, that reroutes to your provided business number. 
@@ -73,16 +76,18 @@ NodeMailer for invoice mailing
 ### Server-side Core Dependencies:
 ```
   "dependencies": {
-    "bcryptjs": "^2.4.0",
+   "bcryptjs": "^2.4.0",
     "body-parser": "^1.15.2",
     "cors": "^2.8.4",
     "dotenv": "^6.2.0",
     "express": "^4.16.3",
     "jsonwebtoken": "^8.2.0",
     "knex": "^0.16.3",
+    "lodash": "^4.17.11",
     "moment": "^2.24.0",
     "mongoose": "^5.2.6",
     "morgan": "^1.9.0",
+    "nodemailer": "^5.1.1",
     "nodemon": "^1.18.9",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",

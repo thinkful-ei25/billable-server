@@ -58,8 +58,8 @@ function validateUser(req){
       reject(err);
 
     }
-    let { password, organizationName, email, hourlyRate } = req.body; 
-    let user = {password, organizationName, email, hourlyRate }; 
+    let { password, organizationName, email} = req.body; 
+    let user = {password, organizationName, email}; 
     resolve(user); 
   }); 
  

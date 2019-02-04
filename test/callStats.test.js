@@ -2,17 +2,14 @@
 
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const jwt = require('jsonwebtoken');
 
 const { app, runServer, closeServer } = require('../index');
-const  Call  = require('../models/call');
-const { JWT_SECRET, TEST_DATABASE_URL } = require('../config');
+const {  TEST_DATABASE_URL } = require('../config');
 
 const expect = chai.expect;
-require('dotenv').config();
+require('dotenv');
 
-const authToken = process.env.TEST_AUTH_TOKEN; 
-
+const authToken=process.env.TEST_AUTH_TOKEN;
 chai.use(chaiHttp);
 
 
