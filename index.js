@@ -29,6 +29,7 @@ app.use(
 
 app.use(
   cors({
+    Access-Control-Allow-Origin: *
   })
 );
 
