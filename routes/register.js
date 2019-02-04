@@ -81,6 +81,22 @@ router.post('/user', (req, res, next) => {
     });
 });
 
+router.put('/endTutorial', jwtAuth, (req,res) => {
+  const userId = req.user.id;
+  User.findByIdAndUpdate(userId, {tutorialCompleted: true})
+    .then(userResult => {
+      console.log(userResult);
+      res
+        .status(201)
+        .end();
+    })
+    .catch(err => {
+      res.json(err); 
+      console.log(err + 'tutorial update error');
+      next(err); 
+    });  
+});
+
 router.get('/phones', (req, res) => {
   console.log('FIND AVAILABLE PHONE NUMBERS');
   const { areaCode } = req.query;
