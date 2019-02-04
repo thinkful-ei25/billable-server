@@ -30,7 +30,8 @@ app.use(
 app.use(
   cors({
   origin: CLIENT_ORIGIN,
-  'https://contactmeter.herokuapp.com'
+  'https://contactmeter.herokuapp.com',
+  'https://callmeter.netlify.com'
   })
 );
 
