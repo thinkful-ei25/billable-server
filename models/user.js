@@ -15,7 +15,7 @@ const UserSchema = mongoose.Schema({
   isLoggedIn:{type: Boolean, default: false}, 
   organizationName:{type:String, required:true},
   organizationPhoneNumber:String,
-  globalHourlyRate:{type:Number, required:true},
+  globalHourlyRate:{type:Number},
   password:{type:String, required: true}, 
   twilio: {
     authToken:{type:String, required:true}, 
