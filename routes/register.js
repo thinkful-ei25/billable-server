@@ -6,7 +6,8 @@ const { MASTER_CLIENT, BASE_URL } = require('../config');
 const User = require('../models/user');
 const validateUser = require('../utils/validators/user.validate');
 const isExistingUser = require('../utils/validators/existingUser.validate');
-
+const passport = require('passport');
+const jwtAuth = passport.authenticate('jwt', { session: false });
 
 router.post('/user', (req, res, next) => {
   console.log('CREATE A NEW USER');
@@ -81,7 +82,7 @@ router.post('/user', (req, res, next) => {
     });
 });
 
-router.put('/endTutorial', (req,res) => {
+router.put('/endTutorial', jwtAuth, (req,res) => {
   const userId = req.user.id;
   User.findByIdAndUpdate(userId, {tutorialCompleted: true})
     .then(userResult => {
