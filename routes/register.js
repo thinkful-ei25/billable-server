@@ -75,13 +75,13 @@ router.post('/user', (req, res, next) => {
         err.reason = 'ValidationError';
         next(err);
       } else {
-      res.json(err)
-      next(err);
+        res.json(err)
+        next(err);
        }
     });
 });
 
-router.put('/endTutorial', jwtAuth, (req,res) => {
+router.put('/endTutorial', (req,res) => {
   const userId = req.user.id;
   User.findByIdAndUpdate(userId, {tutorialCompleted: true})
     .then(userResult => {
